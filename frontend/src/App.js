@@ -16,7 +16,7 @@ function App() {
   }, []);
   return (
     <div className="App">
-      <h1>Test to see if the app is deployed and backend is connected to frontend</h1>
+      <h1>This is reactive</h1>
     </div>
   );
 }
