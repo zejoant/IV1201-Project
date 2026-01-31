@@ -27,12 +27,15 @@ app.get('/', (req, res) => {
 //reqHandlerLoader.loadHandlers(app);
 //reqHandlerLoader.loadErrorHandlers(app);
 
+const PORT = process.env.PORT || 3000;
+
 const server = app.listen(
-    process.env.SERVER_PORT,
-    process.env.SERVER_HOST,
+    PORT,
+    //process.env.SERVER_PORT,
+    //process.env.SERVER_HOST,
     () => {
       console.log(
-          `Server up at ${server.address().address}:${server.address().port}`,
+          `Server up at ${PORT}`,
       );
     },
 );
