@@ -1,13 +1,14 @@
 const express = require("express");
 const cors = require("cors");
-const sequelize = require("./db");
-const userRoutes = require("./routes/users");
+const sequelize = require("./src/db");
+const userRoutes = require("./src/routes/users");
+const path = require("path");
 require("dotenv").config();
 
 const app = express();
 
 // CORS — allow your frontend dev server
-app.use(cors({ origin: "http://localhost:3000" }));
+app.use(cors());
 app.use(express.json());
 
 // Test DB connection
@@ -19,7 +20,15 @@ sequelize.authenticate()
 app.use("/api/users", userRoutes);
 
 // Simple test
-app.get("/", (req, res) => res.send("API is running"));
+//app.get("/", (req, res) => res.send("API is running"));
+
+//serve the static files in build
+app.use(express.static(path.join(__dirname, 'public')));
+
+//app.get("*") only works with express 4, if express 5 is being used this has to be changed to /* or other
+app.get("*", (req,res) => {
+  res.sendFile(path.join(__dirname, 'public', "index.html"));
+});
 
 // Start server
 const PORT = process.env.PORT || 3001;
