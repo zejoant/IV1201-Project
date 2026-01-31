@@ -1,43 +1,26 @@
-'use strict';
+const express = require("express");
+const cors = require("cors");
+const sequelize = require("./db");
+const userRoutes = require("./routes/users");
+require("dotenv").config();
 
-const path = require('path');
-const APP_ROOT_DIR = path.join(__dirname, '..');
-
-/*require('dotenv-safe').config({
-  path: path.join(APP_ROOT_DIR, '.env'),
-  example: path.join(APP_ROOT_DIR, '.env.example'),
-});*/
-
-const express = require('express');
 const app = express();
 
-const bodyParser = require('body-parser');
-app.use(bodyParser.json());
+// CORS — allow your frontend dev server
+app.use(cors({ origin: "http://localhost:3000" }));
+app.use(express.json());
 
-const cookieParser = require('cookie-parser');
-app.use(cookieParser());
+// Test DB connection
+sequelize.authenticate()
+  .then(() => console.log("DB connected"))
+  .catch(err => console.error("DB connection failed:", err));
 
-app.use(express.static(path.join(APP_ROOT_DIR, 'public')));
+// Routes
+app.use("/api/users", userRoutes);
 
-app.get('/', (req, res) => {
-  return res.send('Welcome to the API');
-});
+// Simple test
+app.get("/", (req, res) => res.send("API is running"));
 
-//const reqHandlerLoader = require('./api');
-//reqHandlerLoader.loadHandlers(app);
-//reqHandlerLoader.loadErrorHandlers(app);
-
-const PORT = process.env.PORT || 3000;
-
-const server = app.listen(
-    PORT,
-    //process.env.SERVER_PORT,
-    //process.env.SERVER_HOST,
-    () => {
-      console.log(
-          `Server up at ${PORT}`,
-      );
-    },
-);
-
-module.exports = server; // Needed for tests.
+// Start server
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
