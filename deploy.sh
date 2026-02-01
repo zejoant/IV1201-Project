@@ -10,6 +10,10 @@
 #MANUALLY COPY AND PASTE THE FILES 
 #VERY NICE :)))
 
+#AS OF 2026-01-31 
+#SUDO APT INSTALL DOS2UNIX 
+#DOS2UNIX deploy.sh
+
 
 echo "1. Build React frontend..."
 cd frontend || exit
@@ -22,7 +26,7 @@ rm -rf backend/public/*
 cp -r frontend/build/* backend/public/
 
 echo "3. Zip backend folder..."
-cd backend || exit
+cd backend || exit                                
 zip -r ../app.zip ./* -x "node_modules/*"
 
 echo "4. Fix backslashes in zip file..."

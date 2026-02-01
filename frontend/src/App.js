@@ -6,7 +6,7 @@ function App() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await fetch("http://localhost:3001/api/users/1");
+        const res = await fetch("/api/users/1"); //relative path, works for prod with azure and for localhost dev with proxy
         if (!res.ok) throw new Error(res.statusText);
         const data = await res.json();
         setUser(data);
@@ -17,7 +17,12 @@ function App() {
     fetchUser();
   }, []);
 
-  if (!user) return <p>Loading...</p>;
+  if (!user){
+
+    console.log(`this is user: ${user}`);
+    return <p>Loading...</p>;
+
+  };
 
   return (
     <div>
