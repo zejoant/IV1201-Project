@@ -1,32 +1,40 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
+import Login from "./components/Login";
 
 function App() {
-  const [person, setPerson] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
 
+  // Check if user is already logged in on app load
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await fetch("/api/persons/1"); //relative path, works for prod with azure and for localhost dev with proxy
-        if (!res.ok) throw new Error(res.statusText);
-        const data = await res.json();
-        setPerson(data);
-      } catch (err) {
-        console.error("Fetch failed:", err);
-      }
-    };
-    fetchUser();
+    const savedUser = localStorage.getItem("currentUser");
+    if (savedUser) {
+      setCurrentUser(JSON.parse(savedUser));
+    }
   }, []);
 
-  if (!person) {
-    console.log(`this is user: ${person}`);
-    return <p>Loading...</p>;
+  // Handle logout
+  const handleLogout = () => {
+    localStorage.removeItem("currentUser");
+    setCurrentUser(null);
+  };
+
+  if (!currentUser) {
+    return <Login setCurrentUser={setCurrentUser} />;
   }
 
   return (
     <div>
-      <h1>User Info</h1>
-      <p>ID: {person.person_id}</p>
-      <p>Name: {person.name}</p>
+      <div>
+        <h1>Recruitment Platform</h1>
+        <button onClick={handleLogout}>Logout</button>
+      </div>
+      
+      <div>
+        <h2>User Information</h2>
+        <p>ID: {currentUser.person_id}</p>
+        <p>Name: {currentUser.name}</p>
+        <p>Username: {currentUser.username}</p>
+      </div>
     </div>
   );
 }
