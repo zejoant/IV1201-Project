@@ -1,5 +1,5 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require("../db");
+const sequelize = require("../integration/db");
 
 const Person = sequelize.define(
   "person",
@@ -20,6 +20,7 @@ const Person = sequelize.define(
   },
   {
     timestamps: false, //disable createdAt & updatedAt
+    tableName: "person",
   },
 );
 
