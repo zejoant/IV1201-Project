@@ -19,6 +19,7 @@ const Person = sequelize.define(
     username: { type: DataTypes.STRING },
   },
   {
+    tableName: "person",
     timestamps: false, //disable createdAt & updatedAt
   },
 );
