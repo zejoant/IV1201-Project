@@ -1,21 +1,20 @@
 const express = require("express");
 const router = express.Router();
-const User = require("../models/User");
+const User = require("../models/Person");
 
 router.get("/:id", async (req, res) => {
   try {
     console.log("Fetching user ID:", req.params.id);
 
-    const user = await User.findByPk(req.params.id);
+    const person = await Person.findByPk(req.params.id);
 
-    console.log("User fetched:", user);
+    console.log("Person fetched:", person);
 
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+    if (!person) {
+      return res.status(404).json({ message: "Person not found" });
     }
 
-    res.json(user);
-
+    res.json(person);
   } catch (err) {
     console.error("Sequelize / Backend error:", err);
     res.status(500).json({ error: "Server error", details: err.message });
