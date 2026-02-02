@@ -1,0 +1,308 @@
+.register-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f8ff;
+  padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.register-card {
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  width: 100%;
+  max-width: 520px;
+  border: 1px solid #e6e9f0;
+}
+
+.register-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.register-icon-container {
+  width: 60px;
+  height: 60px;
+  background-color: #4a6cf7;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+}
+
+.register-icon {
+  font-size: 28px;
+  color: white;
+}
+
+.register-title {
+  margin: 0;
+  color: #1a1a1a;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.register-subtitle {
+  margin: 0;
+  color: #666;
+  font-size: 15px;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.register-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.register-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.register-label-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.register-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.register-required {
+  color: #ef4444;
+}
+
+.register-input {
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: 2px solid #e1e5ee;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  outline: none;
+  background-color: #f8f9fa;
+}
+
+.register-input:focus {
+  border-color: #4a6cf7;
+  background-color: white;
+  box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.1);
+}
+
+.register-password-strength {
+  margin-top: 8px;
+}
+
+.register-strength-bars {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.register-strength-bar {
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.register-strength-indicator {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.register-strength-text {
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+}
+
+.register-password-tips {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.register-tip {
+  font-size: 11px;
+  color: #888;
+  margin: 2px 0;
+}
+
+.register-terms-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.register-checkbox {
+  margin-top: 4px;
+}
+
+.register-terms-label {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.4;
+}
+
+.register-terms-link {
+  color: #4a6cf7;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.register-terms-link:hover {
+  text-decoration: underline;
+}
+
+.register-button {
+  padding: 16px;
+  background-color: #4a6cf7;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 8px;
+}
+
+.register-button:hover:not(:disabled) {
+  background-color: #3a5ce5;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(74, 108, 247, 0.3);
+}
+
+.register-button:disabled {
+  opacity: 0.8;
+  cursor: not-allowed;
+}
+
+.register-button-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.register-error-alert {
+  background-color: #fee;
+  border: 1px solid #fcc;
+  color: #c33;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.register-error-icon {
+  font-size: 16px;
+}
+
+.register-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 16px 0;
+}
+
+.register-divider-text {
+  flex: 1;
+  padding: 0 16px;
+  color: #888;
+  font-size: 14px;
+  font-weight: 500;
+  position: relative;
+}
+
+.register-divider-text:before,
+.register-divider-text:after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 45%;
+  height: 1px;
+  background-color: #e1e5ee;
+}
+
+.register-divider-text:before {
+  left: 0;
+}
+
+.register-divider-text:after {
+  right: 0;
+}
+
+.register-switch-button {
+  padding: 14px;
+  background-color: transparent;
+  color: #666;
+  border: 2px solid #e1e5ee;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.register-switch-button:hover {
+  border-color: #4a6cf7;
+  background-color: #f8f9fa;
+}
+
+.register-switch-highlight {
+  color: #4a6cf7;
+  font-weight: 600;
+  margin-left: 4px;
+}
+
+.register-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: register-spin 1s linear infinite;
+}
+
+@keyframes register-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/*  responsive design*/
+@media (max-width: 300px) {
+  .register-form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .register-password-tips {
+    grid-template-columns: 1fr;
+  }
+  
+  .register-card {
+    padding: 24px;
+  }
+}

@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
-import Login from "./components/Login";
+import Login from "./components/login/Login";
+import Register from "./components/register/Register"; 
+import PersonPage from "./components/PersonPage";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
+  const [showRegister, setShowRegister] = useState(false);
 
   // Check if user is already logged in on app load
   useEffect(() => {
@@ -19,24 +22,23 @@ function App() {
   };
 
   if (!currentUser) {
-    return <Login setCurrentUser={setCurrentUser} />;
+    if (showRegister) {
+      return (
+        <Register 
+          setCurrentUser={setCurrentUser} 
+          switchToLogin={() => setShowRegister(false)} 
+        />
+      );
+    }
+    return (
+      <Login 
+        setCurrentUser={setCurrentUser} 
+        switchToRegister={() => setShowRegister(true)}  
+      />
+    );
   }
 
-  return (
-    <div>
-      <div>
-        <h1>Recruitment Platform</h1>
-        <button onClick={handleLogout}>Logout</button>
-      </div>
-      
-      <div>
-        <h2>User Information</h2>
-        <p>ID: {currentUser.person_id}</p>
-        <p>Name: {currentUser.name}</p>
-        <p>Username: {currentUser.username}</p>
-      </div>
-    </div>
-  );
+  return <PersonPage currentUser={currentUser} handleLogout={handleLogout} />;
 }
 
 export default App;
