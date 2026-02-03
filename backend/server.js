@@ -1,9 +1,7 @@
 const express = require("express");
 const cors = require("cors");
-const sequelize = require("./src/integration/db");
-const personRoutes = require("./src/routes/persons");
-const loginRoutes = require("./src/routes/login");
 const path = require("path");
+const reqHandlerLoader = require("./src/api");
 require("dotenv").config();
 
 const app = express();
@@ -12,16 +10,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Test DB connection
-sequelize
-  .authenticate()
-  .then(() => console.log("DB connected"))
-  .catch((err) => console.error("DB connection failed:", err));
-
-// Routes
-app.use("/api/persons", personRoutes);
-
-app.use("/api/login", loginRoutes);
+reqHandlerLoader.loadHandlers(app);
 
 //serve the static files in build
 app.use(express.static(path.join(__dirname, "public")));
