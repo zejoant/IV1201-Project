@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const DAO = require("../integration/DAO")
+const User = require("../models/Person");
 
 router.get("/:id", async (req, res) => {
   try {
     console.log("Fetching user ID:", req.params.id);
 
-    const person = await DAO.findUserByPk(req.params.id)
+    const person = await Person.findByPk(req.params.id);
 
     console.log("Person fetched:", person);
 
