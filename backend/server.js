@@ -3,6 +3,7 @@ const cors = require("cors");
 const sequelize = require("./src/db");
 const personRoutes = require("./src/routes/persons");
 const loginRoutes = require("./src/routes/login");
+const registerRoutes = require("./src/routes/register");
 const path = require("path");
 require("dotenv").config();
 
@@ -22,6 +23,8 @@ sequelize
 app.use("/api/persons", personRoutes);
 
 app.use("/api/login", loginRoutes);
+
+app.use("/api/register", registerRoutes);
 
 // Simple test
 //app.get("/", (req, res) => res.send("API is running"));

@@ -1,34 +1,44 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
+import Login from "./components/login/Login";
+import Register from "./components/register/Register"; 
+import PersonPage from "./components/PersonPage";
 
 function App() {
-  const [person, setPerson] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [showRegister, setShowRegister] = useState(false);
 
+  // Check if user is already logged in on app load
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await fetch("/api/persons/1"); //relative path, works for prod with azure and for localhost dev with proxy
-        if (!res.ok) throw new Error(res.statusText);
-        const data = await res.json();
-        setPerson(data);
-      } catch (err) {
-        console.error("Fetch failed:", err);
-      }
-    };
-    fetchUser();
+    const savedUser = localStorage.getItem("currentUser");
+    if (savedUser) {
+      setCurrentUser(JSON.parse(savedUser));
+    }
   }, []);
 
-  if (!person) {
-    console.log(`this is user: ${person}`);
-    return <p>Loading...</p>;
+  // Handle logout
+  const handleLogout = () => {
+    localStorage.removeItem("currentUser");
+    setCurrentUser(null);
+  };
+
+  if (!currentUser) {
+    if (showRegister) {
+      return (
+        <Register 
+          setCurrentUser={setCurrentUser} 
+          switchToLogin={() => setShowRegister(false)} 
+        />
+      );
+    }
+    return (
+      <Login 
+        setCurrentUser={setCurrentUser} 
+        switchToRegister={() => setShowRegister(true)}  
+      />
+    );
   }
 
-  return (
-    <div>
-      <h1>User Info</h1>
-      <p>ID: {person.person_id}</p>
-      <p>Name: {person.name}</p>
-    </div>
-  );
+  return <PersonPage currentUser={currentUser} handleLogout={handleLogout} />;
 }
 
 export default App;
