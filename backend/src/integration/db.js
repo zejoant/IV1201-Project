@@ -1,5 +1,5 @@
 const { Sequelize } = require("sequelize");
-require("dotenv").config({ path: __dirname + "/../.env" });
+require("dotenv").config({ path: __dirname + "/../../.env" });
 
 const useSSL = process.env.DB_SSL === "true";
 
@@ -16,11 +16,8 @@ const sequelize = new Sequelize(
     port: process.env.DB_PORT || 5432,
     dialect: "postgres",
     logging: false,
-    dialectOptions:
-      process.env.DB_SSL === "true" //could be set to always look for ssl not conditional
-        ? { ssl: { require: true, rejectUnauthorized: false } }
-        : {},
-  },
+    dialectOptions: process.env.DB_SSL === "true" ? { ssl: { require: true, rejectUnauthorized: false } } : {},
+  }
 );
 
 module.exports = sequelize;
