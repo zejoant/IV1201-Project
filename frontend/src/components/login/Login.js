@@ -51,23 +51,20 @@ function Login({ setCurrentUser, switchToRegister }) {
         
         <form onSubmit={handleSubmit} className="login-form">
           <div className="login-input-group">
-            <label className="login-label">Username or Email</label>
+            <label className="login-label">Username</label>
             <input
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
               className="login-input"
-              placeholder="Enter your username or email"
+              placeholder="Enter your username"
             />
           </div>
           
           <div className="login-input-group">
             <div className="login-label-container">
               <label className="login-label">Password</label>
-              <a href="/forgot-password" className="login-forgot-link">
-                Forgot password?
-              </a>
             </div>
             <input
               type="password"

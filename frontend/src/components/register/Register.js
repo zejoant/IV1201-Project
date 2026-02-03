@@ -7,6 +7,7 @@ function Register({ setCurrentUser, switchToLogin }) {
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const [email, setEmail] = useState("");
+  const [personNumber, setPersonNumber] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
@@ -14,7 +15,7 @@ function Register({ setCurrentUser, switchToLogin }) {
   const handlePasswordChange = (e) => {
     const value = e.target.value;
     setPassword(value);
-    // 简单密码强度检查
+    // Simple password strength check
     let strength = 0;
     if (value.length >= 8) strength += 1;
     if (/[A-Z]/.test(value)) strength += 1;
@@ -37,7 +38,9 @@ function Register({ setCurrentUser, switchToLogin }) {
           password, 
           name,
           surname,
-          email
+          email,
+          personNumber
+          
         }),
       });
 
@@ -118,11 +121,14 @@ function Register({ setCurrentUser, switchToLogin }) {
             </div>
             
             <div className="register-input-group">
-              <label className="register-label">Last Name</label>
+              <label className="register-label">
+                Last Name <span className="register-required">*</span>
+              </label>
               <input
                 type="text"
                 value={surname}
                 onChange={(e) => setSurname(e.target.value)}
+                required
                 className="register-input"
                 placeholder="Enter your last name"
               />
@@ -142,7 +148,19 @@ function Register({ setCurrentUser, switchToLogin }) {
               placeholder="Enter your email address"
             />
           </div>
-          
+          <div className="register-input-group">
+            <label className="register-label">
+             Person Number <span className="register-required">*</span>
+         </label>
+          <input
+            type="text"
+            value={personNumber}
+            onChange={(e) => setPersonNumber(e.target.value)}
+            required
+            className="register-input"
+            placeholder="Enter your person number"
+          />
+          </div>
           <div className="register-input-group">
             <label className="register-label">
               Username <span className="register-required">*</span>
@@ -197,19 +215,6 @@ function Register({ setCurrentUser, switchToLogin }) {
             </div>
           </div>
           
-          <div className="register-terms-container">
-            <input type="checkbox" id="terms" required className="register-checkbox" />
-            <label htmlFor="terms" className="register-terms-label">
-              I agree to the{" "}
-              <a href="/terms" className="register-terms-link">
-                Terms of Service
-              </a>{" "}
-              and{" "}
-              <a href="/privacy" className="register-terms-link">
-                Privacy Policy
-              </a>
-            </label>
-          </div>
           
           <button 
             type="submit" 
