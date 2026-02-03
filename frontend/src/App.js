@@ -1,35 +1,48 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 function App() {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
+  const [error, setError] = useState("");
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await fetch("/api/users/1"); //relative path, works for prod with azure and for localhost dev with proxy
-        if (!res.ok) throw new Error(res.statusText);
-        const data = await res.json();
-        setUser(data);
-      } catch (err) {
-        console.error("Fetch failed:", err);
-      }
-    };
-    fetchUser();
-  }, []);
+  async function login(e) {
+    e.preventDefault();
 
-  if (!user){
+    try {
+      const res = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
+      });
 
-    console.log(`this is user: ${user}`);
-    return <p>Loading...</p>;
+      const data = await res.json();
 
-  };
+      if (!res.ok) throw new Error(data.message);
+
+      setUser(data);
+      setError("");
+    } catch (err) {
+      setError("Login failed: " + err.message);
+    }
+  }
+
+  if (user) {
+    return (
+      <div>
+        <h1>Welcome, {user.name} {user.surname}</h1>
+      </div>
+    );
+  }
 
   return (
-    <div>
-      <h1>User Info</h1>
-      <p>ID: {user.id}</p>
-      <p>Name: {user.name}</p>
-    </div>
+    <form onSubmit={login}>
+      <h2>Login</h2>
+      {error && <p>{error}</p>}
+      <input placeholder="Username" value={username} onChange={e => setUsername(e.target.value)}/>
+      <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)}/>
+      <button>Login</button>
+    </form>
   );
 }
 

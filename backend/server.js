@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const sequelize = require("./src/db");
+const sequelize = require("./src/integration/db");
 const personRoutes = require("./src/routes/persons");
 const loginRoutes = require("./src/routes/login");
 const path = require("path");
@@ -22,9 +22,6 @@ sequelize
 app.use("/api/persons", personRoutes);
 
 app.use("/api/login", loginRoutes);
-
-// Simple test
-//app.get("/", (req, res) => res.send("API is running"));
 
 //serve the static files in build
 app.use(express.static(path.join(__dirname, "public")));
