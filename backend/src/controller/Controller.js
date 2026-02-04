@@ -14,7 +14,11 @@ class Controller {
   }
 
   async login(username, password) {
-    return await this.DAO.login(username, password);
+    return await this.DAO.findUser(username, password);
+  }
+
+  async createAccount({name, surname, pnr, email, username, password, role_id}){
+    return await this.DAO.createPerson({name, surname, pnr, email, username, password, role_id})
   }
 
   async findUserById(id) {

@@ -7,7 +7,7 @@ function Register({ setCurrentUser, switchToLogin }) {
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const [email, setEmail] = useState("");
-  const [personNumber, setPersonNumber] = useState("");
+  const [pnr, setPersonNumber] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
@@ -30,7 +30,7 @@ function Register({ setCurrentUser, switchToLogin }) {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/register", {
+      const res = await fetch("/account/sign_up", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
@@ -39,7 +39,7 @@ function Register({ setCurrentUser, switchToLogin }) {
           name,
           surname,
           email,
-          personNumber
+          pnr
           
         }),
       });
@@ -51,7 +51,7 @@ function Register({ setCurrentUser, switchToLogin }) {
       }
 
       // Auto-login after successful registration
-      const loginRes = await fetch("/api/login", {
+      const loginRes = await fetch("/account/sign_in", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
@@ -154,7 +154,7 @@ function Register({ setCurrentUser, switchToLogin }) {
          </label>
           <input
             type="text"
-            value={personNumber}
+            value={pnr}
             onChange={(e) => setPersonNumber(e.target.value)}
             required
             className="register-input"

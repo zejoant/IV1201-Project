@@ -2,26 +2,20 @@
 
 const RequestHandler = require("./RequestHandler");
 
-/**
- * Defines the REST API with endpoints related to messages.
- */
 class LoginApi extends RequestHandler {
-  /**
-   * Constructs a new instance.
-   */
   constructor() {
     super();
   }
 
   get path() {
-    return "/api";
+    return "/account";
   }
 
   async registerHandler() {
     try {
       await this.retrieveController();
 
-      this.router.post("/login", async (req, res) => {
+      this.router.post("/sign_in", async (req, res) => {
         try {
           const { username, password } = req.body;
 
@@ -49,6 +43,38 @@ class LoginApi extends RequestHandler {
           res.status(500).json({ message: "Server error" });
         }
       });
+
+      this.router.post("/sign_up", async (req, res) => {
+        try {
+          const {name, surname, pnr, email, username, password} = req.body;
+          const role_id = 2
+
+          if (!name || !surname || !pnr || !email ||!username|| !password) {
+            return res
+              .status(400)
+              .json({ message: "Missing information" });
+          }
+
+          const person = await this.contr.createAccount({name, surname, pnr, email, username, password, role_id});
+
+          if (!person) {
+            return res.status(401).json({message: "Account creation failed"});
+          }
+
+          res.json({
+            name: person.name,
+            surname: person.surname,
+            pnr: person.pnr,
+            email: person.email,
+            username: person.username,
+          });
+
+        } catch (err) {
+          console.error("Login error:", err);
+          res.status(500).json({ message: "Server error" });
+        }
+      });
+
     } catch (err) {
       console.log("oopsie", err);
     }

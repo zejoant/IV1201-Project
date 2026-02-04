@@ -1,7 +1,7 @@
 "use strict";
 
 const PersonApi = require("./PersonApi");
-const LoginApi = require("./LoginApi");
+const AccountApi = require("./AccountApi");
 
 class RequestHandlerLoader {
   constructor() {
@@ -22,7 +22,7 @@ class RequestHandlerLoader {
 
 const loader = new RequestHandlerLoader();
 
-loader.addRequestHandler(new LoginApi());
-loader.addRequestHandler(new PersonApi());
+loader.addRequestHandler(new AccountApi());
+//loader.addRequestHandler(new PersonApi());
 
 module.exports = loader;

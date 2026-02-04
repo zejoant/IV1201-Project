@@ -2,13 +2,8 @@
 
 const RequestHandler = require("./RequestHandler");
 
-/**
- * Defines the REST API with endpoints related to messages.
- */
 class PersonApi extends RequestHandler {
-  /**
-   * Constructs a new instance.
-   */
+
   constructor() {
     super();
   }

@@ -13,7 +13,7 @@ function Login({ setCurrentUser, switchToRegister }) {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/login", {
+      const res = await fetch("/account/sign_in", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
