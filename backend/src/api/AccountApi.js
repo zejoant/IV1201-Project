@@ -37,6 +37,7 @@ class LoginApi extends RequestHandler {
             name: person.name,
             surname: person.surname,
             username: person.username,
+            email: person.email,
           });
         } catch (err) {
           console.error("Login error:", err);

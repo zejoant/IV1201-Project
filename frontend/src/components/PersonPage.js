@@ -5,14 +5,14 @@ function PersonPage({ currentUser, handleLogout }) {
       <nav style={styles.navbar}>
         <div style={styles.navContent}>
           <div style={styles.brand}>
-            <h1 style={styles.logo}>👔 Recruitment Platform</h1>
+            <h1 style={styles.logo}>Recruitment Platform</h1>
           </div>
           <div style={styles.navActions}>
             <div style={styles.userBadge}>
               <div style={styles.avatar}>
-                {currentUser.name?.charAt(0) || 'U'}
+                {currentUser.username?.charAt(0) || 'U'}
               </div>
-              <span style={styles.username}>{currentUser.name}</span>
+              <span style={styles.username}>{currentUser.username}</span>
             </div>
             <button onClick={handleLogout} style={styles.logoutButton}>
               <span>Logout</span>
@@ -29,7 +29,7 @@ function PersonPage({ currentUser, handleLogout }) {
           <div style={styles.welcomeSection}>
             <div style={styles.welcomeContent}>
               <h2 style={styles.welcomeTitle}>
-                Welcome back, <span style={styles.highlight}>{currentUser.name}</span>!
+                Welcome back, <span style={styles.highlight}>{currentUser.username}</span>!
               </h2>
               <p style={styles.welcomeSubtitle}>
                 Here's your account information and recent activity
@@ -52,21 +52,25 @@ function PersonPage({ currentUser, handleLogout }) {
             
             <div style={styles.infoGrid}>
               <div style={styles.infoItem}>
-                <span style={styles.infoLabel}>User ID</span>
-                <span style={styles.infoValue}>{currentUser.person_id}</span>
+                <span style={styles.infoLabel}>Name</span>
+                <span style={styles.infoValue}>{currentUser.name}</span>
               </div>
               <div style={styles.infoItem}>
-                <span style={styles.infoLabel}>Full Name</span>
-                <span style={styles.infoValue}>{currentUser.name}</span>
+                <span style={styles.infoLabel}>Surname</span>
+                <span style={styles.infoValue}>{currentUser.surname}</span>
               </div>
               <div style={styles.infoItem}>
                 <span style={styles.infoLabel}>Username</span>
                 <span style={styles.infoValue}>{currentUser.username}</span>
               </div>
               <div style={styles.infoItem}>
+                <span style={styles.infoLabel}>Email</span>
+                <span style={styles.infoValue}>{currentUser.email}</span>
+              </div>
+              {/*<div style={styles.infoItem}>
                 <span style={styles.infoLabel}>Account Type</span>
                 <span style={styles.infoValue}>Recruitment Account</span>
-              </div>
+              </div>*/}
             </div>
 
             <div style={styles.cardFooter}>
@@ -77,7 +81,7 @@ function PersonPage({ currentUser, handleLogout }) {
           </div>
 
           {/* 快速操作卡片 */}
-          <div style={styles.actionsGrid}>
+          {/*<div style={styles.actionsGrid}>
             <div style={styles.actionCard}>
               <div style={styles.actionIcon} className="action-icon-1">
                 ✏️
@@ -110,7 +114,7 @@ function PersonPage({ currentUser, handleLogout }) {
               </p>
               <button style={styles.actionButton}>View</button>
             </div>
-          </div>
+          </div>*/}
         </div>
       </main>
     </div>
