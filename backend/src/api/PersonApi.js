@@ -14,7 +14,7 @@ class PersonApi extends RequestHandler {
 
   async registerHandler() {
     try {
-      await this.retrieveController();
+      await this.getController();
 
       this.router.get("/:id", async (req, res) => {
         try {

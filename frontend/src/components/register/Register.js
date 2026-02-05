@@ -40,7 +40,6 @@ function Register({ setCurrentUser, switchToLogin }) {
           surname,
           email,
           pnr
-          
         }),
       });
 
@@ -49,7 +48,7 @@ function Register({ setCurrentUser, switchToLogin }) {
       if (!res.ok) {
         throw new Error(data.message || "Registration failed");
       }
-
+      
       // Auto-login after successful registration
       const loginRes = await fetch("/account/sign_in", {
         method: "POST",
