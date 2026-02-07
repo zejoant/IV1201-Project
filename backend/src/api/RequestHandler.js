@@ -18,7 +18,7 @@ class RequestHandler {
     }
     else{
       if(status < 400){
-        res.status(status).json({["success!"]: body});
+        res.status(status).json({["success"]: body});
       }
       else{
         res.status(status).json({["error"]: body});

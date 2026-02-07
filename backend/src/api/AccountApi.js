@@ -40,8 +40,11 @@ class LoginApi extends RequestHandler {
           }
           // send cookie 
           Authorization.sendCookie(person, res, 204);
+          this.sendResponse(res, 201, {message: "logged in"})
+          //console.log(res);
         } catch (err) {
-          next(err);
+          //next(err);
+          console.log(err);
         }
       });
 
@@ -75,6 +78,29 @@ class LoginApi extends RequestHandler {
           res.status(201).json({message: "Success!",});
         } catch (err) {
           next(err);
+        }
+      });
+
+      this.router.get("/id", async (req, res) => {
+        try {
+          console.log(`this is ${JSON.stringify(req.cookies.auth)}`)
+          
+          if(!(await Authorization.checkLogin(req, res))){
+            return;
+          }
+          
+          const person = await this.contr.findUserById(req.user.id);
+
+          console.log("Person fetched:", person);
+
+          if (!person) {
+            return res.status(404).json({ message: "Person not found" });
+          }
+
+          this.sendResponse(res, 201, person)
+        } catch (err) {
+          console.error("Sequelize / Backend error:", err);
+          res.status(500).json({ error: "Server error", details: err.message });
         }
       });
 

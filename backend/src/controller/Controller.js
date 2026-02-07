@@ -46,7 +46,7 @@ class Controller {
   */
   async findUserById(id) {
     return this.transactionManager.transaction(async (t1) => {
-      const user = await this.DAO.findUserById(id);
+      const user = await this.DAO.findUserByPk(id);
       if(user.length == 0){
         return null;
       }

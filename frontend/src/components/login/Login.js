@@ -15,6 +15,7 @@ function Login({ setCurrentUser, switchToRegister }) {
     try {
       const res = await fetch("/account/sign_in", {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
       });
@@ -25,8 +26,16 @@ function Login({ setCurrentUser, switchToRegister }) {
         throw new Error(data.message || "Login failed");
       }
 
-      localStorage.setItem("currentUser", JSON.stringify(data));
-      setCurrentUser(data);
+      const res2 = await fetch("/account/id", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
+
+      const data2 = await res2.json();
+      debugger
+      localStorage.setItem("currentUser", JSON.stringify(data2.success));
+      setCurrentUser(data2.success);
     } catch (err) {
       setError(err.message || "An error occurred during login");
     } finally {
