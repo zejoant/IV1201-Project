@@ -17,6 +17,10 @@ class DAO {
     }
   }
 
+  getTransactionManager(){
+    return this.db;
+  }
+
   async findUser(username, password) {
     // Find user by username and password
     const person = await Person.findOne({where: {username, password}});

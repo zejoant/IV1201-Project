@@ -2,6 +2,7 @@
 
 const {body, validationResult} = require('express-validator');
 const RequestHandler = require("./RequestHandler");
+const Authorization = require("./auth/Authorization")
 
 class LoginApi extends RequestHandler {
   constructor() {
@@ -37,14 +38,8 @@ class LoginApi extends RequestHandler {
             this.sendResponse(res, 401, {message: "Invalid credentials"})
             return;
           }
-          // For now, just return user info (JWT not done yet)
-          res.status(201).json({
-            person_id: person.person_id,
-            name: person.name,
-            surname: person.surname,
-            username: person.username,
-            email: person.email,
-          });
+          // send cookie 
+          Authorization.sendCookie(person, res, 204);
         } catch (err) {
           next(err);
         }
