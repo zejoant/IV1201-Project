@@ -12,6 +12,7 @@ function Login({ setCurrentUser, switchToRegister }) {
     setError("");
     setLoading(true);
 
+
     try {
       const res = await fetch("/account/sign_in", {
         method: "POST",
@@ -20,7 +21,7 @@ function Login({ setCurrentUser, switchToRegister }) {
         body: JSON.stringify({ username, password }),
       });
 
-      const data = await res.json();
+      const data = await res.json(); 
 
       if (!res.ok) {
         throw new Error(data.message || "Login failed");
@@ -31,9 +32,8 @@ function Login({ setCurrentUser, switchToRegister }) {
         headers: { "Content-Type": "application/json" },
         credentials: "include",
       });
-
-      const data2 = await res2.json();
       debugger
+      const data2 = await res2.json();
       localStorage.setItem("currentUser", JSON.stringify(data2.success));
       setCurrentUser(data2.success);
     } catch (err) {

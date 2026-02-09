@@ -22,7 +22,7 @@ class LoginApi extends RequestHandler {
         body("username").trim().isLength({min: 3, max: 30}).isAlphanumeric(),
         body("password").isLength({min: 8}),
       ],
-      async (req, res) => {
+      async (req, res, next) => {
         try {
           const errors = validationResult(req);
           if (!errors.isEmpty()) {
@@ -39,12 +39,10 @@ class LoginApi extends RequestHandler {
             return;
           }
           // send cookie 
-          Authorization.sendCookie(person, res, 204);
-          this.sendResponse(res, 201, {message: "logged in"})
-          //console.log(res);
+          Authorization.sendCookie(person, res);
+          this.sendResponse(res, 200, {message: "Logged in success"});
         } catch (err) {
-          //next(err);
-          console.log(err);
+          next(err);
         }
       });
 
@@ -57,11 +55,11 @@ class LoginApi extends RequestHandler {
           body("username").isAlphanumeric(),
           body("password").isLength({min: 8}),
         ],
-        async (req, res) => {
+        async (req, res, next) => {
         try {
           const errors = validationResult(req);
           if (!errors.isEmpty()) {
-            res.status(400).json({errors: errors.array()});
+            this.sendResponse(res, 400, {errors: errors.array()})
             return;
           }
 
@@ -71,41 +69,47 @@ class LoginApi extends RequestHandler {
           const person = await this.contr.createAccount({name, surname, pnr, email, username, password, role_id});
 
           if (!person) {
-            res.status(401).json({message: "Account creation failed"});
+            this.sendResponse(res, 401, {message: "Account creation failed"});
             return;
           }
-
-          res.status(201).json({message: "Success!",});
+          this.sendResponse(res, 200, {message: "Success!"})
         } catch (err) {
           next(err);
         }
       });
 
-      this.router.get("/id", async (req, res) => {
+      this.router.get("/id",
+        [
+          body("id").isNumeric()
+        ],
+        async (req, res, next) => {
+        
         try {
-          console.log(`this is ${JSON.stringify(req.cookies.auth)}`)
-          
+          const errors = validationResult(req);
+          if (!errors.isEmpty()) {
+            this.sendResponse(res, 400, {errors: errors.array()});
+            return;
+          }
           if(!(await Authorization.checkLogin(req, res))){
+            this.sendResponse(res, 401, {errors: errors.array()});
             return;
           }
           
           const person = await this.contr.findUserById(req.user.id);
 
-          console.log("Person fetched:", person);
-
           if (!person) {
-            return res.status(404).json({ message: "Person not found" });
+            this.sendResponse(res, 404, {message: "Person not found" });
+            return;
           }
 
           this.sendResponse(res, 201, person)
         } catch (err) {
-          console.error("Sequelize / Backend error:", err);
-          res.status(500).json({ error: "Server error", details: err.message });
+          next(err);
         }
       });
 
     } catch (err) {
-      console.log("oopsie", err);
+      throw err;
     }
   }
 }
