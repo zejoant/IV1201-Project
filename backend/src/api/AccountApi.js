@@ -1,5 +1,6 @@
 "use strict";
 
+const bcrypt = require("bcrypt");
 const {body, validationResult} = require('express-validator');
 const RequestHandler = require("./RequestHandler");
 
@@ -31,12 +32,20 @@ class LoginApi extends RequestHandler {
           
           const { username, password } = req.body;
 
-          const person = await this.contr.login(username, password);
+          const person = await this.contr.login(username);
 
           if (!person) {
             this.sendResponse(res, 401, {message: "Invalid credentials"})
             return;
           }
+
+          const match = await bcrypt.compare(password, person.password)
+
+          if (!match) {
+            this.sendResponse(res, 401, {message: "Invalid credentials"})
+            return;
+          }
+
           // For now, just return user info (JWT not done yet)
           res.status(201).json({
             person_id: person.person_id,
@@ -70,7 +79,10 @@ class LoginApi extends RequestHandler {
           const {name, surname, pnr, email, username, password} = req.body;
           const role_id = 2
 
-          const person = await this.contr.createAccount({name, surname, pnr, email, username, password, role_id});
+          const SALT_ROUNDS = 12;
+          const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+
+          const person = await this.contr.createAccount({name, surname, pnr, email, username, password: hashedPassword, role_id});
 
           if (!person) {
             res.status(401).json({message: "Account creation failed"});

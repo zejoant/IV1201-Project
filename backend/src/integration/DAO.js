@@ -17,9 +17,9 @@ class DAO {
     }
   }
 
-  async findUser(username, password) {
-    // Find user by username and password
-    const person = await Person.findOne({where: {username, password}});
+  async findUser(username) {
+    // Find user by username
+    const person = await Person.findOne({where: {username}});
     if (!person) return null;
 
     return person;

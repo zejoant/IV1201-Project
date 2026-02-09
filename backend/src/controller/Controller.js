@@ -18,8 +18,8 @@ class Controller {
   }
 
   //login user by called the DAO
-  async login(username, password) {
-    return await this.DAO.findUser(username, password);
+  async login(username) {
+    return await this.DAO.findUser(username);
   }
 
   //create new user by called the DAO
