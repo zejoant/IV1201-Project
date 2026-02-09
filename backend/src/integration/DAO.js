@@ -23,10 +23,15 @@ class DAO {
 
   async findUser(username, password) {
     // Find user by username and password
-    const person = await Person.findOne({where: {username, password}});
-    if (!person) return null;
-
-    return person;
+    try{
+      const person = await Person.findOne({where: {username, password}});
+      if (!person) return null;
+  
+      return person;
+    }
+    catch (err){
+      console.log(err)
+    }
   }
 
   async createPerson({name, surname, pnr, email, username, password, role_id}) {

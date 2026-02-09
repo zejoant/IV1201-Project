@@ -1,6 +1,6 @@
 "use strict";
 
-const {body, validationResult} = require('express-validator');
+const {body, check, validationResult} = require('express-validator');
 const RequestHandler = require("./RequestHandler");
 const Authorization = require("./auth/Authorization")
 
@@ -79,11 +79,7 @@ class LoginApi extends RequestHandler {
       });
 
       this.router.get("/id",
-        [
-          body("id").isNumeric()
-        ],
         async (req, res, next) => {
-        
         try {
           const errors = validationResult(req);
           if (!errors.isEmpty()) {
@@ -96,12 +92,11 @@ class LoginApi extends RequestHandler {
           }
           
           const person = await this.contr.findUserById(req.user.id);
-
+          
           if (!person) {
             this.sendResponse(res, 404, {message: "Person not found" });
             return;
           }
-
           this.sendResponse(res, 201, person)
         } catch (err) {
           next(err);

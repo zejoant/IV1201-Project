@@ -18,7 +18,7 @@ class ErrorResponseSender extends ErrorHandler{
             if(res.headerSent){
                 return next(err);
             }
-            this.ErrorResponseSender(res, 500, {error: "Operation failed"});
+            this.sendResponse(res, 500, {error: "Operation failed"});
         });
     }
 }

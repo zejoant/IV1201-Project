@@ -13,9 +13,10 @@ const PORT = process.env.PORT || 3001;
 // CORS — allow your frontend dev server
 app.use(cors({origin: "http://localhost:3000", credentials:true}));
 app.use(express.json());
-
 app.use(cookieParser());
 
+reqHandlerLoader.loadHandlers(app);
+reqHandlerLoader.loadErrorHandlers(app);
 
 //serve the static files in build
 app.use(express.static(path.join(__dirname, "public")));
@@ -24,9 +25,6 @@ app.use(express.static(path.join(__dirname, "public")));
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
-
-reqHandlerLoader.loadHandlers(app);
-reqHandlerLoader.loadErrorHandlers(app);
 
 // Start server
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

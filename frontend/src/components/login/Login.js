@@ -29,11 +29,10 @@ function Login({ setCurrentUser, switchToRegister }) {
 
       const res2 = await fetch("/account/id", {
         method: "GET",
-        headers: { "Content-Type": "application/json" },
         credentials: "include",
       });
-      debugger
       const data2 = await res2.json();
+      debugger
       localStorage.setItem("currentUser", JSON.stringify(data2.success));
       setCurrentUser(data2.success);
     } catch (err) {

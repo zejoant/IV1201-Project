@@ -22,9 +22,9 @@ class Controller {
   async login(username, password) {
     return this.transactionManager.transaction(async (t1) => {
       const user = await this.DAO.findUser(username, password);
-      if(user.length == 0){
-        return null;
-      }
+      //if(user.length === 0){
+      //  return null;
+      //}
       return user;
      });
   }
@@ -33,9 +33,9 @@ class Controller {
   async createAccount({name, surname, pnr, email, username, password, role_id}){
     return this.transactionManager.transaction(async (t1) => {
       const user = await this.DAO.createPerson({name, surname, pnr, email, username, password, role_id})
-      if(user.length == 0){
-        return null;
-      }
+      //if(user.length == 0){
+      //  return null;
+      //}
       return user;
     })
   }
@@ -47,9 +47,9 @@ class Controller {
   async findUserById(id) {
     return this.transactionManager.transaction(async (t1) => {
       const user = await this.DAO.findUserByPk(id);
-      if(user.length == 0){
-        return null;
-      }
+      //if(user.length == 0){
+      //  return null;
+      //}
       return user;
     })
   }
