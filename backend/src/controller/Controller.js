@@ -19,9 +19,9 @@ class Controller {
   }
 
   //login user by called the DAO
-  async login(username, password) {
+  async login(username) {
     return this.transactionManager.transaction(async (t1) => {
-      const user = await this.DAO.findUser(username, password);
+      const user = await this.DAO.findUser(username);
       //if(user.length === 0){
       //  return null;
       //}
