@@ -1,15 +1,26 @@
 "use strict";
 
-const PersonApi = require("./PersonApi");
 const AccountApi = require("./AccountApi");
+const ErrorResponseSender = require("./error/ErrorResponseSender");
 
 class RequestHandlerLoader {
   constructor() {
     this.reqHandlers = [];
+    this.errorHandlers = [];
   }
 
   addRequestHandler(reqHandler) {
     this.reqHandlers.push(reqHandler);
+  }
+
+  addErrorHandler(errorHandler){
+    this.errorHandlers.push(errorHandler);
+  }
+
+  loadErrorHandlers(app){
+    this.errorHandlers.forEach((errorHandler)=>{
+      errorHandler.registerHandler(app);
+    });
   }
 
   loadHandlers(app) {
@@ -23,6 +34,6 @@ class RequestHandlerLoader {
 const loader = new RequestHandlerLoader();
 
 loader.addRequestHandler(new AccountApi());
-//loader.addRequestHandler(new PersonApi());
+loader.addErrorHandler(new ErrorResponseSender());
 
 module.exports = loader;

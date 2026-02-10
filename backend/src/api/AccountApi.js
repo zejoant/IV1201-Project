@@ -1,7 +1,8 @@
 "use strict";
 
-const {body, validationResult} = require('express-validator');
+const {body, check, validationResult} = require('express-validator');
 const RequestHandler = require("./RequestHandler");
+const Authorization = require("./auth/Authorization")
 
 class LoginApi extends RequestHandler {
   constructor() {
@@ -21,7 +22,7 @@ class LoginApi extends RequestHandler {
         body("username").trim().isLength({min: 3, max: 30}).isAlphanumeric(),
         body("password").isLength({min: 8}),
       ],
-      async (req, res) => {
+      async (req, res, next) => {
         try {
           const errors = validationResult(req);
           if (!errors.isEmpty()) {
@@ -37,14 +38,9 @@ class LoginApi extends RequestHandler {
             this.sendResponse(res, 401, {message: "Invalid credentials"})
             return;
           }
-          // For now, just return user info (JWT not done yet)
-          res.status(201).json({
-            person_id: person.person_id,
-            name: person.name,
-            surname: person.surname,
-            username: person.username,
-            email: person.email,
-          });
+          // send cookie 
+          Authorization.sendCookie(person, res);
+          this.sendResponse(res, 200, {message: "Logged in success"});
         } catch (err) {
           next(err);
         }
@@ -59,11 +55,11 @@ class LoginApi extends RequestHandler {
           body("username").isAlphanumeric(),
           body("password").isLength({min: 8}),
         ],
-        async (req, res) => {
+        async (req, res, next) => {
         try {
           const errors = validationResult(req);
           if (!errors.isEmpty()) {
-            res.status(400).json({errors: errors.array()});
+            this.sendResponse(res, 400, {errors: errors.array()})
             return;
           }
 
@@ -73,18 +69,42 @@ class LoginApi extends RequestHandler {
           const person = await this.contr.createAccount({name, surname, pnr, email, username, password, role_id});
 
           if (!person) {
-            res.status(401).json({message: "Account creation failed"});
+            this.sendResponse(res, 401, {message: "Account creation failed"});
             return;
           }
+          this.sendResponse(res, 200, {message: "Success!"})
+        } catch (err) {
+          next(err);
+        }
+      });
 
-          res.status(201).json({message: "Success!",});
+      this.router.get("/id",
+        async (req, res, next) => {
+        try {
+          const errors = validationResult(req);
+          if (!errors.isEmpty()) {
+            this.sendResponse(res, 400, {errors: errors.array()});
+            return;
+          }
+          if(!(await Authorization.checkLogin(req, res))){
+            this.sendResponse(res, 401, {errors: errors.array()});
+            return;
+          }
+          
+          const person = await this.contr.findUserById(req.user.id);
+          
+          if (!person) {
+            this.sendResponse(res, 404, {message: "Person not found" });
+            return;
+          }
+          this.sendResponse(res, 201, person)
         } catch (err) {
           next(err);
         }
       });
 
     } catch (err) {
-      console.log("oopsie", err);
+      throw err;
     }
   }
 }
