@@ -1,6 +1,7 @@
 "use strict";
 
 const AccountApi = require("./AccountApi");
+const ApplicationApi = require("./ApplicationApi");
 const ErrorResponseSender = require("./error/ErrorResponseSender");
 
 class RequestHandlerLoader {
@@ -34,6 +35,7 @@ class RequestHandlerLoader {
 const loader = new RequestHandlerLoader();
 
 loader.addRequestHandler(new AccountApi());
+loader.addRequestHandler(new ApplicationApi());
 loader.addErrorHandler(new ErrorResponseSender());
 
 module.exports = loader;
