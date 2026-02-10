@@ -17,12 +17,21 @@ class DAO {
     }
   }
 
-  async findUser(username) {
-    // Find user by username
-    const person = await Person.findOne({where: {username}});
-    if (!person) return null;
+  getTransactionManager(){
+    return this.db;
+  }
 
-    return person;
+  async findUser(username) {
+    // Find user by username and password
+    try{
+      const person = await Person.findOne({where: {username}});
+      if (!person) return null;
+  
+      return person;
+    }
+    catch (err){
+      console.log(err)
+    }
   }
 
   async createPerson({name, surname, pnr, email, username, password, role_id}) {

@@ -8,6 +8,7 @@ class Controller {
   //creates a new DAO instance
   constructor() {
     this.DAO = new DAO();
+    this.transactionManager = this.DAO.getTransactionManager();
   }
 
   //creates and returns a controller
@@ -19,12 +20,24 @@ class Controller {
 
   //login user by called the DAO
   async login(username) {
-    return await this.DAO.findUser(username);
+    return this.transactionManager.transaction(async (t1) => {
+      const user = await this.DAO.findUser(username);
+      //if(user.length === 0){
+      //  return null;
+      //}
+      return user;
+     });
   }
 
   //create new user by called the DAO
   async createAccount({name, surname, pnr, email, username, password, role_id}){
-    return await this.DAO.createPerson({name, surname, pnr, email, username, password, role_id})
+    return this.transactionManager.transaction(async (t1) => {
+      const user = await this.DAO.createPerson({name, surname, pnr, email, username, password, role_id})
+      //if(user.length == 0){
+      //  return null;
+      //}
+      return user;
+    })
   }
 
   /**Finds user by id by called the DAO
@@ -32,7 +45,13 @@ class Controller {
    * @return {PersonAPI} The user found in the DB
   */
   async findUserById(id) {
-    return await this.DAO.findUserById(id);
+    return this.transactionManager.transaction(async (t1) => {
+      const user = await this.DAO.findUserByPk(id);
+      //if(user.length == 0){
+      //  return null;
+      //}
+      return user;
+    })
   }
 }
 

@@ -12,21 +12,29 @@ function Login({ setCurrentUser, switchToRegister }) {
     setError("");
     setLoading(true);
 
+
     try {
       const res = await fetch("/account/sign_in", {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
       });
 
-      const data = await res.json();
+      const data = await res.json(); 
 
       if (!res.ok) {
         throw new Error(data.message || "Login failed");
       }
 
-      localStorage.setItem("currentUser", JSON.stringify(data));
-      setCurrentUser(data);
+      const res2 = await fetch("/account/id", {
+        method: "GET",
+        credentials: "include",
+      });
+      const data2 = await res2.json();
+      debugger
+      localStorage.setItem("currentUser", JSON.stringify(data2.success));
+      setCurrentUser(data2.success);
     } catch (err) {
       setError(err.message || "An error occurred during login");
     } finally {
