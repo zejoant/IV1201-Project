@@ -1,0 +1,474 @@
+/* Base Reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Container Styles */
+.application-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f8ff;
+  padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.application-card {
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  width: 100%;
+  max-width: 800px;
+  border: 1px solid #e6e9f0;
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Header with Back Button */
+.application-header-with-back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.application-back-button {
+  position: absolute;
+  left: 0;
+  padding: 8px 16px;
+  background-color: transparent;
+  color: #545a63;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.application-back-button:hover {
+  background-color: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.application-header-content {
+  flex: 1;
+  text-align: center;
+}
+
+.application-title {
+  margin: 0;
+  color: #1a1a1a;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.application-subtitle {
+  margin: 0;
+  color: #666;
+  font-size: 15px;
+}
+
+/* Alert Styles */
+.application-error-alert {
+  background-color: #fee;
+  border: 1px solid #fcc;
+  color: #c33;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.application-error-icon {
+  font-size: 16px;
+}
+
+.application-success-alert {
+  background-color: #d1fae5;
+  border: 1px solid #a7f3d0;
+  color: #065f46;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.application-success-icon {
+  font-size: 16px;
+}
+
+/* Form Styles */
+.application-form {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* Section Styles */
+.application-section {
+  background-color: #f8fafc;
+  border-radius: 12px;
+  padding: 24px;
+  border: 1px solid #e2e8f0;
+}
+
+.application-section-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.application-section-icon {
+  font-size: 20px;
+}
+
+.application-section-description {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0 0 20px 0;
+}
+
+/* Input Group Styles */
+.application-input-group-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr auto;
+  gap: 16px;
+  align-items: flex-start; 
+  margin-bottom: 16px;
+}
+
+.application-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 82px; 
+}
+
+.application-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 2px; 
+}
+
+.application-input {
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 2px solid #e1e5ee;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  outline: none;
+  background-color: white;
+  width: 100%;
+}
+
+.application-input:focus {
+  border-color: #4a6cf7;
+  box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.1);
+}
+
+/* Button Styles */
+.application-add-button {
+  padding: 12px 20px;
+  background-color: #4a6cf7;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  height: 48px;
+  margin-top: 22px; 
+}
+
+.application-add-button:hover {
+  background-color: #3a5ce5;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(74, 108, 247, 0.3);
+}
+
+/* List Container Styles */
+.application-list-container {
+  margin-top: 20px;
+}
+
+.application-list-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #334155;
+  margin: 0 0 12px 0;
+}
+
+.application-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.application-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background-color: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.application-list-item:hover {
+  background-color: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.application-list-item-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.application-list-item-name {
+  font-size: 15px;
+  font-weight: 500;
+  color: #1e293b;
+}
+
+.application-list-item-details {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.application-remove-button {
+  padding: 6px 12px;
+  background-color: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.application-remove-button:hover {
+  background-color: #fee2e2;
+  border-color: #fca5a5;
+}
+
+/* Summary Styles */
+.application-summary {
+  background-color: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.application-summary-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #0369a1;
+  margin: 0 0 16px 0;
+}
+
+.application-summary-section {
+  margin-bottom: 16px;
+}
+
+.application-summary-section:last-child {
+  margin-bottom: 0;
+}
+
+.application-summary-subtitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: #0c4a6e;
+  margin: 0 0 8px 0;
+}
+
+.application-summary-list {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.application-summary-item {
+  font-size: 14px;
+  color: #334155;
+  margin-bottom: 4px;
+}
+
+.application-summary-item:last-child {
+  margin-bottom: 0;
+}
+
+/* Action Buttons */
+.application-action-buttons {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.application-submit-button {
+  padding: 16px 32px;
+  background-color: #4a6cf7;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  max-width: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 52px;
+}
+
+.application-submit-button:hover:not(:disabled) {
+  background-color: #3a5ce5;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(74, 108, 247, 0.4);
+}
+
+.application-submit-button:disabled {
+  background-color: #94a3b8;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.application-submit-button-loading {
+  background-color: #4a6cf7;
+  opacity: 0.9;
+}
+
+.application-button-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.application-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.application-note {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+  max-width: 500px;
+  margin: 16px auto 0;
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .application-card {
+    padding: 30px 24px;
+    border-radius: 12px;
+  }
+  
+  .application-title {
+    font-size: 24px;
+  }
+  
+  .application-header-with-back {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+  
+  .application-back-button {
+    position: static;
+    align-self: flex-start;
+  }
+  
+  .application-input-group-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .application-add-button {
+    width: 100%;
+  }
+  
+  .application-summary {
+    padding: 20px;
+  }
+  
+  .application-submit-button {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .application-container {
+    padding: 16px;
+  }
+  
+  .application-card {
+    padding: 24px 20px;
+    border-radius: 10px;
+  }
+  
+  .application-title {
+    font-size: 22px;
+  }
+  
+  .application-section {
+    padding: 20px 16px;
+  }
+  
+  .application-submit-button {
+    padding: 14px 20px;
+    font-size: 15px;
+  }
+}
