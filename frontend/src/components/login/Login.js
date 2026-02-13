@@ -32,9 +32,18 @@ function Login({ setCurrentUser, switchToRegister }) {
         credentials: "include",
       });
       const data2 = await res2.json();
-      debugger
+
       localStorage.setItem("currentUser", JSON.stringify(data2.success));
       setCurrentUser(data2.success);
+
+      const res3 = await fetch("/application/apply", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ expertise: [{competence_id: 2, yoe: 2}], availability: [{from_date: new Date("2026-02-10"), to_date: new Date("2026-02-10")}] }),
+      });
+      debugger
+
     } catch (err) {
       setError(err.message || "An error occurred during login");
     } finally {

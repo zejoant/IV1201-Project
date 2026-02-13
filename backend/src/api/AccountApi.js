@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const {body, validationResult} = require('express-validator');
 const RequestHandler = require("./RequestHandler");
 const Authorization = require("./auth/Authorization")
+const bcrypt = require("bcrypt");
 
 class LoginApi extends RequestHandler {
   constructor() {

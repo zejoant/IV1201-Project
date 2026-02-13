@@ -53,6 +53,27 @@ class Controller {
       return user;
     })
   }
+
+  async createApplication(expertise, availability, id){
+    return this.transactionManager.transaction(async (t1) => {
+      
+      var expertiseArray = [];
+      var availabilityArray = [];
+      const status = "unhandled";
+
+      expertise.forEach(async (exp) => {
+        expertiseArray.push(await this.DAO.addExpertise(id, exp));
+      });
+
+      availability.forEach(async (ava) => {
+        availabilityArray.push(await this.DAO.addAvailability(id, ava));
+      });
+
+      const newApplication = await this.DAO.submitApplication(id, status);
+
+      return newApplication;
+    })
+  }
 }
 
 module.exports = Controller;
