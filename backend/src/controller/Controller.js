@@ -46,7 +46,7 @@ class Controller {
   */
   async findUserById(id) {
     return this.transactionManager.transaction(async (t1) => {
-      const user = await this.DAO.findUserByPk(id);
+      const user = await this.DAO.findUserById(id);
       //if(user.length == 0){
       //  return null;
       //}
@@ -72,6 +72,52 @@ class Controller {
       const newApplication = await this.DAO.submitApplication(id, status);
 
       return newApplication;
+    })
+  }
+
+  async listApplications(){
+    return this.transactionManager.transaction(async (t1) => {
+
+      const applications = await this.DAO.listApplications();
+
+      const applicationList = await Promise.all(
+        applications.map(async (input) => {
+          const person = await this.DAO.findUserById((input.person_id))
+          Object.assign(input,{name:person.name, surname:person.surname});
+          return input
+        })
+      )
+      return applicationList;
+    })
+  }
+
+  async getApplication(application){
+    return this.transactionManager.transaction(async (t1) => {
+    
+      //const person = await this.DAO.findUserById(application.person_id);  TODO: fråga leif om man borde ha typ mail
+      const competenceProfile = await this.DAO.findCompProfileByUserId(application.person_id);
+      const ava = await this.DAO.findAvaByUserId(application.person_id); 
+
+      const competences = await Promise.all(competenceProfile.map(async(input) => {  
+        const comp = await this.DAO.findCompByUserId(input.competence_id);
+        return {yoe: input.years_of_experience, name: comp.name}
+      }))
+
+      const profile = Object.assign(
+        application,
+        {
+        competences,
+        availabilities:ava.map((input) => {
+          return {to_date:input.to_date, from_date:input.from_date}
+        }),
+      });
+      return profile;
+    })
+  }
+
+  async getCompetence(){
+    return this.transactionManager.transaction(async (t1) => {
+      return await this.DAO.getCompetence();
     })
   }
 }

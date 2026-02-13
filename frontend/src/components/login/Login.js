@@ -23,26 +23,23 @@ function Login({ setCurrentUser, switchToRegister }) {
 
       const data = await res.json(); 
 
+      const res2 = await fetch("/application/get_application", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ job_application_id:23, person_id:1028, status: 'unhandled', name: 'Hash', surname: 'Man'}),
+      });
+
+      const data2 = await res2.json()
+
+      debugger
+
       if (!res.ok) {
         throw new Error(data.message || "Login failed");
       }
 
-      const res2 = await fetch("/account/id", {
-        method: "GET",
-        credentials: "include",
-      });
-      const data2 = await res2.json();
-
-      localStorage.setItem("currentUser", JSON.stringify(data2.success));
-      setCurrentUser(data2.success);
-
-      const res3 = await fetch("/application/apply", {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ expertise: [{competence_id: 2, yoe: 2}], availability: [{from_date: new Date("2026-02-10"), to_date: new Date("2026-02-10")}] }),
-      });
-      debugger
+      localStorage.setItem("currentUser", JSON.stringify(data));
+      setCurrentUser(data);
 
     } catch (err) {
       setError(err.message || "An error occurred during login");

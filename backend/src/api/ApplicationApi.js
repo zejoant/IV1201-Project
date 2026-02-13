@@ -51,8 +51,77 @@ class ApplicationApi extends RequestHandler {
         }
       });
 
+      this.router.get("/competence_id",
+        async (req, res, next) => {
+        try {
+          const errors = validationResult(req);
+          if (!errors.isEmpty()) {
+            this.sendResponse(res, 400, {errors: errors.array()});
+            return;
+          }
+          
+          const competence = await this.contr.getCompetence();
 
+          if (!competence) {
+            this.sendResponse(res, 404, {message: "competence not found" });
+            return;
+          }
+          this.sendResponse(res, 200, competence)
+        } catch (err) {
+          next(err);
+        }
+      });
 
+      this.router.get("/list_applications",
+        async (req, res, next) => {
+        try {
+          const errors = validationResult(req);
+          if (!errors.isEmpty()) {
+            this.sendResponse(res, 400, {errors: errors.array()});
+            return;
+          }
+          
+          const applications = await this.contr.listApplications();
+
+          if (!applications) {
+            this.sendResponse(res, 404, {message: "Applications not found" });
+            return;
+          }
+          this.sendResponse(res, 200, applications)
+        } catch (err) {
+          next(err);
+        }
+      });
+
+       this.router.post("/get_application",
+        [
+          body('job_application_id').isNumeric(),
+          body('person_id').isNumeric(),
+          body('status').isAlphanumeric(),
+          body('name').isAlphanumeric(),
+          body('surname').isAlphanumeric(),
+        ],
+        async (req, res, next) => {
+        try {
+          const errors = validationResult(req);
+          if (!errors.isEmpty()) {
+            this.sendResponse(res, 400, {errors: errors.array()});
+            return;
+          }
+          
+          console.log(req.body)
+
+          const application = await this.contr.getApplication(req.body);
+
+          if (!application) {
+            this.sendResponse(res, 404, {message: "Application not found" });
+            return;
+          }
+          this.sendResponse(res, 200, application)
+        } catch (err) {
+          next(err);
+        }
+      });
     } catch (err) {
       throw err;
     }
