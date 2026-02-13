@@ -3,6 +3,7 @@
 const {body, check, validationResult} = require('express-validator');
 const RequestHandler = require("./RequestHandler");
 const Authorization = require("./auth/Authorization")
+const bcrypt = require("bcrypt");
 
 class LoginApi extends RequestHandler {
   constructor() {
@@ -32,12 +33,21 @@ class LoginApi extends RequestHandler {
           
           const { username, password } = req.body;
 
-          const person = await this.contr.login(username, password);
+          const person = await this.contr.login(username);
 
           if (!person) {
             this.sendResponse(res, 401, {message: "Invalid credentials"})
             return;
           }
+
+          const match = await bcrypt.compare(password, person.password)
+
+          if (!match) {
+            this.sendResponse(res, 401, {message: "Invalid credentials"})
+            return;
+          }
+
+
           // send cookie 
           Authorization.sendCookie(person, res);
           this.sendResponse(res, 200, {message: "Logged in success"});
@@ -66,7 +76,10 @@ class LoginApi extends RequestHandler {
           const {name, surname, pnr, email, username, password} = req.body;
           const role_id = 2
 
-          const person = await this.contr.createAccount({name, surname, pnr, email, username, password, role_id});
+          const SALT_ROUNDS = 12;
+          const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+
+          const person = await this.contr.createAccount({name, surname, pnr, email, username, password: hashedPassword, role_id});
 
           if (!person) {
             this.sendResponse(res, 401, {message: "Account creation failed"});
