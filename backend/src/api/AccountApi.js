@@ -1,6 +1,7 @@
 "use strict";
 
-const {body, check, validationResult} = require('express-validator');
+const bcrypt = require("bcrypt");
+const {body, validationResult} = require('express-validator');
 const RequestHandler = require("./RequestHandler");
 const Authorization = require("./auth/Authorization")
 const bcrypt = require("bcrypt");
@@ -46,8 +47,6 @@ class LoginApi extends RequestHandler {
             this.sendResponse(res, 401, {message: "Invalid credentials"})
             return;
           }
-
-
           // send cookie 
           Authorization.sendCookie(person, res);
           this.sendResponse(res, 200, {message: "Logged in success"});
