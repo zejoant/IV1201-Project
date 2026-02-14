@@ -21,6 +21,17 @@ function ApplicationForm({ currentUser, onApplicationComplete, onBackToProfile }
     { competence_id: 3, name: 'Roller Coaster Operation' },
   ];
   
+  // Helper: convert YYYY-MM-DD to UTC Date object (midnight UTC)
+  const toUTCDate = (dateString) => {
+    const [year, month, day] = dateString.split('-').map(Number);
+    return new Date(Date.UTC(year, month - 1, day));
+  };
+  
+  // Helper: get today's UTC date as YYYY-MM-DD
+  const getTodayUTCString = () => {
+    return new Date().toISOString().split('T')[0];
+  };
+  
   // Handle adding an experience to the list
   const handleAddExperience = () => {
     if (!competenceId || !yearsOfExperience) {
@@ -84,29 +95,29 @@ function ApplicationForm({ currentUser, onApplicationComplete, onBackToProfile }
       return;
     }
     
-    const from = new Date(fromDate);
-    const to = new Date(toDate);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    // Compare using UTC dates
+    const fromUTC = toUTCDate(fromDate);
+    const toUTC = toUTCDate(toDate);
+    const todayUTC = toUTCDate(getTodayUTCString());
     
-    if (from < today) {
+    if (fromUTC < todayUTC) {
       setError('Start date cannot be in the past');
       return;
     }
     
-    if (from > to) {
+    if (fromUTC > toUTC) {
       setError('Start date cannot be after end date');
       return;
     }
     
-    // Check if this period overlaps with existing periods
-    const newFrom = from.getTime();
-    const newTo = to.getTime();
+    // Check if this period overlaps with existing periods (using UTC timestamps)
+    const newFromTime = fromUTC.getTime();
+    const newToTime = toUTC.getTime();
     
     const hasOverlap = availabilityList.some(period => {
-      const existingFrom = new Date(period.from_date).getTime();
-      const existingTo = new Date(period.to_date).getTime();
-      return (newFrom <= existingTo && newTo >= existingFrom);
+      const existingFrom = toUTCDate(period.from_date).getTime();
+      const existingTo = toUTCDate(period.to_date).getTime();
+      return (newFromTime <= existingTo && newToTime >= existingFrom);
     });
     
     if (hasOverlap) {
@@ -114,10 +125,10 @@ function ApplicationForm({ currentUser, onApplicationComplete, onBackToProfile }
       return;
     }
     
-    // Add to availability list - format dates as YYYY-MM-DD
+    // Add to availability list - store the raw YYYY-MM-DD strings
     const newAvailability = {
-      from_date: formatDateForBackend(fromDate),
-      to_date: formatDateForBackend(toDate),
+      from_date: fromDate,
+      to_date: toDate,
     };
     
     setAvailabilityList([...availabilityList, newAvailability]);
@@ -206,32 +217,30 @@ function ApplicationForm({ currentUser, onApplicationComplete, onBackToProfile }
     }
   };
   
-  // Format date for display using browser's system language
+  // Format date for display using UTC to avoid timezone shifts
   const formatDateForDisplay = (dateString) => {
-    const date = new Date(dateString);
-    // Use browser's default language or fallback to 'en-US'
+    if (!dateString) return '';
+    const [year, month, day] = dateString.split('-');
+    // Create date object at UTC midnight
+    const date = new Date(Date.UTC(year, month - 1, day));
+    // Use browser's default language but force UTC interpretation
     const userLanguage = navigator.language || 'en-US';
-    return date.toLocaleDateString(userLanguage, { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
+    return date.toLocaleDateString(userLanguage, {
+      timeZone: 'UTC',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
     });
   };
   
-  // Format date for backend (YYYY-MM-DD)
-  const formatDateForBackend = (dateString) => {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  };
-  
-  // Get today's date in YYYY-MM-DD format for date input
+  // Get today's date in YYYY-MM-DD format for date input (based on local date)
+  // Note: The input uses the browser's local date, but we only use it as a string
   const getTodayDate = () => {
     const today = new Date();
-    return formatDateForBackend(today);
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   };
   
   return (
