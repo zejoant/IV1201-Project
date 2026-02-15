@@ -1,11 +1,14 @@
 const postgresDB = require("./db");
 const JobApplication = require("../models/JobApplication");
+const JobApplicationDTO = require("../models/JobApplicationDTO")
 const Person = require("../models/Person");
 const PersonDTO = require("../models/PersonDTO");
 const Availability = require("../models/Availability");
 const AvailabilityDTO = require("../models/AvailabilityDTO");
 const CompetenceProfile = require("../models/CompetenceProfile");
 const CompetenceProfileDTO = require("../models/CompetenceProfileDTO")
+const Competence = require("../models/Competence");
+const CompetenceDTO = require("../models/CompetenceDTO")
 //const Op = require("sequelize"); dumb
 
 class DAO {
@@ -58,8 +61,31 @@ class DAO {
     return this.createPersonDTO(newPerson);
   }
 
-  async findUserByPk(id) {
+  async findUserById(id) {
     return await Person.findByPk(id);
+  }
+
+  async findCompProfileByUserId(id){
+    const newCompProfile = await CompetenceProfile.findAll({where: {person_id: id}})
+
+    const newCompProfileArray = newCompProfile.map((input) => this.createCompetenceProfileDTO(input))
+
+    return newCompProfileArray;
+  }
+
+  async findCompByUserId(id){
+    console.log(id)
+    const newComp = await Competence.findOne({where: {competence_id: id}})
+
+    return this.createCompetenceDTO(newComp)
+  }
+
+  async findAvaByUserId(id){
+    const newAva = await Availability.findAll({where: {person_id: id}})
+
+    const newAvaArray = newAva.map((input) => this.createAvailabilityDTO(input))
+
+    return newAvaArray;
   }
 
   async submitApplication(id, status) {
@@ -76,8 +102,7 @@ class DAO {
     if (!id || !expertise) {
       throw new Error("Missing required fields");
     }
-
-    const newExpertise = CompetenceProfile.create({person_id: id, compentence_id: expertise.compentence_id, years_of_experience: expertise.yoe});
+    const newExpertise = await CompetenceProfile.create({person_id: id, competence_id: expertise.competence_id, years_of_experience: expertise.yoe});
 
     return this.createCompetenceProfileDTO(newExpertise);
   }
@@ -87,9 +112,33 @@ class DAO {
       throw new Error("Missing required fields");
     }
 
-    const newAvailibility = Availability.create({person_id: id, fromDate: availability.fromDate, toDate: availability.toDate});
+    const newAvailibility = await Availability.create({person_id: id, from_date: new Date(availability.from_date), to_date: new Date(availability.to_date)});
 
     return this.createAvailabilityDTO(newAvailibility);
+  }
+
+  async getCompetence(){
+    const newCompetence = await Competence.findAll();
+
+    const newCompetenceArray = newCompetence.map((input) => this.createCompetenceDTO(input))
+
+    return newCompetenceArray;
+  }
+
+  async listApplications(){
+    const applications = await JobApplication.findAll();
+
+    const newApplicationArray = applications.map((input) => this.createJobApplicationDTO(input))
+
+    return newApplicationArray;
+  }
+
+  async updateApplication(body){
+
+    return await JobApplication.update({
+      status: body.status
+    },
+    {where: {job_application_id: body.job_application_id}})
   }
 
   createPersonDTO(person) {
@@ -114,12 +163,27 @@ class DAO {
     );
   }
 
-  createCompetenceProfileDTO(comp) {
+  createCompetenceProfileDTO(compProfile) {
     return new CompetenceProfileDTO(
-        comp.competence_profile_id,
-        comp.person_id,
-        comp.competence_id,
-        comp.years_of_experience,
+        compProfile.competence_profile_id,
+        compProfile.person_id,
+        compProfile.competence_id,
+        compProfile.years_of_experience,
+    );
+  }
+
+  createCompetenceDTO(comp){
+    return new CompetenceDTO(
+      comp.competence_id,
+      comp.name,
+    );
+  }
+
+  createJobApplicationDTO(job){
+    return new JobApplicationDTO(
+      job.job_application_id,
+      job.person_id,
+      job.status
     );
   }
 
