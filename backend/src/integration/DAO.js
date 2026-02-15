@@ -74,7 +74,6 @@ class DAO {
   }
 
   async findCompByUserId(id){
-    console.log(id)
     const newComp = await Competence.findOne({where: {competence_id: id}})
 
     return this.createCompetenceDTO(newComp)

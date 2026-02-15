@@ -44,15 +44,6 @@ function Login({ setCurrentUser, switchToRegister }) {
         throw new Error(profileData.message || 'Failed to fetch user profile');
       }
 
-      const res3 = await fetch('/application/update_application', {
-        method: 'PATCH',
-        credentials: 'include', // Important for cookie-based sessions
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: 'accepted', job_application_id: 40 }),
-      });
-      debugger
-
-
       // Assume profileData.success contains user object with fields:
       // person_id, username, name, surname, email, role, etc.
       const user = profileData.success;
