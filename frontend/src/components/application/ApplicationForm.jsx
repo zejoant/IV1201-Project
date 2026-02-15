@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './ApplicationForm.css';
 
 function ApplicationForm({ currentUser, onApplicationComplete, onBackToProfile }) {
@@ -14,12 +14,32 @@ function ApplicationForm({ currentUser, onApplicationComplete, onBackToProfile }
   const [success, setSuccess] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   
-  // competence options 
-  const competenceOptions = [
-    { competence_id: 1, name: 'Ticket Sales' },
-    { competence_id: 2, name: 'Lotteries'},
-    { competence_id: 3, name: 'Roller Coaster Operation' },
-  ];
+  // State for competences fetched from backend
+  const [competenceOptions, setCompetenceOptions] = useState([]);
+  const [loadingCompetences, setLoadingCompetences] = useState(true);
+  const [fetchError, setFetchError] = useState('');
+
+  // Fetch available competences on component mount
+  useEffect(() => {
+    const fetchCompetences = async () => {
+      try {
+        setLoadingCompetences(true);
+        const res = await fetch('/application/list_competences', {
+          credentials: 'include',
+        });
+        if (!res.ok) throw new Error('Failed to load competences');
+        const data = await res.json();
+        // The backend returns data wrapped in 'success' or directly as array
+        setCompetenceOptions(data.success || data);
+      } catch (err) {
+        setFetchError(err.message);
+        console.error('Error fetching competences:', err);
+      } finally {
+        setLoadingCompetences(false);
+      }
+    };
+    fetchCompetences();
+  }, []);
   
   // Helper: convert YYYY-MM-DD to UTC Date object (midnight UTC)
   const toUTCDate = (dateString) => {
@@ -277,6 +297,13 @@ function ApplicationForm({ currentUser, onApplicationComplete, onBackToProfile }
           </div>
         )}
         
+        {fetchError && (
+          <div className="application-error-alert">
+            <span className="application-error-icon">⚠️</span>
+            Failed to load competences: {fetchError}
+          </div>
+        )}
+        
         <form onSubmit={handleSubmit} className="application-form">
           {/* Expertise Section */}
           <div className="application-section">
@@ -295,8 +322,11 @@ function ApplicationForm({ currentUser, onApplicationComplete, onBackToProfile }
                   value={competenceId}
                   onChange={(e) => setCompetenceId(e.target.value)}
                   className="application-input"
+                  disabled={loadingCompetences}
                 >
-                  <option value="">Select a competence area</option>
+                  <option value="">
+                    {loadingCompetences ? 'Loading competences...' : 'Select a competence area'}
+                  </option>
                   {competenceOptions.map((comp) => (
                     <option key={comp.competence_id} value={comp.competence_id}>
                       {comp.name}
@@ -324,6 +354,7 @@ function ApplicationForm({ currentUser, onApplicationComplete, onBackToProfile }
                 type="button"
                 onClick={handleAddExperience}
                 className="application-add-button"
+                disabled={loadingCompetences}
               >
                 Add Competence
               </button>
@@ -461,7 +492,7 @@ function ApplicationForm({ currentUser, onApplicationComplete, onBackToProfile }
           <div className="application-action-buttons">
             <button
               type="submit"
-              disabled={isSubmitting || experienceList.length === 0 || availabilityList.length === 0}
+              disabled={isSubmitting || experienceList.length === 0 || availabilityList.length === 0 || loadingCompetences}
               className={`application-submit-button ${isSubmitting ? 'application-submit-button-loading' : ''}`}
             >
               {isSubmitting ? (

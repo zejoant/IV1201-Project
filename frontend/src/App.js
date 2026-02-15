@@ -4,9 +4,9 @@ import Login from "./components/login/Login";
 import Register from "./components/register/Register"; 
 import PersonPage from "./components/PersonPage";
 import ApplicationForm from "./components/application/ApplicationForm";
+import MyApplications from "./components/application/MyApplications"; 
 import RecruiterDashboard from "./components/recruiter/RecruiterDashboard";
 import ApplicationDetail from "./components/recruiter/ApplicationDetail";
-
 
 const ROLE_RECRUITER = 1; 
 
@@ -14,6 +14,7 @@ function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [showRegister, setShowRegister] = useState(false);
   const [showApplication, setShowApplication] = useState(false);
+  const [showMyApplications, setShowMyApplications] = useState(false); 
 
   // Check for saved user in localStorage on initial load
   useEffect(() => {
@@ -28,6 +29,7 @@ function App() {
     localStorage.removeItem("currentUser");
     setCurrentUser(null);
     setShowApplication(false);
+    setShowMyApplications(false); 
   };
 
   // Called after application submission to return to profile page
@@ -93,11 +95,20 @@ function App() {
         />
       );
     }
+    if (showMyApplications) { 
+      return (
+        <MyApplications
+          currentUser={currentUser}
+          onBackToProfile={() => setShowMyApplications(false)}
+        />
+      );
+    }
     return (
       <PersonPage
         currentUser={currentUser}
         handleLogout={handleLogout}
         onApplyNow={() => setShowApplication(true)}
+        onViewMyApplications={() => setShowMyApplications(true)} 
       />
     );
   }
