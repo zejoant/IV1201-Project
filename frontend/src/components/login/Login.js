@@ -1,48 +1,67 @@
-import { useState } from "react";
-import "./Login.css";
+import React, { useState } from 'react';
+import './Login.css';
+
 
 function Login({ setCurrentUser, switchToRegister }) {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  /**
+   * Handle form submission.
+   * @param {Event} e - Form submit event.
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
+    setError('');
     setLoading(true);
 
-
     try {
-      const res = await fetch("/account/sign_in", {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
+      // Step 1: Sign in to get session
+      const res = await fetch('/account/sign_in', {
+        method: 'POST',
+        credentials: 'include', // Important for cookie-based sessions
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
       });
 
-      const data = await res.json(); 
-
-      const res2 = await fetch("/application/get_application", {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ job_application_id:23, person_id:1028, status: 'unhandled', name: 'Hash', surname: 'Man'}),
-      });
-
-      const data2 = await res2.json()
-
-      debugger
+      const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.message || "Login failed");
+        throw new Error(data.message || 'Login failed');
       }
 
-      localStorage.setItem("currentUser", JSON.stringify(data));
-      setCurrentUser(data);
+      // Step 2: Fetch the full user profile (including role)
+      const profileRes = await fetch('/account/id', {
+        method: 'GET',
+        credentials: 'include',
+      });
 
+      const profileData = await profileRes.json();
+
+      if (!profileRes.ok) {
+        throw new Error(profileData.message || 'Failed to fetch user profile');
+      }
+
+      const res3 = await fetch('/application/update_application', {
+        method: 'PATCH',
+        credentials: 'include', // Important for cookie-based sessions
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'accepted', job_application_id: 40 }),
+      });
+      debugger
+
+
+      // Assume profileData.success contains user object with fields:
+      // person_id, username, name, surname, email, role, etc.
+      const user = profileData.success;
+
+      // Save user to localStorage for persistence
+      localStorage.setItem('currentUser', JSON.stringify(user));
+      setCurrentUser(user);
     } catch (err) {
-      setError(err.message || "An error occurred during login");
+      setError(err.message || 'An error occurred during login');
     } finally {
       setLoading(false);
     }
@@ -55,14 +74,15 @@ function Login({ setCurrentUser, switchToRegister }) {
           <h2 className="login-title">Welcome Back</h2>
           <p className="login-subtitle">Sign in to your recruitment account</p>
         </div>
-        
+
+        {/* Error alert */}
         {error && (
           <div className="login-error-alert">
             <span className="login-error-icon">⚠️</span>
             {error}
           </div>
         )}
-        
+
         <form onSubmit={handleSubmit} className="login-form">
           <div className="login-input-group">
             <label className="login-label">Username</label>
@@ -75,7 +95,7 @@ function Login({ setCurrentUser, switchToRegister }) {
               placeholder="Enter your username"
             />
           </div>
-          
+
           <div className="login-input-group">
             <div className="login-label-container">
               <label className="login-label">Password</label>
@@ -89,9 +109,9 @@ function Login({ setCurrentUser, switchToRegister }) {
               placeholder="Enter your password"
             />
           </div>
-          
-          <button 
-            type="submit" 
+
+          <button
+            type="submit"
             disabled={loading}
             className={`login-button ${loading ? 'login-button-loading' : ''}`}
           >
@@ -101,16 +121,16 @@ function Login({ setCurrentUser, switchToRegister }) {
                 Logging in...
               </span>
             ) : (
-              "Sign In"
+              'Sign In'
             )}
           </button>
         </form>
-        
+
         <div className="login-footer">
           <p className="login-footer-text">
-            Don't have an account?{" "}
-            <button 
-              onClick={switchToRegister}  
+            Don't have an account?{' '}
+            <button
+              onClick={switchToRegister}
               className="login-link-button"
             >
               Sign up

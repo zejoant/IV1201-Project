@@ -74,6 +74,7 @@ class DAO {
   }
 
   async findCompByUserId(id){
+    console.log(id)
     const newComp = await Competence.findOne({where: {competence_id: id}})
 
     return this.createCompetenceDTO(newComp)
@@ -101,8 +102,7 @@ class DAO {
     if (!id || !expertise) {
       throw new Error("Missing required fields");
     }
-
-    const newExpertise = await CompetenceProfile.create({person_id: id, compentence_id: expertise.compentence_id, years_of_experience: expertise.yoe});
+    const newExpertise = await CompetenceProfile.create({person_id: id, competence_id: expertise.competence_id, years_of_experience: expertise.yoe});
 
     return this.createCompetenceProfileDTO(newExpertise);
   }
@@ -112,7 +112,7 @@ class DAO {
       throw new Error("Missing required fields");
     }
 
-    const newAvailibility = await Availability.create({person_id: id, fromDate: availability.fromDate, toDate: availability.toDate});
+    const newAvailibility = await Availability.create({person_id: id, from_date: new Date(availability.from_date), to_date: new Date(availability.to_date)});
 
     return this.createAvailabilityDTO(newAvailibility);
   }
@@ -131,6 +131,14 @@ class DAO {
     const newApplicationArray = applications.map((input) => this.createJobApplicationDTO(input))
 
     return newApplicationArray;
+  }
+
+  async updateApplication(body){
+
+    return await JobApplication.update({
+      status: body.status
+    },
+    {where: {job_application_id: body.job_application_id}})
   }
 
   createPersonDTO(person) {

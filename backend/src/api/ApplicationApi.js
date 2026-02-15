@@ -51,7 +51,7 @@ class ApplicationApi extends RequestHandler {
         }
       });
 
-      this.router.get("/competence_id",
+      this.router.get("/list_competences",
         async (req, res, next) => {
         try {
           const errors = validationResult(req);
@@ -109,8 +109,6 @@ class ApplicationApi extends RequestHandler {
             return;
           }
           
-          console.log(req.body)
-
           const application = await this.contr.getApplication(req.body);
 
           if (!application) {
@@ -122,6 +120,32 @@ class ApplicationApi extends RequestHandler {
           next(err);
         }
       });
+
+      this.router.patch("/update_application",
+        [
+          body('status').isAlphanumeric(),
+          body('job_application_id').isNumeric(),
+        ],
+        async (req, res, next) => {
+        try {
+          const errors = validationResult(req);
+          if (!errors.isEmpty()) {
+            this.sendResponse(res, 400, {errors: errors.array()});
+            return;
+          }
+          
+          const status = await this.contr.updateApplication(req.body);
+
+          if (!status) {
+            this.sendResponse(res, 404, {message: "status not found" });
+            return;
+          }
+          this.sendResponse(res, 200, status)
+        } catch (err) {
+          next(err);
+        }
+      });
+
     } catch (err) {
       throw err;
     }

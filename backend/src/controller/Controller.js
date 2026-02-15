@@ -56,7 +56,6 @@ class Controller {
 
   async createApplication(expertise, availability, id){
     return this.transactionManager.transaction(async (t1) => {
-      
       var expertiseArray = [];
       var availabilityArray = [];
       const status = "unhandled";
@@ -115,9 +114,22 @@ class Controller {
     })
   }
 
+  async updateApplication(body){
+    return this.transactionManager.transaction(async (t1) => {
+      const newStatus = await this.DAO.updateApplication(body);
+      
+      return newStatus;
+    })
+  }
+
   async getCompetence(){
     return this.transactionManager.transaction(async (t1) => {
       return await this.DAO.getCompetence();
+    })
+  }
+   async getAllCompetences(){
+    return this.transactionManager.transaction(async (t1) => {
+      return await this.DAO.getAllCompetences();
     })
   }
 }
