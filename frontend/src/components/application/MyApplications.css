@@ -1,0 +1,283 @@
+.myapps-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  background-color: #f5f8ff;
+  padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.myapps-card {
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  padding: 32px;
+  width: 100%;
+  max-width: 800px;
+  border: 1px solid #e6e9f0;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.myapps-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.myapps-back-button {
+  padding: 8px 16px;
+  background-color: transparent;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.myapps-back-button:hover {
+  background-color: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.myapps-title {
+  margin: 0;
+  color: #1e293b;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.myapps-loading,
+.myapps-error,
+.myapps-empty {
+  text-align: center;
+  padding: 40px;
+  color: #64748b;
+}
+
+.myapps-error {
+  color: #dc2626;
+}
+
+.myapps-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.myapps-sort-button {
+  padding: 8px 16px;
+  background-color: #f8fafc;
+  color: #334155;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.myapps-sort-button:hover {
+  background-color: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.myapps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.myapps-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.myapps-item:hover {
+  background-color: #f1f5f9;
+}
+
+.myapps-item-info {
+  flex: 1;
+}
+
+.myapps-item-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.myapps-item-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.myapps-status-badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.status-accepted {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.status-rejected {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.status-unhandled {
+  background-color: #fef3c7;
+  color: #d97706;
+}
+
+.status-cancelled {
+  background-color: #e2e8f0;
+  color: #475569;
+  text-decoration: line-through;
+}
+
+.myapps-item-details {
+  font-size: 14px;
+  color: #64748b;
+}
+
+.myapps-delete-button {
+  padding: 8px 16px;
+  background-color: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-left: 16px;
+}
+
+.myapps-delete-button:hover {
+  background-color: #fecaca;
+  border-color: #fca5a5;
+}
+
+/* Modal styles */
+.myapps-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.myapps-modal {
+  background-color: white;
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.myapps-modal h3 {
+  margin: 0 0 16px 0;
+  color: #1e293b;
+  font-size: 20px;
+}
+
+.myapps-modal p {
+  margin: 8px 0;
+  color: #475569;
+  line-height: 1.5;
+}
+
+.myapps-modal-warning {
+  color: #b91c1c !important;
+  font-weight: 500;
+}
+
+.myapps-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.myapps-modal-cancel,
+.myapps-modal-confirm {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.myapps-modal-cancel {
+  background-color: #f1f5f9;
+  color: #475569;
+}
+
+.myapps-modal-cancel:hover {
+  background-color: #e2e8f0;
+}
+
+.myapps-modal-confirm {
+  background-color: #b91c1c;
+  color: white;
+}
+
+.myapps-modal-confirm:hover {
+  background-color: #991b1b;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .myapps-card {
+    padding: 20px;
+  }
+  .myapps-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .myapps-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .myapps-delete-button {
+    margin-left: 0;
+    align-self: flex-start;
+  }
+}

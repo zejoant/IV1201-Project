@@ -76,13 +76,13 @@ function ApplicationDetail({ currentUser, handleLogout }) {
     setDetailError('');
     try {
       // Replace with actual endpoint when available
-      const res = await fetch('/application/update_status', {
-        method: 'PUT',
+      const res = await fetch('/application/update_application', {
+        method: 'PATCH',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          status: newStatus,
           job_application_id: application.job_application_id,
-          new_status: newStatus,
         }),
       });
       if (!res.ok) {

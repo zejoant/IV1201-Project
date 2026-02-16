@@ -177,12 +177,6 @@ class DAO {
    * @returns {Promise<CompetenceDTO>}
    */
   async findCompByUserId(id){
-<<<<<<< Updated upstream
-    console.log(id)
-    const newComp = await Competence.findOne({where: {competence_id: id}})
-
-    return this.createCompetenceDTO(newComp)
-=======
     try{
       const newComp = await Competence.findOne({where: {competence_id: id}})
   
@@ -196,7 +190,6 @@ class DAO {
           'Could not find competence', 
       );
     }
->>>>>>> Stashed changes
   }
 
     /**
