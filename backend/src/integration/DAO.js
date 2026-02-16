@@ -286,7 +286,7 @@ class DAO {
    */
   async addAvailability(id, availability){
     try{
-      if (!id || !availability || true) {
+      if (!id || !availability) {
         throw new Error("Missing required fields");
       }
   
