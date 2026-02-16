@@ -7,6 +7,16 @@ console.log("DB_PASSWORD:", process.env.DB_PASSWORD);
 console.log("DB_USER:", process.env.DB_USER);
 console.log("DB_HOST:", process.env.DB_HOST);
 
+/**
+ * Sequelize instance configured for the PostgreSQL database.
+ *
+ * Configuration is loaded from environment variables via dotenv.
+ *
+ * @module database/sequelize
+ * @exports sequelize
+ * @type {Sequelize}
+ */
+
 const sequelize = new Sequelize(
   process.env.DB_NAME,
   process.env.DB_USER,

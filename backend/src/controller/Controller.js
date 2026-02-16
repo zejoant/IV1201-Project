@@ -2,40 +2,66 @@
 
 const DAO = require("../integration/DAO");
 
-//The Controller interacts with the model and integration layers
+/**
+ * Application controller coordinating business logic between
+ * routes, DAO, and database transactions.
+ *
+ * @public
+ */
 class Controller {
 
-  //creates a new DAO instance
+  /**
+   * Creates a controller instance and initializes DAO access.
+   * @constructor
+   */
   constructor() {
     this.DAO = new DAO();
     this.transactionManager = this.DAO.getTransactionManager();
   }
 
-  //creates and returns a controller
+   /**
+   * Factory method that creates and initializes a controller
+   * with an active database connection.
+   *
+   * @static
+   * @returns {Promise<Controller>} Initialized controller instance.
+   */
   static async makeController() {
     const contr = new Controller();
     await contr.DAO.connectToDatabase();
     return contr;
   }
 
-  //login user by called the DAO
+  /**
+   * Factory method that creates and initializes a controller
+   * with an active database connection.
+   *
+   * @static
+   * @returns {Promise<Controller>} Initialized controller instance.
+   */
   async login(username) {
     return this.transactionManager.transaction(async (t1) => {
       const user = await this.DAO.findUser(username);
-      //if(user.length === 0){
-      //  return null;
-      //}
       return user;
      });
   }
 
-  //create new user by called the DAO
+  /**
+   * Creates a new user account.
+   *
+   * @param {Object} userData - User information.
+   * @param {string} userData.name
+   * @param {string} userData.surname
+   * @param {string} userData.pnr
+   * @param {string} userData.email
+   * @param {string} userData.username
+   * @param {string} userData.password
+   * @param {number} userData.role_id
+   * @returns {Promise<PersonDTO>} Created user.
+   */
   async createAccount({name, surname, pnr, email, username, password, role_id}){
     return this.transactionManager.transaction(async (t1) => {
       const user = await this.DAO.createPerson({name, surname, pnr, email, username, password, role_id})
-      //if(user.length == 0){
-      //  return null;
-      //}
       return user;
     })
   }
@@ -47,33 +73,36 @@ class Controller {
   async findUserById(id) {
     return this.transactionManager.transaction(async (t1) => {
       const user = await this.DAO.findUserById(id);
-      //if(user.length == 0){
-      //  return null;
-      //}
       return user;
     })
   }
 
+   /**
+   * Creates a job application with expertise and availability.
+   *
+   * @param {Array<Object>} expertise - List of competences.
+   * @param {Array<Object>} availability - Availability periods.
+   * @param {number} id - Person ID.
+   * @returns {Promise<JobApplication>} Created application.
+   */
   async createApplication(expertise, availability, id){
     return this.transactionManager.transaction(async (t1) => {
-      var expertiseArray = [];
-      var availabilityArray = [];
+
       const status = "unhandled";
 
-      expertise.forEach(async (exp) => {
-        expertiseArray.push(await this.DAO.addExpertise(id, exp));
-      });
-
-      availability.forEach(async (ava) => {
-        availabilityArray.push(await this.DAO.addAvailability(id, ava));
-      });
-
+      const expertiseArray = await Promise.all(expertise.map(exp => this.DAO.addExpertise(id, exp)));
+      const availabilityArray = await Promise.all(availability.map(ava => this.DAO.addAvailability(id, ava)));
       const newApplication = await this.DAO.submitApplication(id, status);
 
       return newApplication;
     })
   }
 
+  /**
+   * Retrieves all applications including applicant names.
+   *
+   * @returns {Promise<Array<JobApplicationDTO>>}
+   */
   async listApplications(){
     return this.transactionManager.transaction(async (t1) => {
 
@@ -90,6 +119,13 @@ class Controller {
     })
   }
 
+   /**
+   * Retrieves detailed information for a specific application,
+   * including competences and availability.
+   *
+   * @param {JobApplicationDTO} application - Application data.
+   * @returns {Promise<Object>} Application profile.
+   */
   async getApplication(application){
     return this.transactionManager.transaction(async (t1) => {
     
@@ -114,6 +150,12 @@ class Controller {
     })
   }
 
+  /**
+   * Updates the status of an application.
+   *
+   * @param {Object} body - Update data.
+   * @returns {Promise<Array<number>>} Number of updated rows.
+   */
   async updateApplication(body){
     return this.transactionManager.transaction(async (t1) => {
       const newStatus = await this.DAO.updateApplication(body);
@@ -122,14 +164,14 @@ class Controller {
     })
   }
 
+   /**
+   * Retrieves all available competences.
+   *
+   * @returns {Promise<CompetenceDTO[]>}
+   */
   async getCompetence(){
     return this.transactionManager.transaction(async (t1) => {
       return await this.DAO.getCompetence();
-    })
-  }
-   async getAllCompetences(){
-    return this.transactionManager.transaction(async (t1) => {
-      return await this.DAO.getAllCompetences();
     })
   }
 }

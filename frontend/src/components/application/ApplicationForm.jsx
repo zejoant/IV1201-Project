@@ -188,7 +188,7 @@ function ApplicationForm({ currentUser, onApplicationComplete, onBackToProfile }
       const data = await res.json();
       
       if (!res.ok) {
-        throw new Error(data.message || data.errors?.[0]?.msg || 'Failed to submit application');
+        throw new Error(data.error.error || 'Failed to submit application'); //data.error has backend error handling message
       }
       
       // Show success message
