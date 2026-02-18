@@ -28,31 +28,6 @@ class ErrorHandler {
   async retrieveController() {
     this.contr = await Controller.makeController();
   }
-
-  /**
-   * Sends a standardized HTTP response.
-   *
-   * If the status code is below 400, wraps the body in { success: ... }.
-   * Otherwise, wraps the body in { error: ... }.
-   *
-   * @param {express.Response} res - Express response object.
-   * @param {number} status - HTTP status code.
-   * @param {*} body - Response payload.
-   * @returns {void}
-   */
-  sendResponse(res, status, body) {
-    if (!body) {
-      res.status(status).end();
-    }
-    else {
-      if (status < 400) {
-        res.status(status).json({ ["success"]: body });
-      }
-      else {
-        res.status(status).json({ ["error"]: body });
-      }
-    }
-  }
 }
 
 module.exports = ErrorHandler;
