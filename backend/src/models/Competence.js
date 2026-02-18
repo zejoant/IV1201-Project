@@ -1,6 +1,16 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../integration/db");
 
+/**
+ * Sequelize model representing a competence or skill in the system.
+ *
+ * @module Competence
+ * @type {Model}
+ *
+ * @property {number} competence_id - Unique ID of the competence (primary key).
+ * @property {string} name - Name of the competence or skill.
+ *
+ */
 const Competence = sequelize.define(
     "competence",
     {
