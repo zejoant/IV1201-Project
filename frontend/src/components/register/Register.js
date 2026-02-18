@@ -53,6 +53,7 @@ function Register({ setCurrentUser, switchToLogin }) {
     setLoading(true);
 
     try {
+      // Step 1: Register the user
       const res = await fetch("/account/sign_up", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -69,12 +70,15 @@ function Register({ setCurrentUser, switchToLogin }) {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.message || "Registration failed");
+        const err = new Error(data.message || "Registration failed");
+        err.custom = true;
+        throw err;
       }
       
-      // Auto-login after successful registration
+      // Step 2: Auto-login after successful registration
       const loginRes = await fetch("/account/sign_in", {
         method: "POST",
+        credentials: 'include', // Important for cookie-based sessions
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
       });
@@ -82,13 +86,15 @@ function Register({ setCurrentUser, switchToLogin }) {
       const loginData = await loginRes.json();
 
       if (!loginRes.ok) {
-        throw new Error(loginData.message || "Login failed after registration");
+        const err = new Error(loginData.message || "Login failed after registration");
+        err.custom = true;
+        throw err;
       }
 
       localStorage.setItem("currentUser", JSON.stringify(loginData));
       setCurrentUser(loginData);
     } catch (err) {
-      setError(err.message || "An error occurred during registration");
+      setError(err.custom ? err.message : "An error occurred during registration");
     } finally {
       setLoading(false);
     }
