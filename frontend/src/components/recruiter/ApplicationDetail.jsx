@@ -32,7 +32,7 @@ function ApplicationDetail({ currentUser, handleLogout }) {
           appBasic = found;
         }
         
-        // Set basic info immediately so user sees something
+        // Set basic info immediately so user sees something 1
         setApplication(appBasic);
         
         // Now fetch full details
