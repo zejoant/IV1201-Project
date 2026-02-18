@@ -27,10 +27,13 @@ function Login({ setCurrentUser, switchToRegister }) {
       });
 
       const data = await res.json();
-
+      
       if (!res.ok) {
-        throw new Error(data.message || 'Login failed');
+        const err = new Error(data.error.message || 'Login failed');
+        err.custom = true;
+        throw err;
       }
+
 
       // Step 2: Fetch the full user profile (including role)
       const profileRes = await fetch('/account/id', {
@@ -40,8 +43,11 @@ function Login({ setCurrentUser, switchToRegister }) {
 
       const profileData = await profileRes.json();
 
+      
       if (!profileRes.ok) {
-        throw new Error(profileData.message || 'Failed to fetch user profile');
+        const err = new Error(profileData.error || 'Failed to fetch user profile');
+        err.custom = true;
+        throw err;
       }
 
       // Assume profileData.success contains user object with fields:
@@ -52,7 +58,7 @@ function Login({ setCurrentUser, switchToRegister }) {
       localStorage.setItem('currentUser', JSON.stringify(user));
       setCurrentUser(user);
     } catch (err) {
-      setError(err.message || 'An error occurred during login');
+      setError(err.custom?err.message:'An error occurred during login');
     } finally {
       setLoading(false);
     }

@@ -2,26 +2,31 @@
 
 const Controller = require("../../controller/Controller");
 
-class ErrorHandler{
+/**
+ * Base error handler class.
+ *
+ * Provides utility methods for sending standardized JSON responses
+ * and initializing a controller instance for use in error handling.
+ *
+ * @public
+ */
+class ErrorHandler {
 
-    constructor(){}
+  /**
+   * Creates a new ErrorHandler instance.
+   *
+   * @constructor
+   */
+  constructor() { }
 
-    async retrieveController(){
-        this.contr = await Controller.makeController();
-    }
-
-    sendResponse(res, status, body){
-    if(!body){
-      res.status(status).end();
-    }
-    else{
-      if(status < 400){
-        res.status(status).json({["success"]: body});
-      }
-      else{
-        res.status(status).json({["error"]: body});
-      }
-    }
+  /**
+   * Initializes and assigns a Controller instance.
+   *
+   * @async
+   * @returns {Promise<void>}
+   */
+  async retrieveController() {
+    this.contr = await Controller.makeController();
   }
 }
 
