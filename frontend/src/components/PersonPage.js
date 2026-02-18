@@ -1,6 +1,19 @@
 import React from 'react';
 import './PersonPage.css';
 
+/**
+ * PersonPage component – the main dashboard for applicant users.
+ * Displays personal information and provides quick actions to apply
+ * for a position or view existing applications.
+ *
+ * @component
+ * @param {Object} props - Component props
+ * @param {Object} props.currentUser - The currently logged‑in applicant user object
+ * @param {Function} props.handleLogout - Callback to log the user out
+ * @param {Function} props.onApplyNow - Callback to navigate to the application form
+ * @param {Function} props.onViewMyApplications - Callback to navigate to the user's applications list
+ * @returns {JSX.Element} The rendered applicant dashboard
+ */
 function PersonPage({ currentUser, handleLogout, onApplyNow, onViewMyApplications }) {
   // For applicant users, we'll show two main functions
   

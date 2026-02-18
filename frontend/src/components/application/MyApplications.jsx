@@ -1,12 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import './MyApplications.css';
 
+/**
+ * Displays a list of job applications submitted by the currently logged‑in user.
+ * Fetches applications from the backend, filters by the current user, and allows
+ * sorting (by application ID as a proxy for date) and cancelling (soft delete)
+ * of applications that are not already cancelled.
+ *
+ * @component
+ * @param {Object} props - Component props
+ * @param {Object} props.currentUser - The currently logged‑in user object (must contain person_id)
+ * @param {Function} props.onBackToProfile - Callback invoked when the user clicks the back button
+ * @returns {JSX.Element} The rendered MyApplications component
+ */
 function MyApplications({ currentUser, onBackToProfile }) {
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [sortOrder, setSortOrder] = useState('desc'); // 'asc' or 'desc' for date (ID as proxy)
-  const [deleteConfirm, setDeleteConfirm] = useState(null); // stores application id to delete
+  const [sortOrder, setSortOrder] = useState('desc'); 
+  const [deleteConfirm, setDeleteConfirm] = useState(null); 
 
   // Fetch all applications and filter by current user
   useEffect(() => {

@@ -1,6 +1,16 @@
 import { useState } from "react";
 import "./Register.css";
 
+/**
+ * Registration form component allowing new users to create an account.
+ * Handles input validation, password strength indication, and auto‑login upon success.
+ *
+ * @component
+ * @param {Object} props - Component props
+ * @param {Function} props.setCurrentUser - Callback to set the authenticated user after registration/login
+ * @param {Function} props.switchToLogin - Callback to switch the view to the login form
+ * @returns {JSX.Element} The rendered registration form
+ */
 function Register({ setCurrentUser, switchToLogin }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -12,6 +22,12 @@ function Register({ setCurrentUser, switchToLogin }) {
   const [loading, setLoading] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
 
+  /**
+   * Updates the password state and recalculates its strength.
+   * Strength is based on length, uppercase, digit, and special character presence.
+   *
+   * @param {Object} e - Input change event
+   */
   const handlePasswordChange = (e) => {
     const value = e.target.value;
     setPassword(value);
@@ -24,6 +40,13 @@ function Register({ setCurrentUser, switchToLogin }) {
     setPasswordStrength(strength);
   };
 
+  /**
+   * Handles form submission: sends registration data to the server.
+   * On success, automatically logs the user in and updates the application state.
+   *
+   * @param {Object} e - Form submit event
+   * @returns {Promise<void>}
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -71,6 +94,12 @@ function Register({ setCurrentUser, switchToLogin }) {
     }
   };
 
+  /**
+   * Returns a color code based on password strength.
+   *
+   * @param {number} strength - Strength value from 0 to 4
+   * @returns {string} Hex color code
+   */
   const getStrengthColor = (strength) => {
     if (strength === 0) return "#e2e8f0";
     if (strength <= 2) return "#ef4444";
@@ -78,6 +107,12 @@ function Register({ setCurrentUser, switchToLogin }) {
     return "#10b981";
   };
 
+  /**
+   * Returns a descriptive text label for the current password strength.
+   *
+   * @param {number} strength - Strength value from 0 to 4
+   * @returns {string} Text label (empty, "Weak", "Good", or "Strong")
+   */
   const getStrengthText = (strength) => {
     if (strength === 0) return "";
     if (strength <= 2) return "Weak";
