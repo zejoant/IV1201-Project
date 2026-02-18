@@ -94,7 +94,6 @@ class Controller {
       const availabilityArray = await Promise.all(availability.map(ava => this.DAO.addAvailability(id, ava)));
       const newApplication = await this.DAO.submitApplication(id, status);
 
-      throw new Error("Error adding expertise");
       return newApplication;
     })
   }
