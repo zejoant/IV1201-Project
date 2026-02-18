@@ -34,16 +34,24 @@ function ApplicationDetail({ currentUser, handleLogout }) {
           const listRes = await fetch('/application/list_applications', {
             credentials: 'include',
           });
-          if (!listRes.ok) throw new Error('Failed to fetch applications list');
           const listData = await listRes.json();
+          if (!listRes.ok) {
+            const err = new Error(listData.message || 'Failed to fetch applications list');
+            err.custom = true;
+            throw err;
+          }
           const found = listData.success?.find(
             (app) => app.job_application_id === parseInt(id)
           );
-          if (!found) throw new Error(`Application with ID ${id} not found`);
+          if (!found) {
+            const err = new Error(`Application with ID ${id} not found`);
+            err.custom = true;
+            throw err;
+          }
           appBasic = found;
         }
         
-        // Set basic info immediately so user sees something 1
+        // Set basic info immediately so user sees something
         setApplication(appBasic);
         
         // Now fetch full details
@@ -62,17 +70,17 @@ function ApplicationDetail({ currentUser, handleLogout }) {
           body: JSON.stringify(requestBody),
         });
         
+        const data = await res.json();
         if (!res.ok) {
-          const errorData = await res.json().catch(() => ({}));
-          throw new Error(errorData.message || 'Failed to load full application details');
+          const err = new Error(data.message || 'Failed to load full application details');
+          err.custom = true;
+          throw err;
         }
         
-        const data = await res.json();
         setApplication(data.success || data);
       } catch (err) {
         console.error('Error fetching application details:', err);
-        setDetailError(err.message);
-        // application already has basic info from appBasic, so no need to set again
+        setDetailError(err.custom ? err.message : 'An error occurred while fetching application details');
       } finally {
         setLoading(false);
       }
@@ -103,18 +111,20 @@ function ApplicationDetail({ currentUser, handleLogout }) {
           job_application_id: application.job_application_id,
         }),
       });
+      const data = await res.json();
       if (!res.ok) {
-        const errData = await res.json();
-        throw new Error(errData.message || 'Update failed');
+        const err = new Error(data.message || 'Update failed');
+        err.custom = true;
+        throw err;
       }
-      const updated = await res.json();
+      const updated = data;
       setApplication(updated);
       alert('Status updated successfully');
     } catch (err) {
       if (err.message.includes('conflict') || err.message.includes('modified')) {
         alert('This application has been modified by another user. Please refresh.');
       } else {
-        setDetailError(err.message);
+        setDetailError(err.custom ? err.message : 'An error occurred while updating status');
       }
     } finally {
       setUpdating(false);

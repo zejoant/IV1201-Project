@@ -28,13 +28,15 @@ function RecruiterDashboard({ currentUser, handleLogout }) {
         const res = await fetch('/application/list_applications', {
           credentials: 'include',
         });
-        if (!res.ok) {
-          throw new Error('Failed to fetch applications');
-        }
         const data = await res.json();
+        if (!res.ok) {
+          const err = new Error(data.message || data.error?.message || 'Failed to fetch applications');
+          err.custom = true;
+          throw err;
+        }
         setApplications(data.success || []);
       } catch (err) {
-        setError(err.message);
+        setError(err.custom ? err.message : 'An error occurred while fetching applications');
       } finally {
         setLoading(false);
       }
