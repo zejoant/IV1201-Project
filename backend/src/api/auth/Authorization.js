@@ -10,7 +10,7 @@ const jwt = require("jsonwebtoken");
  *
  * @public
  */
-class Authorization{
+class Authorization {
 
     /**
    * Generates a JWT for the given user and sends it as an HTTP-only cookie.
@@ -22,9 +22,9 @@ class Authorization{
    * @param {express.Response} res - Express response object.
    * @returns {void}
    */
-    static sendCookie(person, res){
-        const token = jwt.sign({id: person.person_id, username: person.username}, process.env.JWT_SECRET, {expiresIn: "1h"})
-        const options = {httpOnly: true, maxAge: 60 * 60 * 1000};
+    static sendCookie(person, res) {
+        const token = jwt.sign({ id: person.person_id, username: person.username }, process.env.JWT_SECRET, { expiresIn: "1h" })
+        const options = { httpOnly: true, maxAge: 60 * 60 * 1000 };
         res.cookie("auth", token, options)
     }
 
@@ -53,6 +53,54 @@ class Authorization{
 
             return true;
         } catch (err) {
+            res.clearCookie("auth");
+            res.status(401).json({ message: "Invalid token" });
+            return false;
+        }
+    }
+
+    /**
+     * Checks whether the authenticated user has recruiter privileges by
+     * verifying the JWT stored in the auth cookie.
+     *
+     * Sends an HTTP error response if:
+     * - the auth cookie is missing (401),
+     * - the token is invalid or expired (401),
+     * - the user does not have recruiter permissions (403).
+     *
+     * @static
+     * @async
+     * @param {express.Request} req - Express request object containing cookies.
+     * @param {express.Response} res - Express response object used to send error responses.
+     * @param {Controller} contr - Controller instance.
+     * @returns {Promise<boolean>} Resolves to true if the user is a valid recruiter,
+     * otherwise false.
+     */
+    static async checkRecruiter(contr, req, res) {
+        const authCookie = req.cookies.auth;
+
+        if (!authCookie) {
+            res.status(401).json({ message: "cookie not found" });
+            return false;
+        }
+        try {
+            const decoded = jwt.verify(authCookie, process.env.JWT_SECRET);
+
+            const person = await contr.findUserById(decoded.id);
+
+            if (person.role_id == 2) {
+                res.clearCookie("auth");
+                res.status(403).json({ message: "Not recruiter" });
+                return false;
+            }
+
+
+            // decoded = { id, username, iat, exp }
+            req.user = decoded;
+            return true;
+
+        } catch (err) {
+            res.clearCookie("auth");
             res.status(401).json({ message: "Invalid token" });
             return false;
         }

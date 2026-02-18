@@ -62,13 +62,14 @@ class LoginApi extends RequestHandler {
        * Logs in a user with username and password.
        *
        * Parameters:
+       * - Requires valid authentication cookie (user must be logged in).
        * - username: Alphanumeric string, 3–30 characters.
        * - password: String, minimum 8 characters.
        *
        * Returns:
        * - 200: Login successful; sets authentication cookie.
        * - 400: Validation errors (invalid username/password format).
-       * - 401: Invalid credentials or authentication failed.
+       * - 401: Invalid credentials or authentication failed. / User not authenticated.
        */
       this.router.post("/sign_in",
         [
@@ -110,7 +111,9 @@ class LoginApi extends RequestHandler {
        *
        * Creates a new user account.
        *
+       * 
        * Parameters:
+       * - Requires valid authentication cookie (user must be logged in).
        * - name: Non-empty string.
        * - surname: Non-empty string.
        * - pnr: Numeric personal number.
@@ -121,7 +124,7 @@ class LoginApi extends RequestHandler {
        * Returns:
        * - 200: Account created successfully.
        * - 400: Validation errors (missing or invalid fields).
-       * - 401: Account creation failed (e.g., username already exists).
+       * - 401: Account creation failed (e.g., username already exists). / User not authenticated.
        */
       this.router.post("/sign_up",
         [
@@ -137,6 +140,11 @@ class LoginApi extends RequestHandler {
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
               this.sendResponse(res, 400, { errors: errors.array() })
+              return;
+            }
+
+            if (!(await Authorization.checkLogin(req, res))) {
+              this.sendResponse(res, 401, { errors: errors.array() });
               return;
             }
 

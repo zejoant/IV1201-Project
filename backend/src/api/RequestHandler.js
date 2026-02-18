@@ -10,19 +10,19 @@ const Controller = require("../controller/Controller");
  * @public
  */
 class RequestHandler {
-   /**
-   * Creates a new request handler and initializes an Express router.
-   * @constructor
-   */
+  /**
+  * Creates a new request handler and initializes an Express router.
+  * @constructor
+  */
   constructor() {
     this.router = express.Router();
   }
 
-   /**
-   * Initializes and assigns a controller instance.
-   *
-   * @returns {Promise<void>}
-   */
+  /**
+  * Initializes and assigns a controller instance.
+  *
+  * @returns {Promise<void>}
+  */
   async getController() {
     this.contr = await Controller.makeController();
   }
@@ -38,16 +38,17 @@ class RequestHandler {
    * @param {*} body - Response payload.
    * @returns {void}
    */
-   sendResponse(res, status, body){
-    if(!body){
+  sendResponse(res, status, body) {
+    if (!body) {
       res.status(status).end();
     }
-    else{
-      if(status < 400){
-        res.status(status).json({["success"]: body});
+    else {
+      body.type = "custom"
+      if (status < 400) {
+        res.status(status).json({ ["success"]: body });
       }
-      else{
-        res.status(status).json({["error"]: body});
+      else {
+        res.status(status).json({ ["error"]: body });
       }
     }
   }

@@ -64,6 +64,7 @@ class ApplicationApi extends RequestHandler {
       * Submits a new job application for the logged-in user.
       *
       * Parameters:
+      * - Requires valid authentication cookie (user must be logged in)
       * - expertise: Array of competences, at least one required.
       * - availability: Array of availability periods, at least one required.
       *
@@ -107,10 +108,14 @@ class ApplicationApi extends RequestHandler {
       /*
       *
       * Retrieves all competences available in the system.
+      * 
+      * Parameters:
+      * - Requires valid authentication cookie (user must be logged in)
       *
       * Returns:
       * - 200: Array of competences (CompetenceDTO[]).
       * - 400: Validation errors (should rarely occur for GET).
+      * - 401: User not authenticated.
       * - 404: No competences found.
       */
       this.router.get("/list_competences",
@@ -119,6 +124,11 @@ class ApplicationApi extends RequestHandler {
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
               this.sendResponse(res, 400, { errors: errors.array() });
+              return;
+            }
+
+            if (!(await Authorization.checkLogin(req, res))) {
+              this.sendResponse(res, 401, { errors: errors.array() });
               return;
             }
 
@@ -137,10 +147,14 @@ class ApplicationApi extends RequestHandler {
       /*
       *
       * Retrieves all submitted applications along with applicant names.
+      * 
+      * Parameters:
+      * - Requires valid authentication cookie (user must be logged in as recruiter)
       *
       * Returns:
       * - 200: Array of applications with names and IDs.
       * - 400: Validation errors.
+      * - 401: User not authenticated.
       * - 404: No applications found.
       */
       this.router.get("/list_applications",
@@ -149,6 +163,11 @@ class ApplicationApi extends RequestHandler {
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
               this.sendResponse(res, 400, { errors: errors.array() });
+              return;
+            }
+
+            if (!(await Authorization.checkRecruiter(this.contr, req, res))) {
+              this.sendResponse(res, 401, { errors: errors.array() });
               return;
             }
 
@@ -168,6 +187,7 @@ class ApplicationApi extends RequestHandler {
       * Retrieves details for a specific application.
       *
       * Parameters (in JSON body):
+      *  - Requires valid authentication cookie (user must be logged in as recruiter)
       * - job_application_id: Numeric ID of the application.
       * - person_id: Numeric ID of the applicant.
       * - status: Alphanumeric status string.
@@ -177,6 +197,7 @@ class ApplicationApi extends RequestHandler {
       * Returns:
       * - 200: Application with competences and availability.
       * - 400: Validation errors (missing or invalid fields).
+      * - 401: User not authenticated.
       * - 404: Application not found.
       */
       this.router.post("/get_application",
@@ -192,6 +213,11 @@ class ApplicationApi extends RequestHandler {
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
               this.sendResponse(res, 400, { errors: errors.array() });
+              return;
+            }
+
+            if (!(await Authorization.checkRecruiter(this.contr, req, res))) {
+              this.sendResponse(res, 401, { errors: errors.array() });
               return;
             }
 
@@ -211,12 +237,14 @@ class ApplicationApi extends RequestHandler {
       * Updates the status of a job application.
       *
       * Parameters (in JSON body):
+      * - Requires valid authentication cookie (user must be logged in as recruiter)
       * - job_application_id: Numeric ID of the application.
       * - status: New alphanumeric status.
       *
       * Returns:
       * - 200: Application status updated successfully.
       * - 400: Validation errors (missing or invalid fields).
+      * - 401: User not authenticated.
       * - 404: Application not found.
       */
       this.router.patch("/update_application",
@@ -229,6 +257,11 @@ class ApplicationApi extends RequestHandler {
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
               this.sendResponse(res, 400, { errors: errors.array() });
+              return;
+            }
+
+            if (!(await Authorization.checkRecruiter(this.contr, req, res))) {
+              this.sendResponse(res, 401, { errors: errors.array() });
               return;
             }
 

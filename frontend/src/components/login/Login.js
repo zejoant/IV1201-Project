@@ -26,11 +26,13 @@ function Login({ setCurrentUser, switchToRegister }) {
         body: JSON.stringify({ username, password }),
       });
 
-      const data = await res.json();
+      const data = await res.json()
 
       if (!res.ok) {
-        throw new Error(data.message || 'Login failed');
+        throw new Error(data.error.message || 'Login failed');
       }
+
+
 
       // Step 2: Fetch the full user profile (including role)
       const profileRes = await fetch('/account/id', {
