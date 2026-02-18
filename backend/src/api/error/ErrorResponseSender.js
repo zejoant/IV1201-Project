@@ -12,13 +12,19 @@ class ErrorResponseSender extends ErrorHandler{
         return '/';
     }
 
-    registerHandler(app){
-        
+    registerHandler(app) {
         app.use(this.path, (err, req, res, next) => {
-            if(res.headerSent){
+            console.error(err);
+
+            if (res.headersSent) {
                 return next(err);
             }
-            this.sendResponse(res, 500, {error: "Operation failed"});
+
+            this.sendResponse(res, err.status || 500, {
+                error: err.message,
+                name: err.name,
+                stack: err.stack,
+            });
         });
     }
 }
