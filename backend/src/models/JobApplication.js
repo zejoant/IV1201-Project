@@ -5,14 +5,14 @@ const Person = require("./Person");
 const JobApplication = sequelize.define(
     "job_application",
     {
-        application_id: {
+        job_application_id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true,
+            allowNull: false,
         },
         person_id: {
             type: DataTypes.INTEGER,
-            allowNull: false,
             references: {
                 model: Person,
                 key: "person_id",

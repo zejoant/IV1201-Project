@@ -1,7 +1,7 @@
 import React from 'react';
 import './PersonPage.css';
 
-function PersonPage({ currentUser, handleLogout, onApplyNow }) {
+function PersonPage({ currentUser, handleLogout, onApplyNow, onViewMyApplications }) {
   // For applicant users, we'll show two main functions
   
   return (
@@ -109,15 +109,20 @@ function PersonPage({ currentUser, handleLogout, onApplyNow }) {
             </div>
             
             {/* My Applications Card */}
-            <div className="personpage-action-card">
-              <div className="personpage-action-icon personpage-action-icon-2">
-                📋
-              </div>
+          <div className="personpage-action-card">
+           <div className="personpage-action-icon personpage-action-icon-2">
+              📋
+           </div>
               <h4 className="personpage-action-title">My Applications</h4>
-              <p className="personpage-action-description">
-                View and manage your submitted applications
-              </p>
-              <button className="personpage-action-button">View All</button>
+               <p className="personpage-action-description">
+            View and manage your submitted applications
+           </p>
+        <button
+            className="personpage-action-button"
+             onClick={onViewMyApplications}
+            >
+            View All
+          </button>
             </div>
           </div>
         </div>
