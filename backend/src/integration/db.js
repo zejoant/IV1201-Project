@@ -1,5 +1,6 @@
 const { Sequelize } = require("sequelize");
 require("dotenv").config({ path: __dirname + "/../../.env" });
+const cls = require('cls-hooked');
 
 const useSSL = process.env.DB_SSL === "true";
 
@@ -16,6 +17,9 @@ console.log("DB_HOST:", process.env.DB_HOST);
  * @exports sequelize
  * @type {Sequelize}
  */
+
+const namespace = cls.createNamespace('db');
+Sequelize.useCLS(namespace);
 
 const sequelize = new Sequelize(
   process.env.DB_NAME,
