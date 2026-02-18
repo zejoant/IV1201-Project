@@ -1,6 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import './ApplicationForm.css';
 
+/**
+ * A form component that allows a logged‑in user to submit a job application.
+ * The user can add multiple competences (with years of experience) and multiple
+ * availability periods. The form fetches the list of available competences from
+ * the backend and sends the final application to the server.
+ *
+ * @component
+ * @param {Object} props - Component props
+ * @param {any} props.currentUser - The currently logged‑in user object (not directly used in the form)
+ * @param {Function} props.onApplicationComplete - Callback invoked after a successful submission
+ * @param {Function} props.onBackToProfile - Callback to return to the profile view
+ * @returns {JSX.Element} The rendered application form
+ */
 function ApplicationForm({ currentUser, onApplicationComplete, onBackToProfile }) {
   const [competenceId, setCompetenceId] = useState('');
   const [yearsOfExperience, setYearsOfExperience] = useState('');
@@ -41,13 +54,20 @@ function ApplicationForm({ currentUser, onApplicationComplete, onBackToProfile }
     fetchCompetences();
   }, []);
   
-  // Helper: convert YYYY-MM-DD to UTC Date object (midnight UTC)
+  /**
+   * Converts a date string in YYYY-MM-DD format to a Date object set to UTC midnight.
+   * @param {string} dateString - Date in YYYY-MM-DD format
+   * @returns {Date} UTC Date object representing midnight of the given date
+   */
   const toUTCDate = (dateString) => {
     const [year, month, day] = dateString.split('-').map(Number);
     return new Date(Date.UTC(year, month - 1, day));
   };
   
-  // Helper: get today's UTC date as YYYY-MM-DD
+  /**
+   * Returns today's date as a string in YYYY-MM-DD format, based on UTC.
+   * @returns {string} Today's UTC date in YYYY-MM-DD
+   */
   const getTodayUTCString = () => {
     return new Date().toISOString().split('T')[0];
   };
@@ -237,7 +257,12 @@ function ApplicationForm({ currentUser, onApplicationComplete, onBackToProfile }
     }
   };
   
-  // Format date for display using UTC to avoid timezone shifts
+  /**
+   * Formats a date string (YYYY-MM-DD) into a human‑readable long date,
+   * using UTC to avoid timezone shifts.
+   * @param {string} dateString - Date in YYYY-MM-DD format
+   * @returns {string} Formatted date (e.g., "January 1, 2025")
+   */
   const formatDateForDisplay = (dateString) => {
     if (!dateString) return '';
     const [year, month, day] = dateString.split('-');
@@ -253,8 +278,11 @@ function ApplicationForm({ currentUser, onApplicationComplete, onBackToProfile }
     });
   };
   
-  // Get today's date in YYYY-MM-DD format for date input (based on local date)
-  // Note: The input uses the browser's local date, but we only use it as a string
+  /**
+   * Returns today's date as a string in YYYY-MM-DD format, based on the browser's local time.
+   * This is used for the min attribute of date inputs.
+   * @returns {string} Today's local date in YYYY-MM-DD
+   */
   const getTodayDate = () => {
     const today = new Date();
     const year = today.getFullYear();

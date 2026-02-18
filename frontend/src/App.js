@@ -10,6 +10,15 @@ import ApplicationDetail from "./components/recruiter/ApplicationDetail";
 
 const ROLE_RECRUITER = 1; 
 
+/**
+ * Main application component.
+ * Handles authentication state and routing based on user role.
+ * Renders login/register views for unauthenticated users,
+ * recruiter dashboard for recruiters, and applicant dashboard for applicants.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered application root
+ */
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [showRegister, setShowRegister] = useState(false);
