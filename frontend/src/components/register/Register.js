@@ -44,9 +44,11 @@ function Register({ setCurrentUser, switchToLogin }) {
       });
 
       const data = await res.json();
-
+      
       if (!res.ok) {
-        throw new Error(data.message || "Registration failed");
+        const err = new Error(data.error || "Registration failed");
+        err.custom = true;
+        throw err;
       }
       
       // Auto-login after successful registration
@@ -59,13 +61,15 @@ function Register({ setCurrentUser, switchToLogin }) {
       const loginData = await loginRes.json();
 
       if (!loginRes.ok) {
-        throw new Error(loginData.message || "Login failed after registration");
+        const err = new Error(loginData.error || "Login failed after registration");
+        err.custom = true;
+        throw err;
       }
 
       localStorage.setItem("currentUser", JSON.stringify(loginData));
       setCurrentUser(loginData);
     } catch (err) {
-      setError(err.message || "An error occurred during registration");
+      setError(err.custom? err.message : "An error occurred during registration");
     } finally {
       setLoading(false);
     }

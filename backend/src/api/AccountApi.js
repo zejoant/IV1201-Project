@@ -73,8 +73,8 @@ class LoginApi extends RequestHandler {
        */
       this.router.post("/sign_in",
         [
-          body("username").trim().isLength({ min: 3, max: 30 }).isAlphanumeric(),
-          body("password").isLength({ min: 8 }),
+          body("username").trim().isLength({ min: 3, max: 30 }).withMessage('Username must be between 3-30 characters').isAlphanumeric().withMessage('Username must contain only letters and numbers'),
+          body("password").isLength({ min: 8 }).withMessage("Password must be at least 8 characters"),
         ],
         async (req, res, next) => {
           try {
@@ -89,19 +89,19 @@ class LoginApi extends RequestHandler {
             const person = await this.contr.login(username);
 
             if (!person) {
-              this.sendResponse(res, 401, { message: "Invalid credentials" })
+              this.sendResponse(res, 401, "Invalid credentials")
               return;
             }
 
             const match = await bcrypt.compare(password, person.password)
 
             if (!match) {
-              this.sendResponse(res, 401, { message: "Invalid credentials" })
+              this.sendResponse(res, 401, "Invalid credentials")
               return;
             }
             // send cookie 
             Authorization.sendCookie(person, res);
-            this.sendResponse(res, 200, { message: "Logged in success" });
+            this.sendResponse(res, 200, "Logged in success");
           } catch (err) {
             next(err);
           }
@@ -113,7 +113,6 @@ class LoginApi extends RequestHandler {
        *
        * 
        * Parameters:
-       * - Requires valid authentication cookie (user must be logged in).
        * - name: Non-empty string.
        * - surname: Non-empty string.
        * - pnr: Numeric personal number.
@@ -124,27 +123,22 @@ class LoginApi extends RequestHandler {
        * Returns:
        * - 200: Account created successfully.
        * - 400: Validation errors (missing or invalid fields).
-       * - 401: Account creation failed (e.g., username already exists). / User not authenticated.
+       * - 401: Account creation failed (e.g., username already exists).
        */
       this.router.post("/sign_up",
         [
-          body("name").notEmpty(),
-          body("surname").notEmpty(),
-          body("pnr").isNumeric(),
-          body("email").normalizeEmail().isEmail(),
-          body("username").isAlphanumeric(),
-          body("password").isLength({ min: 8 }),
+          body("username").trim().isLength({ min: 3, max: 30 }).withMessage("Username must be between 3 and 30 characters").isAlphanumeric().withMessage("Username must contain only letters and numbers"),
+          body("name").notEmpty().withMessage("Name is required").isAlpha().withMessage("Name must contain only letters"),
+          body("surname").notEmpty().withMessage("Surname is required").isAlpha().withMessage("Surname must contain only letters"),
+          body("pnr").isNumeric().withMessage("Personnummer must contain only numbers").isLength(12).withMessage("Personnummer must be 12 digits"),
+          body("email").normalizeEmail().isEmail().withMessage("Email must be a valid email address"),
+          body("password").isLength({ min: 8 }).withMessage("Password must be at least 8 characters long"),
         ],
         async (req, res, next) => {
           try {
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
-              this.sendResponse(res, 400, { errors: errors.array() })
-              return;
-            }
-
-            if (!(await Authorization.checkLogin(req, res))) {
-              this.sendResponse(res, 401, { errors: errors.array() });
+              this.sendResponse(res, 400, errors.array() )
               return;
             }
 
@@ -157,10 +151,10 @@ class LoginApi extends RequestHandler {
             const person = await this.contr.createAccount({ name, surname, pnr, email, username, password: hashedPassword, role_id });
 
             if (!person) {
-              this.sendResponse(res, 401, { message: "Account creation failed" });
+              this.sendResponse(res, 401, "Account creation failed");
               return;
             }
-            this.sendResponse(res, 200, { message: "Success!" })
+            this.sendResponse(res, 200, "Account created!")
           } catch (err) {
             next(err);
           }
@@ -182,20 +176,15 @@ class LoginApi extends RequestHandler {
       this.router.get("/id",
         async (req, res, next) => {
           try {
-            const errors = validationResult(req);
-            if (!errors.isEmpty()) {
-              this.sendResponse(res, 400, { errors: errors.array() });
-              return;
-            }
             if (!(await Authorization.checkLogin(req, res))) {
-              this.sendResponse(res, 401, { errors: errors.array() });
+              this.sendResponse(res, 401, errors.array());
               return;
             }
 
             const person = await this.contr.findUserById(req.user.id);
 
             if (!person) {
-              this.sendResponse(res, 404, { message: "Person not found" });
+              this.sendResponse(res, 404, "Person not found");
               return;
             }
             this.sendResponse(res, 201, person)

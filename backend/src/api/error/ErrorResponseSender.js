@@ -48,12 +48,10 @@ class ErrorResponseSender extends ErrorHandler {
     registerHandler(app) {
         app.use(this.path, (err, req, res, next) => {
             console.error(err);
-
             if (res.headersSent) {
                 return next(err);
             }
-
-            res.status(500).send({ error: 'Operation failed' });
+            res.status(500).send({ error: err.jse_shortmsg || 'Operation failed' });
         });
     }
 }

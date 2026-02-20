@@ -179,7 +179,6 @@ class DAO {
   async findCompByUserId(id) {
     try {
       const newComp = await Competence.findOne({ where: { competence_id: id } })
-
       return this.createCompetenceDTO(newComp)
     } catch (err) {
       throw new WError(

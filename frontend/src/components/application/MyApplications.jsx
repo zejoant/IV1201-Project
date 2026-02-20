@@ -16,17 +16,21 @@ function MyApplications({ currentUser, onBackToProfile }) {
         const res = await fetch('/application/list_applications', {
           credentials: 'include',
         });
-        if (!res.ok) {
-          throw new Error('Failed to fetch applications');
-        }
+
         const data = await res.json();
+        
+        if (!res.ok) {
+          const err = new Error(data.error || 'Failed to fetch applications');
+          err.custom = true;
+          throw err;
+        }
         // data.success is expected to be an array of applications
         const allApps = data.success || [];
         // Filter applications belonging to current user
         const myApps = allApps.filter(app => app.person_id === currentUser.person_id);
         setApplications(myApps);
       } catch (err) {
-        setError(err.message);
+        setError(err.type? err.message : "An error occured while fetching your applications");
       } finally {
         setLoading(false);
       }
@@ -59,16 +63,19 @@ function MyApplications({ currentUser, onBackToProfile }) {
         }),
       });
 
+      const data = await res.json();
+
       if (!res.ok) {
-        const errData = await res.json();
-        throw new Error(errData.message || 'Failed to cancel application');
+        const err = new Error(data.error || 'Failed to cancel application');
+        err.custom = true;
+        throw err;
       }
 
       // Remove from local state
       setApplications(prev => prev.filter(app => app.job_application_id !== deleteConfirm.job_application_id));
       setDeleteConfirm(null);
     } catch (err) {
-      alert(`Error: ${err.message}`);
+      setError(err.type? err.message : "An error occured while cancelling applications");
     }
   };
 

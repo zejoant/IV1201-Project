@@ -27,13 +27,18 @@ function ApplicationForm({ currentUser, onApplicationComplete, onBackToProfile }
         const res = await fetch('/application/list_competences', {
           credentials: 'include',
         });
-        if (!res.ok) throw new Error('Failed to load competences');
         const data = await res.json();
+        
+        if (!res.ok) {
+          const err = new Error(data.error || 'Failed to load competences');
+          err.custom = true;
+          throw err;
+        }
+        
         // The backend returns data wrapped in 'success' or directly as array
         setCompetenceOptions(data.success || data);
       } catch (err) {
-        setFetchError(err.message);
-        console.error('Error fetching competences:', err);
+        setFetchError(err.custom ? err.message : 'An error occurred while loading competences');
       } finally {
         setLoadingCompetences(false);
       }
@@ -208,7 +213,9 @@ function ApplicationForm({ currentUser, onApplicationComplete, onBackToProfile }
       const data = await res.json();
       
       if (!res.ok) {
-        throw new Error(data.message || data.errors?.[0]?.msg || 'Failed to submit application');
+        const err = new Error(data.error || 'Failed to submit application');
+        err.custom = true;
+        throw err;
       }
       
       // Show success message
@@ -231,7 +238,7 @@ function ApplicationForm({ currentUser, onApplicationComplete, onBackToProfile }
       
     } catch (err) {
       console.error('Application submission error:', err);
-      setError(err.message || 'An error occurred while submitting your application');
+      setError(err.type ? err.message : 'An error occurred while submitting your application');
     } finally {
       setIsSubmitting(false);
     }
