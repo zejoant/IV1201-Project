@@ -43,7 +43,7 @@ function ApplicationForm({ currentUser, onApplicationComplete, onBackToProfile }
         const data = await res.json();
         
         if (!res.ok) {
-          const err = new Error(data.error?.message || data.message || 'Failed to load competences');
+          const err = new Error(data.error || 'Failed to load competences');
           err.custom = true;
           throw err;
         }
@@ -52,7 +52,6 @@ function ApplicationForm({ currentUser, onApplicationComplete, onBackToProfile }
         setCompetenceOptions(data.success || data);
       } catch (err) {
         setFetchError(err.custom ? err.message : 'An error occurred while loading competences');
-        console.error('Error fetching competences:', err);
       } finally {
         setLoadingCompetences(false);
       }
@@ -234,7 +233,7 @@ function ApplicationForm({ currentUser, onApplicationComplete, onBackToProfile }
       const data = await res.json();
       
       if (!res.ok) {
-        const err = new Error(data.message || data.errors?.[0]?.msg || 'Failed to submit application');
+        const err = new Error(data.error || 'Failed to submit application');
         err.custom = true;
         throw err;
       }

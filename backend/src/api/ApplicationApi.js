@@ -75,8 +75,12 @@ class ApplicationApi extends RequestHandler {
       */
       this.router.post("/apply",
         [
-          body("expertise").isArray().isLength({ min: 1 }),
-          body("availability").isArray().isLength({ min: 1 }),
+          body("expertise").isArray({min : 1}).withMessage("Not enough expertises"),
+          body("expertise.*.yoe").isNumeric().withMessage("Years of experience must be numerical"),
+          body("expertise.*.competence_id").isNumeric().withMessage("Expertise is the wrong format"),
+          body("availability").isArray({min : 1}).withMessage("Not enough availabilities"),
+          body("availability.*.from_date").isISO8601().withMessage("Availability start date is not correctly formated"),
+          body("availability.*.to_date").isISO8601().withMessage("Availability end date is not correctly formated"),
         ],
         async (req, res, next) => {
           try {
@@ -87,7 +91,7 @@ class ApplicationApi extends RequestHandler {
             }
 
             if (!(await Authorization.checkLogin(req, res))) {
-              this.sendResponse(res, 401, { errors: errors.array() });
+              this.sendResponse(res, 401, errors.array());
               return;
             }
 
@@ -96,11 +100,11 @@ class ApplicationApi extends RequestHandler {
             const application = await this.contr.createApplication(expertise, availability, req.user.id);
 
             if (!application) {
-              this.sendResponse(res, 401, { message: "Invalid application" })
+              this.sendResponse(res, 401,"Invalid application")
               return;
             }
 
-            this.sendResponse(res, 200, { message: "sent application" });
+            this.sendResponse(res, 200, "sent application");
           } catch (err) {
             next(err);
           }
@@ -121,21 +125,15 @@ class ApplicationApi extends RequestHandler {
       this.router.get("/list_competences",
         async (req, res, next) => {
           try {
-            const errors = validationResult(req);
-            if (!errors.isEmpty()) {
-              this.sendResponse(res, 400, { errors: errors.array() });
-              return;
-            }
-
             if (!(await Authorization.checkLogin(req, res))) {
-              this.sendResponse(res, 401, { errors: errors.array() });
+              this.sendResponse(res, 401, errors.array());
               return;
             }
 
             const competence = await this.contr.getCompetence();
 
             if (!competence) {
-              this.sendResponse(res, 404, { message: "competence not found" });
+              this.sendResponse(res, 404, "competence not found");
               return;
             }
             this.sendResponse(res, 200, competence)
@@ -160,21 +158,15 @@ class ApplicationApi extends RequestHandler {
       this.router.get("/list_applications",
         async (req, res, next) => {
           try {
-            const errors = validationResult(req);
-            if (!errors.isEmpty()) {
-              this.sendResponse(res, 400, { errors: errors.array() });
-              return;
-            }
-
             if (!(await Authorization.checkRecruiter(this.contr, req, res))) {
-              this.sendResponse(res, 401, { errors: errors.array() });
+              this.sendResponse(res, 401, errors.array());
               return;
             }
 
             const applications = await this.contr.listApplications();
 
             if (!applications) {
-              this.sendResponse(res, 404, { message: "Applications not found" });
+              this.sendResponse(res, 404, "Applications not found");
               return;
             }
             this.sendResponse(res, 200, applications)
@@ -202,29 +194,29 @@ class ApplicationApi extends RequestHandler {
       */
       this.router.post("/get_application",
         [
-          body('job_application_id').isNumeric(),
-          body('person_id').isNumeric(),
-          body('status').isAlphanumeric(),
-          body('name').isAlphanumeric(),
-          body('surname').isAlphanumeric(),
+          body('job_application_id').isNumeric().withMessage("Job application does not exist"),
+          body('person_id').isNumeric().withMessage("Job application does not exist"),
+          body('status').matches(/^(unhandled|rejected|accepted)$/).withMessage("Job application does not exist"),
+          body('name').isAlpha().withMessage("Job application does not exist"),
+          body('surname').isAlpha().withMessage("Job application does not exist"),
         ],
         async (req, res, next) => {
           try {
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
-              this.sendResponse(res, 400, { errors: errors.array() });
+              this.sendResponse(res, 400, errors.array());
               return;
             }
 
             if (!(await Authorization.checkRecruiter(this.contr, req, res))) {
-              this.sendResponse(res, 401, { errors: errors.array() });
+              this.sendResponse(res, 401, errors.array() );
               return;
             }
 
             const application = await this.contr.getApplication(req.body);
 
             if (!application) {
-              this.sendResponse(res, 404, { message: "Application not found" });
+              this.sendResponse(res, 404, "Application not found");
               return;
             }
             this.sendResponse(res, 200, application)
@@ -249,26 +241,26 @@ class ApplicationApi extends RequestHandler {
       */
       this.router.patch("/update_application",
         [
-          body('status').isAlphanumeric(),
-          body('job_application_id').isNumeric(),
+          body('status').matches(/^(unhandled|rejected|accepted)$/).withMessage("Unable to change status"),
+          body('job_application_id').isNumeric().withMessage("Unable to change status"),
         ],
         async (req, res, next) => {
           try {
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
-              this.sendResponse(res, 400, { errors: errors.array() });
+              this.sendResponse(res, 400, errors.array() );
               return;
             }
 
             if (!(await Authorization.checkRecruiter(this.contr, req, res))) {
-              this.sendResponse(res, 401, { errors: errors.array() });
+              this.sendResponse(res, 401, errors.array());
               return;
             }
 
             const status = await this.contr.updateApplication(req.body);
 
             if (!status) {
-              this.sendResponse(res, 404, { message: "status not found" });
+              this.sendResponse(res, 404, "status not found");
               return;
             }
             this.sendResponse(res, 200, status)

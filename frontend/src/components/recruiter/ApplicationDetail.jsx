@@ -34,9 +34,11 @@ function ApplicationDetail({ currentUser, handleLogout }) {
           const listRes = await fetch('/application/list_applications', {
             credentials: 'include',
           });
+          
           const listData = await listRes.json();
+          
           if (!listRes.ok) {
-            const err = new Error(listData.message || 'Failed to fetch applications list');
+            const err = new Error(listData.error || 'Failed to fetch applications list');
             err.custom = true;
             throw err;
           }
@@ -71,8 +73,9 @@ function ApplicationDetail({ currentUser, handleLogout }) {
         });
         
         const data = await res.json();
+
         if (!res.ok) {
-          const err = new Error(data.message || 'Failed to load full application details');
+          const err = new Error(data.error || 'Failed to load full application details');
           err.custom = true;
           throw err;
         }
@@ -80,7 +83,8 @@ function ApplicationDetail({ currentUser, handleLogout }) {
         setApplication(data.success || data);
       } catch (err) {
         console.error('Error fetching application details:', err);
-        setDetailError(err.custom ? err.message : 'An error occurred while fetching application details');
+        setDetailError(err.custom? err.message: 'An error occurred while fetching application details');
+        // application already has basic info from appBasic, so no need to set again
       } finally {
         setLoading(false);
       }
@@ -111,13 +115,17 @@ function ApplicationDetail({ currentUser, handleLogout }) {
           job_application_id: application.job_application_id,
         }),
       });
+
       const data = await res.json();
+
       if (!res.ok) {
-        const err = new Error(data.message || 'Update failed');
+        const err = new Error(data.error || 'Update failed');
         err.custom = true;
         throw err;
       }
+      
       const updated = data;
+
       setApplication(updated);
       alert('Status updated successfully');
     } catch (err) {

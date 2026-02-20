@@ -28,15 +28,18 @@ function RecruiterDashboard({ currentUser, handleLogout }) {
         const res = await fetch('/application/list_applications', {
           credentials: 'include',
         });
+
         const data = await res.json();
+
         if (!res.ok) {
-          const err = new Error(data.message || data.error?.message || 'Failed to fetch applications');
+          const err = new Error(data.error || 'Failed to fetch applications');
           err.custom = true;
           throw err;
         }
+
         setApplications(data.success || []);
       } catch (err) {
-        setError(err.custom ? err.message : 'An error occurred while fetching applications');
+        setError(err.type? err.message : "An error occured while fetching applications");
       } finally {
         setLoading(false);
       }
@@ -131,7 +134,7 @@ function RecruiterDashboard({ currentUser, handleLogout }) {
         <div className="recruiter-content">
           <h2 className="recruiter-page-title">All Applications</h2>
           {loading && <div className="recruiter-loading">Loading applications...</div>}
-          {error && <div className="recruiter-error">Error: {error}</div>}
+          {error && <div className="recruiter-error">{error}</div>}
           {!loading && !error && (
             <div className="recruiter-table-container">
               <table className="recruiter-table">

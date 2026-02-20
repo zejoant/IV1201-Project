@@ -43,11 +43,13 @@ class RequestHandler {
       res.status(status).end();
     }
     else {
-      body.type = "custom"
       if (status < 400) {
         res.status(status).json({ ["success"]: body });
       }
       else {
+        if(Array.isArray(body)){
+          body = body[0].msg;
+        }
         res.status(status).json({ ["error"]: body });
       }
     }

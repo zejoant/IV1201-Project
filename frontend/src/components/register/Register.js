@@ -68,9 +68,9 @@ function Register({ setCurrentUser, switchToLogin }) {
       });
 
       const data = await res.json();
-
+      
       if (!res.ok) {
-        const err = new Error(data.message || "Registration failed");
+        const err = new Error(data.error || "Registration failed");
         err.custom = true;
         throw err;
       }
@@ -86,7 +86,7 @@ function Register({ setCurrentUser, switchToLogin }) {
       const loginData = await loginRes.json();
 
       if (!loginRes.ok) {
-        const err = new Error(loginData.message || "Login failed after registration");
+        const err = new Error(loginData.error || "Login failed after registration");
         err.custom = true;
         throw err;
       }

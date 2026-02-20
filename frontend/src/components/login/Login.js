@@ -29,7 +29,7 @@ function Login({ setCurrentUser, switchToRegister }) {
       const data = await res.json();
       
       if (!res.ok) {
-        const err = new Error(data.error.message || 'Login failed');
+        const err = new Error(data.error || 'Login failed');
         err.custom = true;
         throw err;
       }
@@ -58,7 +58,7 @@ function Login({ setCurrentUser, switchToRegister }) {
       localStorage.setItem('currentUser', JSON.stringify(user));
       setCurrentUser(user);
     } catch (err) {
-      setError(err.custom?err.message:'An error occurred during login');
+      setError(err.custom ? err.message : 'An error occurred during login');
     } finally {
       setLoading(false);
     }

@@ -28,14 +28,14 @@ function MyApplications({ currentUser, onBackToProfile }) {
         const res = await fetch('/application/list_applications', {
           credentials: 'include',
         });
+
         const data = await res.json();
         
         if (!res.ok) {
-          const err = new Error(data.message || data.error?.message || 'Failed to fetch applications');
+          const err = new Error(data.error || 'Failed to fetch applications');
           err.custom = true;
           throw err;
         }
-        
         // data.success is expected to be an array of applications
         const allApps = data.success || [];
         // Filter applications belonging to current user
@@ -78,7 +78,7 @@ function MyApplications({ currentUser, onBackToProfile }) {
       const data = await res.json();
 
       if (!res.ok) {
-        const err = new Error(data.message || data.error?.message || 'Failed to cancel application');
+        const err = new Error(data.error || 'Failed to cancel application');
         err.custom = true;
         throw err;
       }
