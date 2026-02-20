@@ -2,6 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import './ApplicationDetail.css';
 
+/**
+ * Displays detailed information about a single job application.
+ * Recruiters can view personal details, competences, availability,
+ * and update the application status.
+ *
+ * @component
+ * @param {Object} props - Component props
+ * @param {Object} props.currentUser - The currently logged‑in user (recruiter)
+ * @param {Function} props.handleLogout - Callback to log the user out
+ * @returns {JSX.Element} The rendered application detail view
+ */
 function ApplicationDetail({ currentUser, handleLogout }) {
   const { id } = useParams();
   const location = useLocation();
@@ -34,7 +45,11 @@ function ApplicationDetail({ currentUser, handleLogout }) {
           const found = listData.success?.find(
             (app) => app.job_application_id === parseInt(id)
           );
-          if (!found) throw new Error(`Application with ID ${id} not found`);
+          if (!found) {
+            const err = new Error(`Application with ID ${id} not found`);
+            err.custom = true;
+            throw err;
+          }
           appBasic = found;
         }
         
@@ -78,6 +93,13 @@ function ApplicationDetail({ currentUser, handleLogout }) {
     fetchApplicationDetails();
   }, [id, location.state]);
 
+  /**
+   * Updates the status of the current application.
+   * Sends a PATCH request to the server and updates local state on success.
+   *
+   * @param {string} newStatus - New status value ('accepted', 'rejected', or 'unhandled')
+   * @returns {Promise<void>}
+   */
   const handleStatusChange = async (newStatus) => {
     if (!application) return;
     setUpdating(true);
@@ -110,19 +132,31 @@ function ApplicationDetail({ currentUser, handleLogout }) {
       if (err.message.includes('conflict') || err.message.includes('modified')) {
         alert('This application has been modified by another user. Please refresh.');
       } else {
-        setDetailError(err.custom? err.message : "An error occurred while updating status");
+        setDetailError(err.custom ? err.message : 'An error occurred while updating status');
       }
     } finally {
       setUpdating(false);
     }
   };
 
+  /**
+   * Formats a date string into a human‑readable long date.
+   *
+   * @param {string} dateString - ISO date string
+   * @returns {string} Formatted date (e.g., "January 1, 2025") or "N/A" if invalid
+   */
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
   };
 
+  /**
+   * Returns a CSS class name based on the application status.
+   *
+   * @param {string} status - Application status
+   * @returns {string} CSS class for styling the status badge
+   */
   const getStatusClass = (status) => {
     switch (status) {
       case 'accepted': return 'detail-status-accepted';

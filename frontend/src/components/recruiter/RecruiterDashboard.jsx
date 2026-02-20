@@ -2,6 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './RecruiterDashboard.css';
 
+/**
+ * Recruiter dashboard displaying a sortable table of all job applications.
+ * Allows recruiters to view applications and navigate to details.
+ *
+ * @component
+ * @param {Object} props - Component props
+ * @param {Object} props.currentUser - The currently logged‑in recruiter
+ * @param {Function} props.handleLogout - Callback to log the user out
+ * @returns {JSX.Element} The rendered dashboard
+ */
 function RecruiterDashboard({ currentUser, handleLogout }) {
   // State: applications list, loading, error, sort settings
   const [applications, setApplications] = useState([]);
@@ -57,7 +67,13 @@ function RecruiterDashboard({ currentUser, handleLogout }) {
     return sorted;
   }, [applications, sortConfig]);
 
-  // Toggle sort direction when header clicked
+  /**
+   * Updates the sort configuration when a column header is clicked.
+   * Toggles between ascending and descending order for the same key,
+   * or sets a new key with ascending order.
+   *
+   * @param {string} key - The column key to sort by
+   */
   const requestSort = (key) => {
     setSortConfig(prev => ({
       key,
@@ -65,7 +81,12 @@ function RecruiterDashboard({ currentUser, handleLogout }) {
     }));
   };
 
-  // Return CSS class based on application status
+  /**
+   * Returns a CSS class name based on the application status.
+   *
+   * @param {string} status - Application status ('accepted', 'rejected', or other)
+   * @returns {string} CSS class for styling the status badge
+   */
   const getStatusClass = (status) => {
     switch (status) {
       case 'accepted': return 'status-accepted';
@@ -74,7 +95,12 @@ function RecruiterDashboard({ currentUser, handleLogout }) {
     }
   };
 
-  // Navigate to application details page
+  /**
+   * Navigates to the detailed view of the selected application.
+   * Passes the application data via router state.
+   *
+   * @param {Object} app - The application object
+   */
   const handleRowClick = (app) => {
     navigate(`/recruiter/application/${app.job_application_id}`, { state: { application: app } });
   };
