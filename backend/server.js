@@ -26,18 +26,8 @@ const PORT = process.env.PORT || 3001;
  * - JSON parsing for request bodies
  * - Cookie parsing
  */
-const allowedOrigins = [
-  "http://localhost:3000", // local dev
-  process.env.FRONTEND_URL // Azure frontend
-];
 const corsOptions = {
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("CORS blocked"));
-    }
-  },
+  origin: process.env.FRONTEND_URL || "http://localhost:3000",
   methods: ["GET", "POST", "PATCH"],
   allowedHeaders: ["Content-Type"],
   credentials: true
