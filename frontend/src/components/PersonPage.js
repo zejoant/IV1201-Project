@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { UserContext } from '../contexts/UserContext';
 import './PersonPage.css';
 
 /**
@@ -8,39 +9,16 @@ import './PersonPage.css';
  *
  * @component
  * @param {Object} props - Component props
- * @param {Object} props.currentUser - The currently logged‑in applicant user object
- * @param {Function} props.handleLogout - Callback to log the user out
  * @param {Function} props.onApplyNow - Callback to navigate to the application form
  * @param {Function} props.onViewMyApplications - Callback to navigate to the user's applications list
  * @returns {JSX.Element} The rendered applicant dashboard
  */
-function PersonPage({ currentUser, handleLogout, onApplyNow, onViewMyApplications }) {
-  // For applicant users, we'll show two main functions
+function PersonPage({ onApplyNow, onViewMyApplications }) {
+  const { currentUser } = useContext(UserContext);
   
   return (
     <div className="personpage-container">
-      {/* Top Navigation Bar */}
-      <nav className="personpage-navbar">
-        <div className="personpage-nav-content">
-          <div className="personpage-brand">
-            <h1 className="personpage-logo">Recruitment Platform</h1>
-          </div>
-          <div className="personpage-nav-actions">
-            <div className="personpage-user-badge">
-              <div className="personpage-avatar">
-                {currentUser.username?.charAt(0) || 'U'}
-              </div>
-              <span className="personpage-username">{currentUser.username}</span>
-              <span className="personpage-user-role">Applicant</span>
-            </div>
-            <button onClick={handleLogout} className="personpage-logout-button">
-              <span>Logout</span>
-              <span className="personpage-logout-icon">→</span>
-            </button>
-          </div>
-        </div>
-      </nav>
-
+      
       {/* Main Content Area */}
       <main className="personpage-main">
         <div className="personpage-content">
