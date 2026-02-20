@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../../contexts/UserContext';
 import './RecruiterDashboard.css';
 
 /**
@@ -7,12 +8,10 @@ import './RecruiterDashboard.css';
  * Allows recruiters to view applications and navigate to details.
  *
  * @component
- * @param {Object} props - Component props
- * @param {Object} props.currentUser - The currently logged‑in recruiter
- * @param {Function} props.handleLogout - Callback to log the user out
  * @returns {JSX.Element} The rendered dashboard
  */
-function RecruiterDashboard({ currentUser, handleLogout }) {
+function RecruiterDashboard() {
+  const { currentUser } = useContext(UserContext);
   // State: applications list, loading, error, sort settings
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -107,28 +106,8 @@ function RecruiterDashboard({ currentUser, handleLogout }) {
 
   return (
     <div className="recruiter-container">
-      {/* Navigation bar with user info and logout */}
-      <nav className="recruiter-navbar">
-        <div className="recruiter-nav-content">
-          <div className="recruiter-brand">
-            <h1 className="recruiter-logo">Recruitment Platform</h1>
-          </div>
-          <div className="recruiter-nav-actions">
-            <div className="recruiter-user-badge">
-              <div className="recruiter-avatar">
-                {currentUser.username?.charAt(0) || 'U'}
-              </div>
-              <span className="recruiter-username">{currentUser.username}</span>
-              <span className="recruiter-user-role">Recruiter</span>
-            </div>
-            <button onClick={handleLogout} className="recruiter-logout-button">
-              <span>Logout</span>
-              <span className="recruiter-logout-icon">→</span>
-            </button>
-          </div>
-        </div>
-      </nav>
 
+      
       {/* Main content: applications table with sorting */}
       <main className="recruiter-main">
         <div className="recruiter-content">

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { UserContext } from '../../contexts/UserContext';
 import './MyApplications.css';
 
 /**
@@ -9,11 +10,11 @@ import './MyApplications.css';
  *
  * @component
  * @param {Object} props - Component props
- * @param {Object} props.currentUser - The currently logged‑in user object (must contain person_id)
  * @param {Function} props.onBackToProfile - Callback invoked when the user clicks the back button
  * @returns {JSX.Element} The rendered MyApplications component
  */
-function MyApplications({ currentUser, onBackToProfile }) {
+function MyApplications({ onBackToProfile }) {
+  const { currentUser } = useContext(UserContext);
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');

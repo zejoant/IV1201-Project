@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { UserContext } from '../../contexts/UserContext';
 import './ApplicationDetail.css';
 
 /**
@@ -8,12 +9,10 @@ import './ApplicationDetail.css';
  * and update the application status.
  *
  * @component
- * @param {Object} props - Component props
- * @param {Object} props.currentUser - The currently logged‑in user (recruiter)
- * @param {Function} props.handleLogout - Callback to log the user out
  * @returns {JSX.Element} The rendered application detail view
  */
-function ApplicationDetail({ currentUser, handleLogout }) {
+function ApplicationDetail() {
+  const { currentUser } = useContext(UserContext);
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
@@ -180,26 +179,6 @@ function ApplicationDetail({ currentUser, handleLogout }) {
 
   return (
     <div className="recruiter-detail-container">
-      <nav className="recruiter-detail-navbar">
-        <div className="recruiter-detail-nav-content">
-          <div className="recruiter-detail-brand">
-            <h1 className="recruiter-detail-logo">Recruitment Platform</h1>
-          </div>
-          <div className="recruiter-detail-nav-actions">
-            <div className="recruiter-detail-user-badge">
-              <div className="recruiter-detail-avatar">
-                {currentUser.username?.charAt(0) || 'U'}
-              </div>
-              <span className="recruiter-detail-username">{currentUser.username}</span>
-              <span className="recruiter-detail-user-role">Recruiter</span>
-            </div>
-            <button onClick={handleLogout} className="recruiter-detail-logout-button">
-              <span>Logout</span>
-              <span className="recruiter-detail-logout-icon">→</span>
-            </button>
-          </div>
-        </div>
-      </nav>
 
       <main className="recruiter-detail-main">
         <div className="recruiter-detail-content">
