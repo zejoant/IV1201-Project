@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { UserContext } from '../../contexts/UserContext';
 import './ApplicationForm.css';
 
 /**
@@ -9,12 +10,12 @@ import './ApplicationForm.css';
  *
  * @component
  * @param {Object} props - Component props
- * @param {any} props.currentUser - The currently logged‑in user object (not directly used in the form)
  * @param {Function} props.onApplicationComplete - Callback invoked after a successful submission
  * @param {Function} props.onBackToProfile - Callback to return to the profile view
  * @returns {JSX.Element} The rendered application form
  */
-function ApplicationForm({ currentUser, onApplicationComplete, onBackToProfile }) {
+function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
+  const { currentUser } = useContext(UserContext); 
   const [competenceId, setCompetenceId] = useState('');
   const [yearsOfExperience, setYearsOfExperience] = useState('');
   const [experienceList, setExperienceList] = useState([]);

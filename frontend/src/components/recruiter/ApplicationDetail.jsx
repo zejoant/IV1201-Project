@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { UserContext } from '../../contexts/UserContext';
 import './ApplicationDetail.css';
 
 /**
@@ -8,12 +9,10 @@ import './ApplicationDetail.css';
  * and update the application status.
  *
  * @component
- * @param {Object} props - Component props
- * @param {Object} props.currentUser - The currently logged‑in user (recruiter)
- * @param {Function} props.handleLogout - Callback to log the user out
  * @returns {JSX.Element} The rendered application detail view
  */
-function ApplicationDetail({ currentUser, handleLogout }) {
+function ApplicationDetail() {
+  const { currentUser } = useContext(UserContext);
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
@@ -34,9 +33,9 @@ function ApplicationDetail({ currentUser, handleLogout }) {
           const listRes = await fetch('/application/list_applications', {
             credentials: 'include',
           });
-          
+
           const listData = await listRes.json();
-          
+
           if (!listRes.ok) {
             const err = new Error(listData.error || 'Failed to fetch applications list');
             err.custom = true;
@@ -52,10 +51,10 @@ function ApplicationDetail({ currentUser, handleLogout }) {
           }
           appBasic = found;
         }
-        
+
         // Set basic info immediately so user sees something
         setApplication(appBasic);
-        
+
         // Now fetch full details
         const requestBody = {
           job_application_id: parseInt(id),
@@ -71,7 +70,7 @@ function ApplicationDetail({ currentUser, handleLogout }) {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(requestBody),
         });
-        
+
         const data = await res.json();
 
         if (!res.ok) {
@@ -79,12 +78,11 @@ function ApplicationDetail({ currentUser, handleLogout }) {
           err.custom = true;
           throw err;
         }
-        
+
         setApplication(data.success || data);
       } catch (err) {
         console.error('Error fetching application details:', err);
-        setDetailError(err.custom? err.message: 'An error occurred while fetching application details');
-        // application already has basic info from appBasic, so no need to set again
+        setDetailError(err.custom ? err.message : 'An error occurred while fetching application details');
       } finally {
         setLoading(false);
       }
@@ -102,6 +100,12 @@ function ApplicationDetail({ currentUser, handleLogout }) {
    */
   const handleStatusChange = async (newStatus) => {
     if (!application) return;
+    
+    // Store previous status for potential rollback
+    const previousStatus = application.status;
+    
+
+    setApplication(prev => ({ ...prev, status: newStatus }));
     setUpdating(true);
     setDetailError('');
     try {
@@ -119,21 +123,26 @@ function ApplicationDetail({ currentUser, handleLogout }) {
       const data = await res.json();
 
       if (!res.ok) {
+        // If request fails, rollback to previous status
+        setApplication(prev => ({ ...prev, status: previousStatus }));
         const err = new Error(data.error || 'Update failed');
         err.custom = true;
         throw err;
       }
-      
-      const updated = data;
 
-      setApplication(updated);
-      alert('Status updated successfully');
-    } catch (err) {
-      if (err.message.includes('conflict') || err.message.includes('modified')) {
-        alert('This application has been modified by another user. Please refresh.');
-      } else {
-        setDetailError(err.custom ? err.message : 'An error occurred while updating status');
+      const updatedApp = data.success || data;
+      if (updatedApp && typeof updatedApp === 'object') {
+        setApplication(prev => ({ ...prev, ...updatedApp }));
       }
+
+
+    } catch (err) {
+      // Set a user-friendly error message
+      let errorMessage = err.custom ? err.message : 'An error occurred while updating status';
+      if (err.message.includes('conflict') || err.message.includes('modified')) {
+        errorMessage = 'This application has been modified by another user. Please refresh.';
+      }
+      setDetailError(errorMessage);
     } finally {
       setUpdating(false);
     }
@@ -170,26 +179,6 @@ function ApplicationDetail({ currentUser, handleLogout }) {
 
   return (
     <div className="recruiter-detail-container">
-      <nav className="recruiter-detail-navbar">
-        <div className="recruiter-detail-nav-content">
-          <div className="recruiter-detail-brand">
-            <h1 className="recruiter-detail-logo">Recruitment Platform</h1>
-          </div>
-          <div className="recruiter-detail-nav-actions">
-            <div className="recruiter-detail-user-badge">
-              <div className="recruiter-detail-avatar">
-                {currentUser.username?.charAt(0) || 'U'}
-              </div>
-              <span className="recruiter-detail-username">{currentUser.username}</span>
-              <span className="recruiter-detail-user-role">Recruiter</span>
-            </div>
-            <button onClick={handleLogout} className="recruiter-detail-logout-button">
-              <span>Logout</span>
-              <span className="recruiter-detail-logout-icon">→</span>
-            </button>
-          </div>
-        </div>
-      </nav>
 
       <main className="recruiter-detail-main">
         <div className="recruiter-detail-content">
@@ -292,6 +281,7 @@ function ApplicationDetail({ currentUser, handleLogout }) {
                   Mark as Unhandled
                 </button>
               </div>
+              {detailError && <div className="recruiter-detail-error-message">{detailError}</div>}
               {updating && <p className="recruiter-detail-updating">Updating...</p>}
             </section>
           </div>
