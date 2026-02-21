@@ -38,6 +38,10 @@ Before running the project, make sure you have:
 - Windows Subsystem for Linux (WSL) for deployment
 - Git
 
+### Install dependencies
+`npm install`
+
+### Create Environment Variables
 A `.env` file is needed in the backend containing the following
 
 ```
@@ -49,7 +53,8 @@ DB_PORT=5432
 DB_SSL=true
 JWT_SECRET=your-secret-key
 ```
-## Running the frontend and backend
+## Running & Deploying
 
 - To run the frontend do: `npm start`
 - To run the backend do: `node server.js`
+- To deploy the app to azure, run `deploy.sh`
