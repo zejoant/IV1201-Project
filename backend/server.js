@@ -26,7 +26,14 @@ const PORT = process.env.PORT || 3001;
  * - JSON parsing for request bodies
  * - Cookie parsing
  */
-app.use(cors({origin: "http://localhost:3000", credentials:true}));
+const corsOptions = {
+  origin: [process.env.FRONTEND_URL, "http://localhost:3000"],
+  methods: ["GET", "POST", "PATCH"],
+  allowedHeaders: ["Content-Type"],
+  credentials: true
+};
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 

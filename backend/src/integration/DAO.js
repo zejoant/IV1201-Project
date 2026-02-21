@@ -10,6 +10,7 @@ const CompetenceProfileDTO = require("../models/CompetenceProfileDTO");
 const Competence = require("../models/Competence");
 const CompetenceDTO = require("../models/CompetenceDTO");
 const WError = require('verror').WError;
+const Checker = require("../util/Checkers");
 //const Op = require("sequelize"); dumb
 
 /**
@@ -68,6 +69,9 @@ class DAO {
   async findUser(username) {
     // Find user by username
     try {
+      Checker.isLength(username, 3, 30, 'username');
+      Checker.isAlphaNumeric(username, 'username');
+
       const person = await Person.findOne({ where: { username } });
       if (!person) return null;
 
@@ -87,19 +91,31 @@ class DAO {
   /**
  * Creates a new person in the database.
  *
- * @param {Object} personData - Person information.
- * @param {string} personData.name
- * @param {string} personData.surname
- * @param {string} personData.pnr
- * @param {string} personData.email
- * @param {string} personData.username
- * @param {string} personData.password
- * @param {number} personData.role_id
- * @returns {Promise<PersonDTO>} Created person DTO.
+ * @param {string} name user name
+ * @param {string} surname user surname
+ * @param {string} pnr user personnummer
+ * @param {string} email user email
+ * @param {string} username user username
+ * @param {string} password user password
+ * @param {number} role_id user role id 
+ * @returns {Promise<PersonDTO>} Created user.
  * @throws {Error} If validation fails or user exists.
  */
   async createPerson({ name, surname, pnr, email, username, password, role_id }) {
     try {
+      Checker.notEmptyString(name, 'name');
+      Checker.isAlpha(name, 'name');
+      Checker.notEmptyString(surname, 'surname');
+      Checker.isAlpha(surname, 'surname');
+      Checker.isPositiveInteger(parseInt(pnr), 'person number');
+      Checker.isLength(pnr, 12, 12, 'person number');
+      Checker.isEmailString(email, 'email');
+      Checker.isAlphaNumeric(username, 'username');
+      Checker.isLength(username, 3, 30, 'username');
+      Checker.isLength(password, 8, Number.MAX_SAFE_INTEGER);
+      Checker.isInteger(role_id, 'role id')
+      Checker.isNumberBetween(role_id, 1, 3, 'role id')
+
       if (!name || !surname || !email || !username || !password) {
         throw new Error("Missing required fields");
       }
@@ -134,6 +150,8 @@ class DAO {
  */
   async findUserById(id) {
     try {
+      Checker.isPositiveInteger(id, 'person id')
+
       return await Person.findByPk(id);
     } catch (err) {
       throw new WError(
@@ -154,6 +172,8 @@ class DAO {
   */
   async findCompProfileByUserId(id) {
     try {
+      Checker.isPositiveInteger(id, 'person id')
+
       const newCompProfile = await CompetenceProfile.findAll({ where: { person_id: id } })
 
       const newCompProfileArray = newCompProfile.map((input) => this.createCompetenceProfileDTO(input))
@@ -178,6 +198,8 @@ class DAO {
   */
   async findCompByUserId(id) {
     try {
+      Checker.isPositiveInteger(id, 'competence id')
+
       const newComp = await Competence.findOne({ where: { competence_id: id } })
       return this.createCompetenceDTO(newComp)
     } catch (err) {
@@ -199,6 +221,8 @@ class DAO {
  */
   async findAvaByUserId(id) {
     try {
+      Checker.isPositiveInteger(id, 'person id')
+
       const newAva = await Availability.findAll({ where: { person_id: id } })
 
       const newAvaArray = newAva.map((input) => this.createAvailabilityDTO(input))
@@ -225,6 +249,9 @@ class DAO {
   */
   async submitApplication(id, status) {
     try {
+      Checker.isPositiveInteger(id, 'person id')
+      Checker.isMatches(status, /^(unhandled|rejected|accepted)$/, 'status');
+
       if (!id || !status) {
         throw new Error("Missing required fields");
       }
@@ -252,6 +279,11 @@ class DAO {
  */
   async addExpertise(id, expertise) {
     try {
+        Checker.isPositiveInteger(id, 'person id')
+        Checker.isPositiveInteger(expertise.competence_id, 'competence id')
+        Checker.isNumeric(expertise.yoe, 'years of experience')
+        Checker.isNumberBetween(expertise.yoe, 0, 50, 'years of experience')
+      
       if (!id || !expertise) {
         throw new Error("Missing required fields");
       }
@@ -278,6 +310,10 @@ class DAO {
  */
   async addAvailability(id, availability) {
     try {
+      Checker.isPositiveInteger(id, 'person id')
+      Checker.isDateString(availability.from_date, 'from date')
+      Checker.isDateString(availability.to_date, 'to date')
+
       if (!id || !availability) {
         throw new Error("Missing required fields");
       }
@@ -345,13 +381,15 @@ class DAO {
   /**
   * Updates the status of a job application.
   *
-  * @param {Object} body - Update data.
-  * @param {number} body.job_application_id
-  * @param {string} body.status
+  * @param {number} body.job_application_id identifier for job application 
+  * @param {string} body.status status of the application
   * @returns {Promise<Array<number>>} Number of affected rows.
   */
   async updateApplication(body) {
     try {
+      Checker.isMatches(body.status, /^(unhandled|rejected|accepted)$/, 'status' );
+      Checker.isPositiveInteger(body.job_application_id, 'job app id');
+
       return await JobApplication.update({ status: body.status }, { where: { job_application_id: body.job_application_id } })
     } catch (err) {
       throw new WError(

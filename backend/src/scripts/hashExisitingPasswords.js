@@ -3,8 +3,8 @@
 require("dotenv").config();
 const bcrypt = require("bcrypt");
 const { Sequelize } = require("sequelize");
-const Person = require("../src/models/Person");
-const postgresDB = require("../src/integration/db");
+const Person = require("../models/Person");
+const postgresDB = require("../integration/db");
 
 const SALT_ROUNDS = 12;
 

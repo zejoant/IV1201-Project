@@ -76,8 +76,8 @@ class ApplicationApi extends RequestHandler {
       this.router.post("/apply",
         [
           body("expertise").isArray({min : 1}).withMessage("Not enough expertises"),
-          body("expertise.*.yoe").isNumeric().withMessage("Years of experience must be numerical"),
-          body("expertise.*.competence_id").isNumeric().withMessage("Expertise is the wrong format"),
+          body("expertise.*.yoe").isFloat({min : 0, max:50}).withMessage("Years of experience must be numerical"),
+          body("expertise.*.competence_id").isInt({min:1, max:3}).withMessage("Expertise is the wrong format"),
           body("availability").isArray({min : 1}).withMessage("Not enough availabilities"),
           body("availability.*.from_date").isISO8601().withMessage("Availability start date is not correctly formated"),
           body("availability.*.to_date").isISO8601().withMessage("Availability end date is not correctly formated"),
@@ -194,8 +194,8 @@ class ApplicationApi extends RequestHandler {
       */
       this.router.post("/get_application",
         [
-          body('job_application_id').isNumeric().withMessage("Job application does not exist"),
-          body('person_id').isNumeric().withMessage("Job application does not exist"),
+          body('job_application_id').isInt({min:1}).withMessage("Job application does not exist"),
+          body('person_id').isInt({min:1}).withMessage("Job application does not exist"),
           body('status').matches(/^(unhandled|rejected|accepted)$/).withMessage("Job application does not exist"),
           body('name').isAlpha().withMessage("Job application does not exist"),
           body('surname').isAlpha().withMessage("Job application does not exist"),
@@ -242,7 +242,7 @@ class ApplicationApi extends RequestHandler {
       this.router.patch("/update_application",
         [
           body('status').matches(/^(unhandled|rejected|accepted)$/).withMessage("Unable to change status"),
-          body('job_application_id').isNumeric().withMessage("Unable to change status"),
+          body('job_application_id').isInt({min:1}).withMessage("Unable to change status"),
         ],
         async (req, res, next) => {
           try {
