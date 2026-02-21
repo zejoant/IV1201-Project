@@ -91,7 +91,6 @@ class ApplicationApi extends RequestHandler {
             }
 
             if (!(await Authorization.checkLogin(req, res))) {
-              this.sendResponse(res, 401, errors.array());
               return;
             }
 
@@ -126,7 +125,6 @@ class ApplicationApi extends RequestHandler {
         async (req, res, next) => {
           try {
             if (!(await Authorization.checkLogin(req, res))) {
-              this.sendResponse(res, 401, errors.array());
               return;
             }
 
@@ -159,7 +157,6 @@ class ApplicationApi extends RequestHandler {
         async (req, res, next) => {
           try {
             if (!(await Authorization.checkRecruiter(this.contr, req, res))) {
-              this.sendResponse(res, 401, errors.array());
               return;
             }
 
@@ -209,7 +206,6 @@ class ApplicationApi extends RequestHandler {
             }
 
             if (!(await Authorization.checkRecruiter(this.contr, req, res))) {
-              this.sendResponse(res, 401, errors.array() );
               return;
             }
 
@@ -253,7 +249,6 @@ class ApplicationApi extends RequestHandler {
             }
 
             if (!(await Authorization.checkRecruiter(this.contr, req, res))) {
-              this.sendResponse(res, 401, errors.array());
               return;
             }
 

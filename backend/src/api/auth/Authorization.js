@@ -42,7 +42,7 @@ class Authorization {
         const authCookie = req.cookies.auth;
 
         if (!authCookie) {
-            res.status(401).json({ message: "cookie not found" });
+            res.status(401).json({ message: "Login session invalid" });
             return false;
         }
         try {
@@ -54,7 +54,7 @@ class Authorization {
             return true;
         } catch (err) {
             res.clearCookie("auth");
-            res.status(401).json({ message: "Invalid token" });
+            res.status(401).json({ message: "User login expired" });
             return false;
         }
     }
@@ -80,7 +80,7 @@ class Authorization {
         const authCookie = req.cookies.auth;
 
         if (!authCookie) {
-            res.status(401).json({ message: "cookie not found" });
+            res.status(401).json({ message: "Login session invalid" });
             return false;
         }
         try {
@@ -90,7 +90,7 @@ class Authorization {
 
             if (person.role_id == 2) {
                 res.clearCookie("auth");
-                res.status(403).json({ message: "Not recruiter" });
+                res.status(403).json({ message: "Permission denied" });
                 return false;
             }
 
@@ -101,7 +101,7 @@ class Authorization {
 
         } catch (err) {
             res.clearCookie("auth");
-            res.status(401).json({ message: "Invalid token" });
+            res.status(401).json({ message: "User login expired" });
             return false;
         }
     }

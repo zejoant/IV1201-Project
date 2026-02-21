@@ -177,7 +177,6 @@ class LoginApi extends RequestHandler {
         async (req, res, next) => {
           try {
             if (!(await Authorization.checkLogin(req, res))) {
-              this.sendResponse(res, 401, errors.array());
               return;
             }
 
