@@ -11,7 +11,7 @@ It consists of:
 ## Tech Stack
 ### Backend
 - Node.js
-- Express
+- Express 4
 - Sequelize ORM
 - PostgreSQL
 - JWT Authentication
