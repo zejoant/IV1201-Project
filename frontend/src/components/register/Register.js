@@ -20,6 +20,7 @@ function Register({ setCurrentUser, switchToLogin }) {
   const [pnr, setPersonNumber] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false); // new state for success
   const [passwordStrength, setPasswordStrength] = useState(0);
 
   /**
@@ -74,8 +75,16 @@ function Register({ setCurrentUser, switchToLogin }) {
         err.custom = true;
         throw err;
       }
+
+      // ✅ Instead of auto-login, show success and switch to login
+      setSuccess(true);
+
+      // Optional: Wait 2 seconds before redirecting to login
+      setTimeout(() => {
+        switchToLogin();
+      }, 2000);
       
-      // Step 2: Auto-login after successful registration
+      /*// Step 2: Auto-login after successful registration
       const loginRes = await fetch("/account/sign_in", {
         method: "POST",
         credentials: 'include', // Important for cookie-based sessions
@@ -92,7 +101,7 @@ function Register({ setCurrentUser, switchToLogin }) {
       }
 
       localStorage.setItem("currentUser", JSON.stringify(loginData));
-      setCurrentUser(loginData);
+      setCurrentUser(loginData);*/
     } catch (err) {
       setError(err.custom ? err.message : "An error occurred during registration");
     } finally {
@@ -313,6 +322,12 @@ function Register({ setCurrentUser, switchToLogin }) {
             </div>
           </div>
           
+          {success && (
+            <div className="register-success-alert">
+              <span className="register-error-icon"></span>
+              Account created successfully!
+            </div>
+          )}
           
           <button 
             type="submit" 
