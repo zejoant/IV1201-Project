@@ -159,6 +159,18 @@ class LoginApi extends RequestHandler {
             next(err);
           }
         });
+      
+
+
+      this.router.post("/sign_out",
+        async (req, res, next) => {
+          try {
+            Authorization.deleteCookie(res);
+            this.sendResponse(res, 200, "success!")
+          } catch (err) {
+            next(err);
+          }
+        });
 
       /*
        *

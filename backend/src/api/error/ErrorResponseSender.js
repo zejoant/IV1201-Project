@@ -51,6 +51,7 @@ class ErrorResponseSender extends ErrorHandler {
             if (res.headersSent) {
                 return next(err);
             }
+            console.log(err.jse_shortmsg)
             res.status(500).send({ error: err.jse_shortmsg || err.message || 'Operation failed' });
         });
     }

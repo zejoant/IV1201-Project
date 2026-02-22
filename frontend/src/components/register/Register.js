@@ -153,7 +153,19 @@ function Register({ setCurrentUser, switchToLogin }) {
               <input
                 type="text"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/[^A-Za-z ]/g, "");
+                  setName(value);
+
+                  // Custom validation on every change
+                  if (!/^[A-Za-z ]+$/.test(value)){
+                    e.target.setCustomValidity(
+                      "Name must only contain letters"
+                    );
+                  } else {
+                    e.target.setCustomValidity("");
+                  }
+                }}
                 required
                 className="register-input"
                 placeholder="Enter your first name"
@@ -167,7 +179,19 @@ function Register({ setCurrentUser, switchToLogin }) {
               <input
                 type="text"
                 value={surname}
-                onChange={(e) => setSurname(e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/[^A-Za-z ]/g, "");
+                  setSurname(value);
+
+                  // Custom validation on every change
+                  if (!/^[A-Za-z ]+$/.test(value)){
+                    e.target.setCustomValidity(
+                      "Name must only contain letters"
+                    );
+                  } else {
+                    e.target.setCustomValidity("");
+                  }
+                }}
                 required
                 className="register-input"
                 placeholder="Enter your last name"
@@ -195,7 +219,19 @@ function Register({ setCurrentUser, switchToLogin }) {
           <input
             type="text"
             value={pnr}
-            onChange={(e) => setPersonNumber(e.target.value)}
+            onChange={(e) => {
+              const value = e.target.value.replace(/\D/g, "");
+              setPersonNumber(value);
+
+              // Custom validation on every change
+              if (!/^\d{12}$/.test(value)) {
+                e.target.setCustomValidity(
+                  "Person number must be exactly 12 digits"
+                );
+              } else {
+                e.target.setCustomValidity("");
+              }
+            }}
             required
             className="register-input"
             placeholder="Enter your person number"
@@ -208,7 +244,18 @@ function Register({ setCurrentUser, switchToLogin }) {
             <input
               type="text"
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value.replace(/[^A-Za-z0-9]/g, "");
+                setUsername(value);
+
+                if (!/^[A-Za-z0-9]+$/.test(value)) {
+                  e.target.setCustomValidity("Username can only contain letters and numbers");
+                } else if(value.length < 3 || value.length > 30){
+                  e.target.setCustomValidity("Username must be between 3 and 30 characters");
+                } else {
+                  e.target.setCustomValidity("");
+                }
+              }}
               required
               className="register-input"
               placeholder="Choose a username"
@@ -226,10 +273,21 @@ function Register({ setCurrentUser, switchToLogin }) {
                 </span>
               </div>
             </div>
+            <input type="text" name="fake-username" autoComplete="username" style={{ display: "none" }}/> {/*decoy field to prevent firefox detecting login*/}
             <input
               type="password"
               value={password}
-              onChange={handlePasswordChange}
+              onChange={(e) => {
+                handlePasswordChange(e);
+
+                const value = e.target.value;
+
+                if (value.length < 8) {
+                  e.target.setCustomValidity("Password must be at least 8 characters long");
+                } else {
+                  e.target.setCustomValidity("");
+                }
+              }}
               required
               className="register-input"
               placeholder="Create a strong password"

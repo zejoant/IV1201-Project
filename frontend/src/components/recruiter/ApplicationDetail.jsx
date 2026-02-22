@@ -12,7 +12,7 @@ import './ApplicationDetail.css';
  * @returns {JSX.Element} The rendered application detail view
  */
 function ApplicationDetail() {
-  const { currentUser } = useContext(UserContext);
+  const { currentUser, logout } = useContext(UserContext);
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
@@ -33,6 +33,10 @@ function ApplicationDetail() {
           const listRes = await fetch('/application/list_applications', {
             credentials: 'include',
           });
+
+          if (res.status === 403) {
+            logout()
+          } 
 
           const listData = await listRes.json();
 
@@ -70,6 +74,10 @@ function ApplicationDetail() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(requestBody),
         });
+
+        if (res.status === 403) {
+          logout()
+        } 
 
         const data = await res.json();
 
@@ -119,6 +127,10 @@ function ApplicationDetail() {
           job_application_id: application.job_application_id,
         }),
       });
+
+      if (res.status === 403) {
+        logout()
+      } 
 
       const data = await res.json();
 

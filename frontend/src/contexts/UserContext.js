@@ -45,7 +45,7 @@ export function UserProvider({ children }) {
     setCurrentUser(null);
     localStorage.removeItem('currentUser');
     // Optionally call logout endpoint (fire-and-forget)
-    fetch('/account/logout', { method: 'POST', credentials: 'include' }).catch(() => {});
+    fetch('/account/sign_out', { method: 'POST', credentials: 'include' }).catch(() => {});
   };
 
   return (

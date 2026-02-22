@@ -15,7 +15,8 @@ import './ApplicationForm.css';
  * @returns {JSX.Element} The rendered application form
  */
 function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
-  const { currentUser } = useContext(UserContext); 
+  //const { currentUser } = useContext(UserContext); 
+  const { currentUser, logout } = useContext(UserContext);
   const [competenceId, setCompetenceId] = useState('');
   const [yearsOfExperience, setYearsOfExperience] = useState('');
   const [experienceList, setExperienceList] = useState([]);
@@ -41,6 +42,11 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
         const res = await fetch('/application/list_competences', {
           credentials: 'include',
         });
+
+        if (res.status === 403) {
+          logout()
+        } 
+
         const data = await res.json();
         
         if (!res.ok) {
@@ -80,13 +86,21 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
   
   // Handle adding an experience to the list
   const handleAddExperience = () => {
-    if (!competenceId || !yearsOfExperience) {
-      setError('Please select a competence and enter years of experience');
+    if(!competenceId) {
+      setError('Please select a competence');
       return;
     }
-    
-    const years = parseFloat(yearsOfExperience);
-    if (isNaN(years) || years <= 0) {
+
+    if(!yearsOfExperience) {
+      setError('Please write years of experience');
+      return;
+    }
+    const years = parseFloat(yearsOfExperience).toFixed(1);
+    if(years == 0){
+      setError('Not enough years of experience');
+      return;
+    }
+    if (isNaN(years) || years < 0) {
       setError('Years of experience must be a positive number');
       return;
     }
@@ -230,6 +244,10 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
         },
         body: JSON.stringify({ expertise, availability }),
       });
+
+      if (res.status === 403) {
+        logout()
+      } 
       
       const data = await res.json();
       
