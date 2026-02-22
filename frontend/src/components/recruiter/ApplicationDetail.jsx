@@ -12,7 +12,7 @@ import './ApplicationDetail.css';
  * @returns {JSX.Element} The rendered application detail view
  */
 function ApplicationDetail() {
-  const { currentUser, logout } = useContext(UserContext);
+  const { logout } = useContext(UserContext);
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
@@ -34,7 +34,7 @@ function ApplicationDetail() {
             credentials: 'include',
           });
 
-          if (res.status === 403) {
+          if (listRes.status === 403) {
             logout()
           } 
 
@@ -97,7 +97,7 @@ function ApplicationDetail() {
     };
 
     fetchApplicationDetails();
-  }, [id, location.state]);
+  }, [id, location.state, logout]);
 
   /**
    * Updates the status of the current application.

@@ -11,7 +11,7 @@ import './RecruiterDashboard.css';
  * @returns {JSX.Element} The rendered dashboard
  */
 function RecruiterDashboard() {
-  const { currentUser, logout } = useContext(UserContext);
+  const { logout } = useContext(UserContext);
   // State: applications list, loading, error, sort settings
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -48,7 +48,7 @@ function RecruiterDashboard() {
       }
     };
     fetchApplications();
-  }, []);
+  }, [logout]);
 
   // Sort applications based on selected column
   const sortedApplications = React.useMemo(() => {

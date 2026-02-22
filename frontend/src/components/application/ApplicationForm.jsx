@@ -16,7 +16,7 @@ import './ApplicationForm.css';
  */
 function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
   //const { currentUser } = useContext(UserContext); 
-  const { currentUser, logout } = useContext(UserContext);
+  const { logout } = useContext(UserContext);
   const [competenceId, setCompetenceId] = useState('');
   const [yearsOfExperience, setYearsOfExperience] = useState('');
   const [experienceList, setExperienceList] = useState([]);
@@ -64,7 +64,7 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
       }
     };
     fetchCompetences();
-  }, []);
+  }, [logout]);
   
   /**
    * Converts a date string in YYYY-MM-DD format to a Date object set to UTC midnight.
@@ -96,7 +96,7 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
       return;
     }
     const years = parseFloat(yearsOfExperience).toFixed(1);
-    if(years == 0){
+    if(years === 0){
       setError('Not enough years of experience');
       return;
     }
