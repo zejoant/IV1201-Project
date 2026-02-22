@@ -14,7 +14,7 @@ import './MyApplications.css';
  * @returns {JSX.Element} The rendered MyApplications component
  */
 function MyApplications({ onBackToProfile }) {
-  const { currentUser } = useContext(UserContext);
+  const { currentUser, logout } = useContext(UserContext);
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -29,6 +29,10 @@ function MyApplications({ onBackToProfile }) {
         const res = await fetch('/application/list_applications', {
           credentials: 'include',
         });
+
+        if (res.status === 403) {
+          logout()
+        } 
 
         const data = await res.json();
         
@@ -50,7 +54,7 @@ function MyApplications({ onBackToProfile }) {
     };
 
     fetchMyApplications();
-  }, [currentUser.person_id]);
+  }, [currentUser.person_id, logout]);
 
   // Handle delete (cancel) confirmation
   const confirmDelete = (app) => {
@@ -75,6 +79,10 @@ function MyApplications({ onBackToProfile }) {
           status: 'cancelled', // assuming backend accepts 'cancelled'
         }),
       });
+
+      if (res.status === 403) {
+        logout()
+      } 
 
       const data = await res.json();
 

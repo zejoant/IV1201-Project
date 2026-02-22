@@ -32,6 +32,10 @@ class Authorization {
    * Checks whether the user is logged in by verifying the auth cookie.
    * If valid, attaches decoded user information to `req.user`.
    *
+   * Sends an HTTP error response if:
+   * - the auth cookie is missing (403),
+   * - the user does not have permissions (403),
+   * 
    * @static
    * @async
    * @param {express.Request} req - Express request object.
@@ -42,7 +46,7 @@ class Authorization {
         const authCookie = req.cookies.auth;
 
         if (!authCookie) {
-            res.status(401).json({ message: "cookie not found" });
+            res.status(403).json({ message: "Login session invalid" });
             return false;
         }
         try {
@@ -54,7 +58,7 @@ class Authorization {
             return true;
         } catch (err) {
             res.clearCookie("auth");
-            res.status(401).json({ message: "Invalid token" });
+            res.status(403).json({ message: "User login expired" });
             return false;
         }
     }
@@ -64,9 +68,9 @@ class Authorization {
      * verifying the JWT stored in the auth cookie.
      *
      * Sends an HTTP error response if:
-     * - the auth cookie is missing (401),
-     * - the token is invalid or expired (401),
-     * - the user does not have recruiter permissions (403).
+     * - the auth cookie is missing (403),
+     * - the token is invalid or expired (403),
+     * - the user does not have recruiter permissions (403),
      *
      * @static
      * @async
@@ -80,7 +84,7 @@ class Authorization {
         const authCookie = req.cookies.auth;
 
         if (!authCookie) {
-            res.status(401).json({ message: "cookie not found" });
+            res.status(403).json({ message: "Login session invalid" });
             return false;
         }
         try {
@@ -90,7 +94,7 @@ class Authorization {
 
             if (person.role_id == 2) {
                 res.clearCookie("auth");
-                res.status(403).json({ message: "Not recruiter" });
+                res.status(403).json({ message: "Permission denied" });
                 return false;
             }
 
@@ -101,9 +105,19 @@ class Authorization {
 
         } catch (err) {
             res.clearCookie("auth");
-            res.status(401).json({ message: "Invalid token" });
+            res.status(403).json({ message: "User login expired" });
             return false;
         }
+    }
+
+    /**
+     * deletes the users cookie
+     *
+     * @static
+     * @param {express.Response} res - Express response object used to send error responses.
+     */
+    static deleteCookie(res){
+        res.clearCookie("auth");
     }
 }
 

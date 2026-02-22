@@ -86,7 +86,18 @@ function Login({ setCurrentUser, switchToRegister }) {
             <input
               type="text"
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value.replace(/[^A-Za-z0-9]/g, "");
+                setUsername(value);
+
+                if (!/^[A-Za-z0-9]+$/.test(value)) {
+                  e.target.setCustomValidity("Username can only contain letters and numbers");
+                } else if(value.length < 3 || value.length > 30){
+                  e.target.setCustomValidity("Username must be between 3 and 30 characters");
+                } else {
+                  e.target.setCustomValidity("");
+                }
+              }}
               required
               className="login-input"
               placeholder="Enter your username"
@@ -100,7 +111,16 @@ function Login({ setCurrentUser, switchToRegister }) {
             <input
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                setPassword(value);
+
+                if (value.length < 8) {
+                  e.target.setCustomValidity("Password must be at least 8 characters long");
+                } else {
+                  e.target.setCustomValidity("");
+                }
+              }}
               required
               className="login-input"
               placeholder="Enter your password"

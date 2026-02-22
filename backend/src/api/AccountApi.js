@@ -130,7 +130,7 @@ class LoginApi extends RequestHandler {
           body("username").trim().isLength({ min: 3, max: 30 }).withMessage("Username must be between 3 and 30 characters").isAlphanumeric().withMessage("Username must contain only letters and numbers"),
           body("name").notEmpty().withMessage("Name is required").isAlpha().withMessage("Name must contain only letters"),
           body("surname").notEmpty().withMessage("Surname is required").isAlpha().withMessage("Surname must contain only letters"),
-          body("pnr").isNumeric().withMessage("Personnummer must contain only numbers").isLength(12).withMessage("Personnummer must be 12 digits"),
+          body("pnr").isNumeric({no_symbols:true}).withMessage("Personnummer must contain only numbers").isLength({min:12, max:12}).withMessage("Personnummer must be 12 digits"),
           body("email").normalizeEmail().isEmail().withMessage("Email must be a valid email address"),
           body("password").isLength({ min: 8 }).withMessage("Password must be at least 8 characters long"),
         ],
@@ -159,6 +159,18 @@ class LoginApi extends RequestHandler {
             next(err);
           }
         });
+      
+
+
+      this.router.post("/sign_out",
+        async (req, res, next) => {
+          try {
+            Authorization.deleteCookie(res);
+            this.sendResponse(res, 200, "success!")
+          } catch (err) {
+            next(err);
+          }
+        });
 
       /*
        *
@@ -177,7 +189,6 @@ class LoginApi extends RequestHandler {
         async (req, res, next) => {
           try {
             if (!(await Authorization.checkLogin(req, res))) {
-              this.sendResponse(res, 401, errors.array());
               return;
             }
 

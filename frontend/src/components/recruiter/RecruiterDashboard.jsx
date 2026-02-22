@@ -11,7 +11,7 @@ import './RecruiterDashboard.css';
  * @returns {JSX.Element} The rendered dashboard
  */
 function RecruiterDashboard() {
-  const { currentUser } = useContext(UserContext);
+  const { currentUser, logout } = useContext(UserContext);
   // State: applications list, loading, error, sort settings
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -27,6 +27,10 @@ function RecruiterDashboard() {
         const res = await fetch('/application/list_applications', {
           credentials: 'include',
         });
+
+        if (res.status === 403) {
+          logout()
+        } 
 
         const data = await res.json();
 
