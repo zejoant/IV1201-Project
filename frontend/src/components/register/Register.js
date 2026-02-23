@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./Register.css";
+import Footer from "../Footer";
 
 /**
  * Registration form component allowing new users to create an account.
@@ -20,7 +21,6 @@ function Register({ setCurrentUser, switchToLogin }) {
   const [pnr, setPersonNumber] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false); // new state for success
   const [passwordStrength, setPasswordStrength] = useState(0);
 
   /**
@@ -76,14 +76,7 @@ function Register({ setCurrentUser, switchToLogin }) {
         throw err;
       }
 
-      // ✅ Instead of auto-login, show success and switch to login
-      setSuccess(true);
-
-      // Optional: Wait 2 seconds before redirecting to login
-      setTimeout(() => {
-        switchToLogin();
-      }, 2000);
-      
+      switchToLogin();
       /*// Step 2: Auto-login after successful registration
       const loginRes = await fetch("/account/sign_in", {
         method: "POST",
@@ -136,6 +129,7 @@ function Register({ setCurrentUser, switchToLogin }) {
   };
 
   return (
+   <>
     <div className="register-container">
       <div className="register-card">
         <div className="register-header">
@@ -322,13 +316,6 @@ function Register({ setCurrentUser, switchToLogin }) {
             </div>
           </div>
           
-          {success && (
-            <div className="register-success-alert">
-              <span className="register-error-icon"></span>
-              Account created successfully!
-            </div>
-          )}
-          
           <button 
             type="submit" 
             disabled={loading}
@@ -358,7 +345,10 @@ function Register({ setCurrentUser, switchToLogin }) {
         </form>
       </div>
     </div>
+    <Footer />
+    </>
   );
 }
+
 
 export default Register;
