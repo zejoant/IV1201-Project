@@ -37,14 +37,14 @@ function RecruiterDashboard() {
         const data = await res.json();
 
         if (!res.ok) {
-          const err = new Error(`errors.${data.error}` || 'errors.invalid_fetch');
+          const err = new Error(`list_applications.errors.${data.error}` || 'recruiterDashboard.errors.invalid_fetch');
           err.custom = true;
           throw err;
         }
 
         setApplications(data.success || []);
       } catch (err) {
-        setError(err.type? err.message : 'errors.offline_recruiterDashboard');
+        setError(err.type? err.message : 'recruiterDashboard.errors.offline');
       } finally {
         setLoading(false);
       }
@@ -119,7 +119,7 @@ function RecruiterDashboard() {
         <div className="recruiter-content">
           <h2 className="recruiter-page-title">{t('recruiterDashboard.title')}</h2>
           {loading && <div className="recruiter-loading">{t('recruiterDashboard.loading')}</div>}
-          {error && <div className="recruiter-error">{t(`recruiterDashboard.${error}`)}</div>}
+          {error && <div className="recruiter-error">{t(error)}</div>}
           {!loading && !error && (
             <div className="recruiter-table-container">
               <table className="recruiter-table">
@@ -132,7 +132,7 @@ function RecruiterDashboard() {
                       {t('recruiterDashboard.columns.surname')} {sortConfig.key === 'surname' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
                     </th>
                     <th onClick={() => requestSort('job_application_id')}>
-                      {t('recruiterDashboard.columns.applicationId')} {sortConfig.key === 'job_application_id' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
+                      {t('recruiterDashboard.columns.application_id')} {sortConfig.key === 'job_application_id' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
                     </th>
                     <th onClick={() => requestSort('status')}>
                       {t('recruiterDashboard.columns.status')} {sortConfig.key === 'status' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
@@ -151,7 +151,7 @@ function RecruiterDashboard() {
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="4" className="recruiter-no-data">{t('recruiterDashboard.noData')}</td>
+                      <td colSpan="4" className="recruiter-no-data">{t('recruiterDashboard.no_data')}</td>
                     </tr>
                   )}
                 </tbody>

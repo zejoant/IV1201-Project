@@ -53,7 +53,7 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
         const data = await res.json();
         
         if (!res.ok) {
-          const err = new Error(`errors.${data.error}` || 'errors.invalid_application');
+          const err = new Error(`list_competences.errors.${data.error}` || 'applicationForm.errors.invalid_application');
           err.custom = true;
           throw err;
         }
@@ -61,7 +61,7 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
         // The backend returns data wrapped in 'success' or directly as array
         setCompetenceOptions(data.success || data);
       } catch (err) {
-        setFetchError(err.custom ? err.message  : 'errors.offline_application');
+        setFetchError(err.custom ? err.message  : 'applicationForm.errors.offline_application');
       } finally {
         setLoadingCompetences(false);
       }
@@ -90,26 +90,26 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
   // Handle adding an experience to the list
   const handleAddExperience = () => {
     if(!competenceId) {
-      setError('validation.selectCompetence');
+      setError('applicationForm.error.select_competence');
       return;
     }
 
     if(!yearsOfExperience) {
-      setError('validation.writeExperience');
+      setError('applicationForm.error.write_experience');
       return;
     }
     const years = Number(parseFloat(yearsOfExperience).toFixed(1));
     if(years === 0){
-      setError('validation.notEnoughExperience');
+      setError('applicationForm.error.not_enough_experience');
       return;
     }
     if (isNaN(years) || years < 0) {
-      setError('validation.experiencePositive');
+      setError('applicationForm.error.experience_positive');
       return;
     }
     
     if (years > 50) {
-      setError('validation.experienceMax');
+      setError('applicationForm.error.experience_max');
       return;
     }
     
@@ -119,7 +119,7 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
     );
     
     if (isAlreadyAdded) {
-      setError('validation.competenceExists');
+      setError('applicationForm.error.competence_exists');
       return;
     }
     
@@ -129,7 +129,7 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
     );
     
     if (!selectedCompetence) {
-      setError('validation.invalidCompetence');
+      setError('applicationForm.error.invalid_competence');
       return;
     }
     
@@ -154,7 +154,7 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
   // Handle adding an availability period
   const handleAddAvailability = () => {
     if (!fromDate || !toDate) {
-      setError('validation.selectDates');
+      setError('applicationForm.error.select_dates');
       return;
     }
     
@@ -164,12 +164,12 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
     const todayUTC = toUTCDate(getTodayUTCString());
     
     if (fromUTC < todayUTC) {
-      setError('validation.startPast');
+      setError('applicationForm.error.start_past');
       return;
     }
     
     if (fromUTC > toUTC) {
-      setError('validation.startAfterEnd');
+      setError('applicationForm.error.start_after_end');
       return;
     }
     
@@ -184,7 +184,7 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
     });
     
     if (hasOverlap) {
-      setError('validation.overlappingPeriod');
+      setError('applicationForm.error.overlapping_period');
       return;
     }
     
@@ -210,12 +210,12 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
     e.preventDefault();
     
     if (experienceList.length === 0) {
-      setError('validation.addCompetenceRequired');
+      setError('applicationForm.error.add_competence_required');
       return;
     }
     
     if (availabilityList.length === 0) {
-      setError('validation.addAvailabilityRequired');
+      setError('applicationForm.error.add_availability_required');
       return;
     }
     
@@ -255,7 +255,7 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
       const data = await res.json();
       
       if (!res.ok) {
-        const err = new Error(`errors.${data.error}` || 'errors.invalid_application');
+        const err = new Error(`apply.errors.${data.error}` || 'applicationForm.errors.invalid_application');
         err.custom = true;
         throw err;
       }
@@ -279,8 +279,8 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
       }, 2000);
       
     } catch (err) {
-      console.error('Application submission error:', err);
-      setError(err.custom ? err.message : 'errors.invalid_application');
+      //console.error('Application submission error:', err);
+      setError(err.custom ? err.message : 'applicationForm.errors.invalid_application');
     } finally {
       setIsSubmitting(false);
     }
@@ -343,7 +343,7 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
         {error && (
           <div className="application-error-alert">
             <span className="application-error-icon">⚠️</span>
-            {t(`applicationForm.${error}`)}
+            {t(error)}
           </div>
         )}
         
@@ -357,7 +357,7 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
         {fetchError && (
           <div className="application-error-alert">
             <span className="application-error-icon">⚠️</span>
-            {t(`applicationForm.${fetchError}`)}
+            {t(fetchError)}
           </div>
         )}
         
@@ -366,15 +366,15 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
           <div className="application-section">
             <h3 className="application-section-title">
               <span className="application-section-icon">🎯</span>
-              {t('applicationForm.sections.competenceTitle')}
+              {t('applicationForm.sections.competence_title')}
             </h3>
             <p className="application-section-description">
-              {t('applicationForm.sections.competenceDescription')}
+              {t('applicationForm.sections.competence_description')}
             </p>
             
             <div className="application-input-group-row">
               <div className="application-input-group">
-                <label className="application-label">{t('applicationForm.labels.competenceArea')}</label>
+                <label className="application-label">{t('applicationForm.labels.competence_area')}</label>
                 <select
                   value={competenceId}
                   onChange={(e) => setCompetenceId(e.target.value)}
@@ -382,7 +382,7 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
                   disabled={loadingCompetences}
                 >
                   <option value="">
-                    {loadingCompetences ? t('applicationForm.placeholders.loadingCompetences') : t('applicationForm.placeholders.selectCompetence')}
+                    {loadingCompetences ? t('applicationForm.placeholders.loading_competences') : t('applicationForm.placeholders.select_competence')}
                   </option>
                   {competenceOptions.map((comp) => (
                     <option key={comp.competence_id} value={comp.competence_id}>
@@ -393,7 +393,7 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
               </div>
               
               <div className="application-input-group">
-                <label className="application-label">{t('applicationForm.labels.yearsExperience')}</label>
+                <label className="application-label">{t('applicationForm.labels.years_experience')}</label>
                 <input
                   type="number"
                   value={yearsOfExperience}
@@ -402,9 +402,9 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
                   max="50"
                   step="0.5"
                   className="application-input"
-                  placeholder={t('applicationForm.placeholders.experienceExample')}
+                  placeholder={t('applicationForm.placeholders.experience_example')}
                 />
-                <small className="application-input-hint">{t('applicationForm.experience.decimalHint')}</small>
+                <small className="application-input-hint">{t('applicationForm.experience.decimal_hint')}</small>
               </div>
               
               <button
@@ -413,14 +413,14 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
                 className="application-add-button"
                 disabled={loadingCompetences}
               >
-                {t('applicationForm.buttons.addCompetence')}
+                {t('applicationForm.buttons.add_competence')}
               </button>
             </div>
             
             {/* Experience List */}
             {experienceList.length > 0 && (
               <div className="application-list-container">
-                <h4 className="application-list-title">{t('applicationForm.lists.addedCompetences')}</h4>
+                <h4 className="application-list-title">{t('applicationForm.lists.added_competences')}</h4>
                 <div className="application-list">
                   {experienceList.map((item, index) => (
                     <div key={index} className="application-list-item">
@@ -448,15 +448,15 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
           <div className="application-section">
             <h3 className="application-section-title">
               <span className="application-section-icon">📅</span>
-              {t('applicationForm.lists.availabilityPeriods')}
+              {t('applicationForm.lists.availability_periods')}
             </h3>
             <p className="application-section-description">
-              {t('applicationForm.sections.availabilityDescription')}
+              {t('applicationForm.sections.availability_description')}
             </p>
             
             <div className="application-input-group-row">
               <div className="application-input-group">
-                <label className="application-label">{t('applicationForm.labels.fromDate')}</label>
+                <label className="application-label">{t('applicationForm.labels.from_date')}</label>
                 {/* TODO: TYPE:DATE IS SYSTEM DEPENDANT AND WILL OVERWRITE PLACEHOLDER,
                 IF TRANSLATION IS WANTED HAVE TO CHANGE TO ANOTHER TYPE OR SOMETHING IDK */}
                 <input 
@@ -469,7 +469,7 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
               </div>
               
               <div className="application-input-group">
-                <label className="application-label">{t('applicationForm.labels.toDate')}</label>
+                <label className="application-label">{t('applicationForm.labels.to_date')}</label>
                 <input
                   type="date"
                   value={toDate}
@@ -484,14 +484,14 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
                 onClick={handleAddAvailability}
                 className="application-add-button"
               >
-                {t('applicationForm.buttons.addPeriod')}
+                {t('applicationForm.buttons.add_period')}
               </button>
             </div>
             
             {/* Availability List */}
             {availabilityList.length > 0 && (
               <div className="application-list-container">
-                <h4 className="application-list-title">{t('applicationForm.lists.addedAvailability')}</h4>
+                <h4 className="application-list-title">{t('applicationForm.lists.added_availability')}</h4>
                 <div className="application-list">
                   {availabilityList.map((item, index) => (
                     <div key={index} className="application-list-item">
@@ -517,7 +517,7 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
           {/* Summary Section */}
           {(experienceList.length > 0 || availabilityList.length > 0) && (
             <div className="application-summary">
-              <h3 className="application-summary-title">{t('applicationForm.sections.summaryTitle')}</h3>
+              <h3 className="application-summary-title">{t('applicationForm.sections.summary_title')}</h3>
               
               {experienceList.length > 0 && (
                 <div className="application-summary-section">
@@ -534,7 +534,7 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
               
               {availabilityList.length > 0 && (
                 <div className="application-summary-section">
-                  <h4 className="application-summary-subtitle">{t('applicationForm.sections.availabilityTitle')}:</h4>
+                  <h4 className="application-summary-subtitle">{t('applicationForm.sections.availability_title')}:</h4>
                   <ul className="application-summary-list">
                     {availabilityList.map((item, index) => (
                       <li key={index} className="application-summary-item">

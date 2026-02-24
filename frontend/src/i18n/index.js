@@ -1,7 +1,7 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import en from './en.json';
-import sv from './sv.json';
+import en from './en2.json';
+import sv from './sv2.json';
 
 /**
  * i18n configuration for the application.

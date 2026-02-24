@@ -28,10 +28,10 @@ function PersonPage({ onApplyNow, onViewMyApplications }) {
           <div className="personpage-welcome-section">
             <div className="personpage-welcome-content">
               <h2 className="personpage-welcome-title">
-                {t('personPage.welcomeTitle')} <span className="personpage-highlight">{currentUser.username}</span>!
+                {t('personPage.welcome_title')} <span className="personpage-highlight">{currentUser.username}</span>!
               </h2>
               <p className="personpage-welcome-subtitle">
-                {t('personPage.welcomeSubtitle')}
+                {t('personPage.welcome_subtitle')}
               </p>
             </div>
             <div className="personpage-welcome-decoration">
@@ -44,7 +44,7 @@ function PersonPage({ onApplyNow, onViewMyApplications }) {
             <div className="personpage-card-header">
               <h3 className="personpage-card-title">
                 <span className="personpage-card-icon">👤</span>
-                {t('personPage.personalInformation')}
+                {t('personPage.personal_info')}
               </h3>
               <div className="personpage-card-badge">{t('personPage.active')}</div>
             </div>
@@ -52,11 +52,11 @@ function PersonPage({ onApplyNow, onViewMyApplications }) {
             <div className="personpage-info-grid">
               <div className="personpage-info-item">
                 <span className="personpage-info-label">{t('personPage.labels.name')}</span>
-                <span className="personpage-info-value">{currentUser.name || t('personPage.notProvided')}</span>
+                <span className="personpage-info-value">{currentUser.name || t('personPage.not_provided')}</span>
               </div>
               <div className="personpage-info-item">
                 <span className="personpage-info-label">{t('personPage.labels.surname')}</span>
-                <span className="personpage-info-value">{currentUser.surname || t('personPage.notProvided')}</span>
+                <span className="personpage-info-value">{currentUser.surname || t('personPage.not_provided')}</span>
               </div>
               <div className="personpage-info-item">
                 <span className="personpage-info-label">{t('personPage.labels.username')}</span>
@@ -69,7 +69,7 @@ function PersonPage({ onApplyNow, onViewMyApplications }) {
               {/* Person number can be shown if available */}
               {currentUser.person_number && (
                 <div className="personpage-info-item">
-                  <span className="personpage-info-label">{t('personPage.labels.personNumber')}</span>
+                  <span className="personpage-info-label">{t('personPage.labels.pnr')}</span>
                   <span className="personpage-info-value">{currentUser.person_number}</span>
                 </div>
               )}
@@ -77,7 +77,7 @@ function PersonPage({ onApplyNow, onViewMyApplications }) {
 
             <div className="personpage-card-footer">
               <span className="personpage-footer-note">
-                {t('personPage.lastUpdated')} {new Date().toLocaleDateString()}
+                {t('personPage.last_updated')} {new Date().toLocaleDateString()}
               </span>
             </div>
           </div>
@@ -89,15 +89,15 @@ function PersonPage({ onApplyNow, onViewMyApplications }) {
               <div className="personpage-action-icon personpage-action-icon-1">
                 📝
               </div>
-              <h4 className="personpage-action-title">{t('personPage.actions.submitApplication')}</h4>
+              <h4 className="personpage-action-title">{t('personPage.actions.submit_application')}</h4>
               <p className="personpage-action-description">
-                {t('personPage.actions.submitDescription')}
+                {t('personPage.actions.submit_description')}
               </p>
               <button 
                 className="personpage-action-button"
                 onClick={onApplyNow}
               >
-                {t('personPage.actions.applyNow')}
+                {t('personPage.actions.apply_now')}
               </button>
             </div>
             
@@ -106,15 +106,15 @@ function PersonPage({ onApplyNow, onViewMyApplications }) {
            <div className="personpage-action-icon personpage-action-icon-2">
               📋
            </div>
-              <h4 className="personpage-action-title">{t('personPage.actions.myApplications')}</h4>
+              <h4 className="personpage-action-title">{t('personPage.actions.my_applications')}</h4>
                <p className="personpage-action-description">
-            {t('personPage.actions.manageDescription')}
+            {t('personPage.actions.manage_description')}
            </p>
         <button
             className="personpage-action-button"
              onClick={onViewMyApplications}
             >
-            {t('personPage.actions.viewAll')}
+            {t('personPage.actions.view_all')}
           </button>
             </div>
           </div>

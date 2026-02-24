@@ -23,7 +23,7 @@ function Register({ setCurrentUser, switchToLogin }) {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false); // new state for success
   const [passwordStrength, setPasswordStrength] = useState(0);
-  const {i18n, t} = useTranslation();
+  const {t, i18n} = useTranslation();
 
   /**
    * Updates the password state and recalculates its strength.
@@ -81,7 +81,7 @@ function Register({ setCurrentUser, switchToLogin }) {
       const data = await res.json();
       
       if (!res.ok) {
-        const err = new Error(`errors.${data.error}` || 'errors.invalid_account_creation');
+        const err = new Error(`sign_up.errors.${data.error}` || 'register.errors.invalid_account_creation');
         err.custom = true;
         throw err;
       }
@@ -113,7 +113,7 @@ function Register({ setCurrentUser, switchToLogin }) {
       localStorage.setItem("currentUser", JSON.stringify(loginData));
       setCurrentUser(loginData);*/
     } catch (err) {
-      setError(err.custom ? err.message : 'errors.offline_login');
+      setError(err.custom ? err.message : 'register.errors.offline_login');
     } finally {
       setLoading(false);
     }
@@ -140,9 +140,9 @@ function Register({ setCurrentUser, switchToLogin }) {
    */
   const getStrengthText = (strength) => {
     if (strength === 0) return "";
-    if (strength <= 2) return t('register.passwordStrength.weak');
-    if (strength === 3) return t('register.passwordStrength.good');
-    return t('register.passwordStrength.strong');
+    if (strength <= 2) return t('register.password_strength.weak');
+    if (strength === 3) return t('register.password_strength.good');
+    return t('register.password_strength.strong');
   };
 
   return (
@@ -159,7 +159,7 @@ function Register({ setCurrentUser, switchToLogin }) {
         {error && (
           <div className="register-error-alert">
             <span className="register-error-icon">⚠️</span>
-            {t(`register.${error}`)}
+            {t(error)}
           </div>
         )}
         
@@ -167,7 +167,7 @@ function Register({ setCurrentUser, switchToLogin }) {
           <div className="register-form-row">
             <div className="register-input-group">
               <label className="register-label">
-                {t('register.labels.firstName')} <span className="register-required">*</span>
+                {t('register.labels.first_name')} <span className="register-required">*</span>
               </label>
               <input
                 type="text"
@@ -176,7 +176,7 @@ function Register({ setCurrentUser, switchToLogin }) {
                 required
                 onInvalid={(e) => {
                   const value = e.target.value;
-                  if (value.length == 0){
+                  if (value.length === 0){
                     e.target.setCustomValidity(t('register.errors.missing_field'));
                   }
                   else {
@@ -184,13 +184,13 @@ function Register({ setCurrentUser, switchToLogin }) {
                   }
                 }}
                 className="register-input"
-                placeholder={t('register.placeholders.firstName')}
+                placeholder={t('register.placeholders.first_name')}
               />
             </div>
             
             <div className="register-input-group">
               <label className="register-label">
-                {t('register.labels.lastName')} <span className="register-required">*</span>
+                {t('register.labels.last_name')} <span className="register-required">*</span>
               </label>
               <input
                 type="text"
@@ -199,7 +199,7 @@ function Register({ setCurrentUser, switchToLogin }) {
                 required
                 onInvalid={(e) => {
                   const value = e.target.value;
-                  if (value.length == 0){
+                  if (value.length === 0){
                     e.target.setCustomValidity(t('register.errors.missing_field'));
                   }
                   else {
@@ -207,7 +207,7 @@ function Register({ setCurrentUser, switchToLogin }) {
                   }
                 }}
                 className="register-input"
-                placeholder={t('register.placeholders.lastName')}
+                placeholder={t('register.placeholders.last_name')}
               />
             </div>
           </div>
@@ -223,7 +223,7 @@ function Register({ setCurrentUser, switchToLogin }) {
               required
               onInvalid={(e) => {
                 const value = e.target.value;
-                if (value.length == 0){
+                if (value.length === 0){
                   e.target.setCustomValidity(t('register.errors.missing_field'));
                 }
                 else {
@@ -236,7 +236,7 @@ function Register({ setCurrentUser, switchToLogin }) {
           </div>
           <div className="register-input-group">
             <label className="register-label">
-             {t('register.labels.personNumber')} <span className="register-required">*</span>
+             {t('register.labels.pnr')} <span className="register-required">*</span>
          </label>
           <input
             type="text"
@@ -249,18 +249,18 @@ function Register({ setCurrentUser, switchToLogin }) {
             required
             onInvalid={(e) => {
               const value = e.target.value;
-              if (value.length == 0){
+              if (value.length === 0){
                 e.target.setCustomValidity(t('register.errors.missing_field'));
               } else if (value.length !== 12) {
                 e.target.setCustomValidity(
-                  t("register.validation.personNumberLength")
+                  t("register.errors.pnr_length")
                 );
               } else {
                 e.target.setCustomValidity("");
               }
             }}
             className="register-input"
-            placeholder={t('register.placeholders.personNumber')}
+            placeholder={t('register.placeholders.pnr')}
           />
           </div>
           <div className="register-input-group">
@@ -279,10 +279,10 @@ function Register({ setCurrentUser, switchToLogin }) {
               minLength={3}
               onInvalid={(e) => {
                 const value = e.target.value;
-                if (value.length == 0){
+                if (value.length === 0){
                   e.target.setCustomValidity(t('register.errors.missing_field'));
                 } else if(value.length < 3 || value.length > 30){
-                  e.target.setCustomValidity(t('register.validation.usernameLength'));
+                  e.target.setCustomValidity(t('register.errors.username_length'));
                 } else {
                   e.target.setCustomValidity("");
                 }
@@ -314,10 +314,10 @@ function Register({ setCurrentUser, switchToLogin }) {
               required
               onInvalid={(e) => {
                 const value = e.target.value;
-                if (value.length == 0){
+                if (value.length === 0){
                   e.target.setCustomValidity(t('register.errors.missing_field'));
                 } else if (value.length < 8) {
-                  e.target.setCustomValidity(t('register.validation.passwordLength'));
+                  e.target.setCustomValidity(t('register.errors.password_length'));
                 } else {
                   e.target.setCustomValidity("");
                 }
@@ -338,10 +338,10 @@ function Register({ setCurrentUser, switchToLogin }) {
                 ))}
               </div>
               <div className="register-password-tips">
-                <p className="register-tip">• {t('register.passwordStrength.tips.0')}</p>
-                <p className="register-tip">• {t('register.passwordStrength.tips.1')}</p>
-                <p className="register-tip">• {t('register.passwordStrength.tips.2')}</p>
-                <p className="register-tip">• {t('register.passwordStrength.tips.3')}</p>
+                <p className="register-tip">• {t('register.password_strength.tips.0')}</p>
+                <p className="register-tip">• {t('register.password_strength.tips.1')}</p>
+                <p className="register-tip">• {t('register.password_strength.tips.2')}</p>
+                <p className="register-tip">• {t('register.password_strength.tips.3')}</p>
               </div>
             </div>
           </div>
@@ -361,10 +361,10 @@ function Register({ setCurrentUser, switchToLogin }) {
             {loading ? (
               <span className="register-button-content">
                 <span className="register-spinner"></span>
-                {t('register.buttons.creatingAccount')}
+                {t('register.buttons.creating_account')}
               </span>
             ) : (
-              <p>{t('register.buttons.createAccount')}</p>
+              <p>{t('register.buttons.create_account')}</p>
             )}
           </button>
           
@@ -377,10 +377,14 @@ function Register({ setCurrentUser, switchToLogin }) {
             onClick={switchToLogin}
             className="register-switch-button"
           >
-            {t('register.buttons.accountAlready')} <span className="register-switch-highlight">{t('register.buttons.signIn')}</span>
+            {t('register.buttons.account_already')} <span className="register-switch-highlight">{t('register.buttons.sign_in')}</span>
           </button>
         </form>
       </div>
+      <div>
+      <button onClick={() => {i18n.changeLanguage('en'); localStorage.setItem('language','en')}}>English</button>
+      <button onClick={() => {i18n.changeLanguage('sv'); localStorage.setItem('language','sv')}}>Svenska</button>
+        </div>
     </div>
   );
 }

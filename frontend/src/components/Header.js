@@ -36,7 +36,7 @@ function Header() {
             </div>
             <span className="header-username">{currentUser.username}</span>
             <span className="header-user-role">
-              {currentUser.role_id === 1 ? t('header.role.recruiter') : t('header.role.applicant')}
+              {currentUser.role_id === 1 ? t('header.recruiter') : t('header.applicant')}
             </span>
           </div>
           <button onClick={handleLogout} className="header-logout-button">

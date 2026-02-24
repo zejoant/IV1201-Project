@@ -44,7 +44,7 @@ function ApplicationDetail() {
           const listData = await listRes.json();
 
           if (!listRes.ok) {
-            const err = new Error(`errors.${listData.error}` || 'validation.application_fetch_fail');
+            const err = new Error(`list_applications.errors.${listData.error}` || 'applicationDetail.errors.application_fetch_fail');
             err.custom = true;
             throw err;
           }
@@ -52,7 +52,7 @@ function ApplicationDetail() {
             (app) => app.job_application_id === parseInt(id)
           );
           if (!found) {
-            const err = new Error(`validation.application_not_found`);
+            const err = new Error(`applicationDetail.errors.application_not_found`);
             err.custom = true;
             throw err;
           }
@@ -85,7 +85,7 @@ function ApplicationDetail() {
         const data = await res.json();
 
         if (!res.ok) {
-          const err = new Error(`errors.${data.error}` || 'validation.load_full_application');
+          const err = new Error(`get_application.errors.${data.error}` || 'applicationDetail.errors.load_full_application');
           err.custom = true;
           throw err;
         }
@@ -93,7 +93,7 @@ function ApplicationDetail() {
         setApplication(data.success || data);
       } catch (err) {
         //console.error('Error fetching application details:', err);
-        setDetailError(err.custom ? err.message : 'validation.application_fetch_error');
+        setDetailError(err.custom ? err.message : 'applicationDetail.errors.application_fetch_error');
       } finally {
         setLoading(false);
       }
@@ -140,7 +140,7 @@ function ApplicationDetail() {
       if (!res.ok) {
         // If request fails, rollback to previous status
         setApplication(prev => ({ ...prev, status: previousStatus }));
-        const err = new Error(`errors.${data.error}` || 'validation.application_update_failed');
+        const err = new Error(`update_application.errors.${data.error}` || 'applicationDetail.errors.application_update_failed');
         err.custom = true;
         throw err;
       }
@@ -153,7 +153,7 @@ function ApplicationDetail() {
 
     } catch (err) {
       // Set a user-friendly error message
-      let errorMessage = err.custom ? err.message : 'validation.update_status_error';
+      let errorMessage = err.custom ? err.message : 'applicationDetail.errors.update_status_error';
       //if (err.message.includes('conflict') || err.message.includes('modified')) {
       //  errorMessage = 'This application has been modified by another user. Please refresh.';
       //}
@@ -190,7 +190,7 @@ function ApplicationDetail() {
   };
 
   if (loading) return <div className="recruiter-detail-loading">{t('applicationDetail.loading')}</div>;
-  if (!application) return <div className="recruiter-detail-error">{t('applicationDetail.applicationNotFound')}</div>;
+  if (!application) return <div className="recruiter-detail-error">{t('applicationDetail.application_not_found')}</div>;
 
   return (
     <div className="recruiter-detail-container">
@@ -198,7 +198,7 @@ function ApplicationDetail() {
       <main className="recruiter-detail-main">
         <div className="recruiter-detail-content">
           <button className="recruiter-detail-back-button" onClick={() => navigate('/recruiter')}>
-            {t('applicationDetail.backToApplications')}
+            {t('applicationDetail.back_to_applications')}
           </button>
 
           <div className="recruiter-detail-card">
@@ -210,7 +210,7 @@ function ApplicationDetail() {
             </div>
 
             <section className="recruiter-detail-section">
-              <h3>{t('applicationDetail.personalInformation')}</h3>
+              <h3>{t('applicationDetail.personal_info')}</h3>
               <div className="recruiter-detail-info-grid">
                 <div className="recruiter-detail-info-item">
                   <span className="recruiter-detail-info-label">{t('applicationDetail.name')}</span>
@@ -220,19 +220,19 @@ function ApplicationDetail() {
                 </div>
                 <div className="recruiter-detail-info-item">
                   <span className="recruiter-detail-info-label">{t('applicationDetail.email')}</span>
-                  <span className="recruiter-detail-info-value">{application.email || t('applicationDetail.notAvailable')}</span>
+                  <span className="recruiter-detail-info-value">{application.email || t('applicationDetail.not_available')}</span>
                 </div>
                 <div className="recruiter-detail-info-item">
                   <span className="recruiter-detail-info-label">{t('applicationDetail.pnr')}</span>
                   <span className="recruiter-detail-info-value">
-                    {application.pnr || application.person_number || application.ssn || t('applicationDetail.notAvailable')}
+                    {application.pnr || application.person_number || application.ssn || t('applicationDetail.not_available')}
                   </span>
                 </div>
               </div>
             </section>
 
             <section className="recruiter-detail-section">
-              <h3>{t('applicationDetail.areasOfExpertise')}</h3>
+              <h3>{t('applicationDetail.aoe')}</h3>
               {application.competences && Array.isArray(application.competences) && application.competences.length > 0 ? (
                 <ul className="recruiter-detail-list">
                   {application.competences.map((exp, index) => {
@@ -247,18 +247,18 @@ function ApplicationDetail() {
                   })}
                 </ul>
               ) : (
-                <p>{detailError ? t('applicationDetail.fullDetailsUnavailable') : t('applicationDetail.noExpertise')}</p>
+                <p>{detailError ? t('applicationDetail.fullDetailsUnavailable') : t('applicationDetail.no_expertise')}</p>
               )}
             </section>
 
             <section className="recruiter-detail-section">
-              <h3>{t('applicationDetail.availabilityPeriods')}</h3>
+              <h3>{t('applicationDetail.availability_periods')}</h3>
               {application.availabilities && Array.isArray(application.availabilities) && application.availabilities.length > 0 ? (
                 <ul className="recruiter-detail-list">
                   {application.availabilities.map((period, index) => {
                     if (!period) return null;
-                    const from = period.from_date ? formatDate(period.from_date) : t('applicationDetail.notAvailable');
-                    const to = period.to_date ? formatDate(period.to_date) : t('applicationDetail.notAvailable');
+                    const from = period.from_date ? formatDate(period.from_date) : t('applicationDetail.not_available');
+                    const to = period.to_date ? formatDate(period.to_date) : t('applicationDetail.not_available');
                     return (
                       <li key={index} className="recruiter-detail-list-item">
                         {from} {t('applicationDetail.to')} {to}
@@ -267,12 +267,12 @@ function ApplicationDetail() {
                   })}
                 </ul>
               ) : (
-                <p>{detailError ? t('applicationDetail.fullDetailsUnavailable') : t('applicationDetail.noAvailability')}</p>
+                <p>{detailError ? t('applicationDetail.full_details_unavailable') : t('applicationDetail.noAvailability')}</p>
               )}
             </section>
 
             <section className="recruiter-detail-actions">
-              <h3>{t('applicationDetail.changeStatus')}</h3>
+              <h3>{t('applicationDetail.change_status')}</h3>
               <div className="recruiter-detail-buttons">
                 <button
                   className="recruiter-detail-button accept"
@@ -293,7 +293,7 @@ function ApplicationDetail() {
                   onClick={() => handleStatusChange('unhandled')}
                   disabled={updating || application.status === 'unhandled'}
                 >
-                  {t('applicationDetail.markUnhandled')}
+                  {t('applicationDetail.mark_unhandled')}
                 </button>
               </div>
               {detailError && <div className="recruiter-detail-error-message">{detailError}</div>}

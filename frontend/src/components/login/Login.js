@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 
 function Login({ setCurrentUser, switchToRegister }) {
-  const {t} = useTranslation();
+  const {t, i18n} = useTranslation();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -39,7 +39,7 @@ function Login({ setCurrentUser, switchToRegister }) {
       const data = await res.json();
       
       if (!res.ok) {
-        const err = new Error(`errors.${data.error}` || 'errors.invalid_credentials');
+        const err = new Error(`sign_in.errors.${data.error}` || 'login.errors.invalid_credentials');
         err.custom = true;
         throw err;
       }
@@ -55,7 +55,7 @@ function Login({ setCurrentUser, switchToRegister }) {
 
       
       if (!profileRes.ok) {
-        const err = new Error(`errors.${profileData.error}` || 'errors.invalid_fetch');
+        const err = new Error(`id.errors.${profileData.error}` || 'login.errors.invalid_fetch');
         err.custom = true;
         throw err;
       }
@@ -68,7 +68,7 @@ function Login({ setCurrentUser, switchToRegister }) {
       localStorage.setItem('currentUser', JSON.stringify(user));
       setCurrentUser(user);
     } catch (err) {
-      setError(err.custom ? err.message : 'errors.offline_login');
+      setError(err.custom ? err.message : 'login.errors.offline_login');
     } finally {
       setLoading(false);
     }
@@ -86,7 +86,7 @@ function Login({ setCurrentUser, switchToRegister }) {
         {error && (
           <div className="login-error-alert">
             <span className="login-error-icon">⚠️</span>
-            {t(`login.${error}`)}
+            {t(error)}
           </div>
         )}
 
@@ -105,8 +105,8 @@ function Login({ setCurrentUser, switchToRegister }) {
               maxLength={30}
               onInvalid={(e) => {
                 const value = e.target.value;
-                if (value.length == 0) {
-                  e.target.setCustomValidity(t('login.missing_field'));
+                if (value.length === 0) {
+                  e.target.setCustomValidity(t('login.errors.missing_field'));
                 } else if(value.length < 3 || value.length > 30){
                   e.target.setCustomValidity(t('login.errors.invalid_username_length'));
                 } else {
@@ -114,7 +114,7 @@ function Login({ setCurrentUser, switchToRegister }) {
                 }
               }}
               className="login-input"
-              placeholder={t('login.usernamePlaceholder')}
+              placeholder={t('login.username_placeholder')}
             />
           </div>
 
@@ -133,16 +133,16 @@ function Login({ setCurrentUser, switchToRegister }) {
               required
               onInvalid={(e) => {
                 const value = e.target.value;
-                if (value.length == 0){
-                  e.target.setCustomValidity(t('register.errors.missing_field'));
+                if (value.length === 0){
+                  e.target.setCustomValidity(t('login.errors.missing_field'));
                 } else if (value.length < 8) {
-                  e.target.setCustomValidity(t('register.validation.passwordLength'));
+                  e.target.setCustomValidity(t('login.errors.password_length'));
                 } else {
                   e.target.setCustomValidity("");
                 }
               }}
               className="login-input"
-              placeholder={t('login.passwordPlaceholder')}
+              placeholder={t('login.password_placeholder')}
             />
           </div>
 
@@ -154,26 +154,30 @@ function Login({ setCurrentUser, switchToRegister }) {
             {loading ? (
               <span className="login-button-content">
                 <span className="login-spinner"></span>
-                {t('login.loggingIn')}
+                {t('login.logging_in')}
               </span>
             ) : (
-              <p>{t('login.signIn')}</p>
+              <p>{t('login.sign_in')}</p>
             )}
           </button>
         </form>
 
         <div className="login-footer">
           <p className="login-footer-text">
-            {t('login.noAccount')}{' '}
+            {t('login.no_account')}{' '}
             <button
               onClick={switchToRegister}
               className="login-link-button"
             >
-              {t('login.signUp')}
+              {t('login.sign_up')}
             </button>
           </p>
         </div>
       </div>
+      <div>
+      <button onClick={() => {i18n.changeLanguage('en'); localStorage.setItem('language','en')}}>English</button>
+      <button onClick={() => {i18n.changeLanguage('sv'); localStorage.setItem('language','sv')}}>Svenska</button>
+        </div>
     </div>
   );
 }
