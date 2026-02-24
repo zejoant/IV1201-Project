@@ -55,6 +55,14 @@ function Register({ setCurrentUser, switchToLogin }) {
     setError("");
     setLoading(true);
 
+    const form = e.target;
+
+    if (!form.checkValidity()) {
+      form.reportValidity(); // Shows your custom messages
+      setLoading(false);
+      return;
+    }
+
     try {
       // Step 1: Register the user
       const res = await fetch("/account/sign_up", {
@@ -155,7 +163,7 @@ function Register({ setCurrentUser, switchToLogin }) {
           </div>
         )}
         
-        <form onSubmit={handleSubmit} className="register-form">
+        <form noValidate onSubmit={handleSubmit} className="register-form">
           <div className="register-form-row">
             <div className="register-input-group">
               <label className="register-label">
@@ -164,20 +172,17 @@ function Register({ setCurrentUser, switchToLogin }) {
               <input
                 type="text"
                 value={name}
-                onChange={(e) => {
-                  const value = e.target.value.replace(/[^A-Za-z ]/g, "");
-                  setName(value);
-
-                  // Custom validation on every change
-                  if (!/^[A-Za-z ]+$/.test(value)){
-                    e.target.setCustomValidity(
-                      t('register.validation.lettersOnlyName')
-                    );
-                  } else {
+                onChange={(e) => {setName(e.target.value.replace(/[^A-Za-z ]/g, "")); e.target.setCustomValidity(t(''));}}
+                required
+                onInvalid={(e) => {
+                  const value = e.target.value;
+                  if (value.length == 0){
+                    e.target.setCustomValidity(t('register.errors.missing_field'));
+                  }
+                  else {
                     e.target.setCustomValidity("");
                   }
                 }}
-                required
                 className="register-input"
                 placeholder={t('register.placeholders.firstName')}
               />
@@ -190,20 +195,17 @@ function Register({ setCurrentUser, switchToLogin }) {
               <input
                 type="text"
                 value={surname}
-                onChange={(e) => {
-                  const value = e.target.value.replace(/[^A-Za-z ]/g, "");
-                  setSurname(value);
-
-                  // Custom validation on every change
-                  if (!/^[A-Za-z ]+$/.test(value)){
-                    e.target.setCustomValidity(
-                      t('register.validation.lettersOnlySurname')
-                    );
-                  } else {
+                onChange={(e) => {setSurname(e.target.value.replace(/[^A-Za-z ]/g, "")); e.target.setCustomValidity(t(''));}}
+                required
+                onInvalid={(e) => {
+                  const value = e.target.value;
+                  if (value.length == 0){
+                    e.target.setCustomValidity(t('register.errors.missing_field'));
+                  }
+                  else {
                     e.target.setCustomValidity("");
                   }
                 }}
-                required
                 className="register-input"
                 placeholder={t('register.placeholders.lastName')}
               />
@@ -217,8 +219,17 @@ function Register({ setCurrentUser, switchToLogin }) {
             <input
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {setEmail(e.target.value); e.target.setCustomValidity(t(''));}}
               required
+              onInvalid={(e) => {
+                const value = e.target.value;
+                if (value.length == 0){
+                  e.target.setCustomValidity(t('register.errors.missing_field'));
+                }
+                else {
+                  e.target.setCustomValidity(t('register.errors.invalid_email'));
+                }
+              }}
               className="register-input"
               placeholder={t('register.placeholders.email')}
             />
@@ -233,17 +244,21 @@ function Register({ setCurrentUser, switchToLogin }) {
             onChange={(e) => {
               const value = e.target.value.replace(/\D/g, "");
               setPersonNumber(value);
-
-              // Custom validation on every change
-              if (!/^\d{12}$/.test(value)) {
+            }}
+            pattern="\d{12}"
+            required
+            onInvalid={(e) => {
+              const value = e.target.value;
+              if (value.length == 0){
+                e.target.setCustomValidity(t('register.errors.missing_field'));
+              } else if (value.length !== 12) {
                 e.target.setCustomValidity(
-                  t('register.validation.personNumberLength')
+                  t("register.validation.personNumberLength")
                 );
               } else {
                 e.target.setCustomValidity("");
               }
             }}
-            required
             className="register-input"
             placeholder={t('register.placeholders.personNumber')}
           />
@@ -258,16 +273,20 @@ function Register({ setCurrentUser, switchToLogin }) {
               onChange={(e) => {
                 const value = e.target.value.replace(/[^A-Za-z0-9]/g, "");
                 setUsername(value);
-
-                if (!/^[A-Za-z0-9]+$/.test(value)) {
-                  e.target.setCustomValidity(t('register.validation.usernameChars'));
+              }}
+              required
+              maxLength={30}
+              minLength={3}
+              onInvalid={(e) => {
+                const value = e.target.value;
+                if (value.length == 0){
+                  e.target.setCustomValidity(t('register.errors.missing_field'));
                 } else if(value.length < 3 || value.length > 30){
                   e.target.setCustomValidity(t('register.validation.usernameLength'));
                 } else {
                   e.target.setCustomValidity("");
                 }
               }}
-              required
               className="register-input"
               placeholder={t('register.placeholders.username')}
             />
@@ -290,16 +309,19 @@ function Register({ setCurrentUser, switchToLogin }) {
               value={password}
               onChange={(e) => {
                 handlePasswordChange(e);
-
+              }}
+              minLength={8}
+              required
+              onInvalid={(e) => {
                 const value = e.target.value;
-
-                if (value.length < 8) {
+                if (value.length == 0){
+                  e.target.setCustomValidity(t('register.errors.missing_field'));
+                } else if (value.length < 8) {
                   e.target.setCustomValidity(t('register.validation.passwordLength'));
                 } else {
                   e.target.setCustomValidity("");
                 }
               }}
-              required
               className="register-input"
               placeholder={t('register.placeholders.password')}
             />
@@ -359,10 +381,6 @@ function Register({ setCurrentUser, switchToLogin }) {
           </button>
         </form>
       </div>
-      <div>
-      <button onClick={() => {i18n.changeLanguage('en'); localStorage.setItem('language','en')}}>English</button>
-      <button onClick={() => {i18n.changeLanguage('sv'); localStorage.setItem('language','sv')}}>Svenska</button>
-        </div>
     </div>
   );
 }

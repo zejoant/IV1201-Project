@@ -11,6 +11,7 @@
     "usernamePlaceholder": "Enter your username",
     "passwordPlaceholder": "Enter your password",
     "usernameValidation": "Username can only contain letters and numbers",
+    "missing_field": "Missing required fields",
 
     "errors": {
       "invalid_credentials": "Invalid credentials",

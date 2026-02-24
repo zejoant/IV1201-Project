@@ -11,6 +11,7 @@
     "usernamePlaceholder": "Ange ditt användarnamn",
     "passwordPlaceholder": "Ange ditt lösenord",
     "usernameValidation": "Användarnamn får endast innehålla bokstäver och siffror",
+    "missing_field": "Obligatoriska fält saknas",
 
     "errors": {
       "invalid_credentials": "Felaktig inloggning",
@@ -25,7 +26,7 @@
       "invalid_name": "Namn krävs",
       "invalid_surname": "Efternamn krävs",
       "invalid_surname_letters": "Efternamn får endast innehålla bokstäver",
-      "invalid_email": "Email must be a valid email address",
+      "invalid_email": "E-post måste vara i rätt e-post format",
       "user_not_found": "Kunde inte hitta användaren"
     }
   },
@@ -251,7 +252,7 @@
       "invalid_name": "Namn krävs",
       "invalid_surname": "Efternamn krävs",
       "invalid_surname_letters": "Efternamn får endast innehålla bokstäver",
-      "invalid_email": "Email must be a valid email address",
+      "invalid_email": "E-post måste vara i rätt e-post format",
       "invalid_account_creation": "Misslyckades att skapa konto",
       "missing_field": "Obligatoriska fält saknas",
       "user_exists": "Användaren finns redan",

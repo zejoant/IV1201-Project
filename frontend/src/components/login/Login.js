@@ -19,6 +19,14 @@ function Login({ setCurrentUser, switchToRegister }) {
     setError('');
     setLoading(true);
 
+    const form = e.target;
+
+    if (!form.checkValidity()) {
+      form.reportValidity(); // Shows your custom messages
+      setLoading(false);
+      return;
+    }
+
     try {
       // Step 1: Sign in to get session
       const res = await fetch('/account/sign_in', {
@@ -82,7 +90,7 @@ function Login({ setCurrentUser, switchToRegister }) {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="login-form">
+        <form noValidate onSubmit={handleSubmit} className="login-form">
           <div className="login-input-group">
             <label className="login-label">{t('login.username')}</label>
             <input
@@ -91,16 +99,20 @@ function Login({ setCurrentUser, switchToRegister }) {
               onChange={(e) => {
                 const value = e.target.value.replace(/[^A-Za-z0-9]/g, "");
                 setUsername(value);
-
-                if (!/^[A-Za-z0-9]+$/.test(value)) {
-                  e.target.setCustomValidity(t('login.usernameValidation'));
+              }}
+              required
+              minLength={3}
+              maxLength={30}
+              onInvalid={(e) => {
+                const value = e.target.value;
+                if (value.length == 0) {
+                  e.target.setCustomValidity(t('login.missing_field'));
                 } else if(value.length < 3 || value.length > 30){
-                  e.target.setCustomValidity(t('login.usernameLength'));
+                  e.target.setCustomValidity(t('login.errors.invalid_username_length'));
                 } else {
                   e.target.setCustomValidity("");
                 }
               }}
-              required
               className="login-input"
               placeholder={t('login.usernamePlaceholder')}
             />
@@ -116,14 +128,19 @@ function Login({ setCurrentUser, switchToRegister }) {
               onChange={(e) => {
                 const value = e.target.value;
                 setPassword(value);
-
-                if (value.length < 8) {
-                  e.target.setCustomValidity(t('login.passwordLength'));
+              }}
+              minLength={8}
+              required
+              onInvalid={(e) => {
+                const value = e.target.value;
+                if (value.length == 0){
+                  e.target.setCustomValidity(t('register.errors.missing_field'));
+                } else if (value.length < 8) {
+                  e.target.setCustomValidity(t('register.validation.passwordLength'));
                 } else {
                   e.target.setCustomValidity("");
                 }
               }}
-              required
               className="login-input"
               placeholder={t('login.passwordPlaceholder')}
             />
