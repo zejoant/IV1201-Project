@@ -102,7 +102,7 @@ function PersonPage({ onApplyNow, onViewMyApplications }) {
             </div>
             
             {/* My Applications Card */}
-          <div className="personpage-action-card">
+          {/*<div className="personpage-action-card">
            <div className="personpage-action-icon personpage-action-icon-2">
               📋
            </div>
@@ -116,7 +116,7 @@ function PersonPage({ onApplyNow, onViewMyApplications }) {
             >
             {t('personPage.actions.view_all')}
           </button>
-            </div>
+            </div>*/}
           </div>
         </div>
       </main>

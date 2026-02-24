@@ -6,7 +6,14 @@
             "invalid_username_chars": "Username can only contain letters and numbers",
             "invalid_password_length": "Password must be at least 8 characters",
             "invalid_credentials": "Invalid username or password",
-            "invalid_fetch": "Failed to fetch user credentials"
+            "invalid_fetch": "Failed to fetch user credentials",
+            "unknown_error": "An unexpected error occured",
+            "operation_failed": "An unexpected error occured",
+            "auth": {
+                "login_session_invalid": "Login session invalid",
+                "user_login_expired": "User login expired",
+                "permission_denied": "Permission denied"
+            }
         }
     },
 
@@ -26,19 +33,39 @@
             "missing_field": "Missing required fields",
             "user_exists": "User already exists",
             "invalid_account_creation": "Account creation failed",
-            "creation_failed": "Could not create account"
+            "creation_failed": "Could not create account",
+            "operation_failed": "An unexpected error occured",
+            "auth": {
+                "login_session_invalid": "Login session invalid",
+                "user_login_expired": "User login expired",
+                "permission_denied": "Permission denied"
+            }
         }
     },
 
     "sign_out": {
-        "success": "Logged out successfully"
+        "success": "Logged out successfully",
+        "errors": {
+            "operation_failed": "An unexpected error occured",
+            "auth": {
+                "login_session_invalid": "Login session invalid",
+                "user_login_expired": "User login expired",
+                "permission_denied": "Permission denied"
+            }
+        }
     },
 
     "id": {
         "errors": {
             "invalid_fetch": "Could not fetch user",
-            "user_not_found": "User not found",
-            "unauthorized": "Not authenticated"
+            "unauthorized": "Not authenticated",
+            "unknown_error": "An unexpected error occured during account creation",
+            "operation_failed": "An unexpected error occured",
+            "auth": {
+                "login_session_invalid": "Login session invalid",
+                "user_login_expired": "User login expired",
+                "permission_denied": "Permission denied"
+            }
         }
     },
 
@@ -55,7 +82,13 @@
             "cannot_add_competence": "Could not add competence",
             "cannot_add_ava": "Could not add availability",
             "missing_field": "Missing required fields",
-            "unauthorized": "Not authenticated"
+            "unauthorized": "Not authenticated",
+            "operation_failed": "An unexpected error occured",
+            "auth": {
+                "login_session_invalid": "Login session invalid",
+                "user_login_expired": "User login expired",
+                "permission_denied": "Permission denied"
+            }
         }
     },
 
@@ -63,7 +96,13 @@
         "errors": {
             "invalid_competence": "Could not load competences",
             "competence_not_found": "No competences found",
-            "unauthorized": "Not authenticated"
+            "unauthorized": "Not authenticated",
+            "operation_failed": "An unexpected error occured",
+            "auth": {
+                "login_session_invalid": "Login session invalid",
+                "user_login_expired": "User login expired",
+                "permission_denied": "Permission denied"
+            }
         }
     },
 
@@ -71,7 +110,13 @@
         "errors": {
             "invalid_fetch": "Could not fetch applications",
             "no_applications": "No applications found",
-            "unauthorized": "Not authorized"
+            "unauthorized": "Not authorized",
+            "operation_failed": "An unexpected error occured",
+            "auth": {
+                "login_session_invalid": "Login session invalid",
+                "user_login_expired": "User login expired",
+                "permission_denied": "Permission denied"
+            }
         }
     },
 
@@ -81,7 +126,13 @@
             "no_application_exists": "Application does not exist",
             "competence_not_found": "Competence not found",
             "availability_not_found": "Availability not found",
-            "unauthorized": "Not authorized"
+            "unauthorized": "Not authorized",
+            "operation_failed": "An unexpected error occured",
+            "auth": {
+                "login_session_invalid": "Login session invalid",
+                "user_login_expired": "User login expired",
+                "permission_denied": "Permission denied"
+            }
         }
     },
 
@@ -90,7 +141,13 @@
         "errors": {
             "status_change": "Invalid status update",
             "status_not_found": "Status not found",
-            "unauthorized": "Not authorized"
+            "unauthorized": "Not authorized",
+            "operation_failed": "An unexpected error occured",
+            "auth": {
+                "login_session_invalid": "Login session invalid",
+                "user_login_expired": "User login expired",
+                "permission_denied": "Permission denied"
+            }
         }
     },
     
@@ -273,7 +330,7 @@
             "update_status_error": "Failed to update status. Please try again."
         }
     },
-    
+
     "applicationForm": {
         "title": "Job Application",
         "subtitle": "Fill in your skills and availability to apply.",

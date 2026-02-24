@@ -23,7 +23,7 @@ function Register({ setCurrentUser, switchToLogin }) {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false); // new state for success
   const [passwordStrength, setPasswordStrength] = useState(0);
-  const {t, i18n} = useTranslation();
+  const {t} = useTranslation();
 
   /**
    * Updates the password state and recalculates its strength.
@@ -381,10 +381,6 @@ function Register({ setCurrentUser, switchToLogin }) {
           </button>
         </form>
       </div>
-      <div>
-      <button onClick={() => {i18n.changeLanguage('en'); localStorage.setItem('language','en')}}>English</button>
-      <button onClick={() => {i18n.changeLanguage('sv'); localStorage.setItem('language','sv')}}>Svenska</button>
-        </div>
     </div>
   );
 }

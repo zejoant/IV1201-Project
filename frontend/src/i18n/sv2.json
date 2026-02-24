@@ -6,7 +6,14 @@
             "invalid_username_chars": "Användarnamnet får endast innehålla bokstäver och siffror",
             "invalid_password_length": "Lösenordet måste vara minst 8 tecken långt",
             "invalid_credentials": "Ogiltigt användarnamn eller lösenord",
-            "invalid_fetch": "Misslyckades med att hämta användaruppgifter"
+            "invalid_fetch": "Misslyckades med att hämta användaruppgifter",
+            "unknown_error": "Ett oväntat fel uppstod",
+            "operation_failed": "Ett oväntat fel uppstod",
+            "auth": {
+                "login_session_invalid": "Inloggningssessionen är ogiltig",
+                "user_login_expired": "Användarinloggningen har gått ut",
+                "permission_denied": "Behörighet nekad"
+            }
         }
     },
 
@@ -26,19 +33,39 @@
             "missing_field": "Obligatoriska fält saknas",
             "user_exists": "Användaren finns redan",
             "invalid_account_creation": "Misslyckades med att skapa konto",
-            "creation_failed": "Kunde inte skapa konto"
+            "creation_failed": "Kunde inte skapa konto",
+            "operation_failed": "Ett oväntat fel uppstod",
+            "auth": {
+                "login_session_invalid": "Inloggningssessionen är ogiltig",
+                "user_login_expired": "Användarinloggningen har gått ut",
+                "permission_denied": "Behörighet nekad"
+            }
         }
     },
 
     "sign_out": {
-        "success": "Utloggning lyckades"
+        "success": "Utloggning lyckades",
+        "errors": {
+            "operation_failed": "Ett oväntat fel uppstod",
+            "auth": {
+                "login_session_invalid": "Inloggningssessionen är ogiltig",
+                "user_login_expired": "Användarinloggningen har gått ut",
+                "permission_denied": "Behörighet nekad"
+            }
+        }
     },
 
     "id": {
         "errors": {
             "invalid_fetch": "Kunde inte hämta användare",
-            "user_not_found": "Användaren hittades inte",
-            "unauthorized": "Inte autentiserad"
+            "unauthorized": "Inte autentiserad",
+            "unknown_error": "Ett oväntat fel uppstod när användaren skapades",
+            "operation_failed": "Ett oväntat fel uppstod",
+            "auth": {
+                "login_session_invalid": "Inloggningssessionen är ogiltig",
+                "user_login_expired": "Användarinloggningen har gått ut",
+                "permission_denied": "Behörighet nekad"
+            }
         }
     },
 
@@ -55,7 +82,13 @@
             "cannot_add_competence": "Kunde inte lägga till kompetens",
             "cannot_add_ava": "Kunde inte lägga till tillgänglighet",
             "missing_field": "Obligatoriska fält saknas",
-            "unauthorized": "Inte autentiserad"
+            "unauthorized": "Inte autentiserad",
+            "operation_failed": "Ett oväntat fel uppstod",
+            "auth": {
+                "login_session_invalid": "Inloggningssessionen är ogiltig",
+                "user_login_expired": "Användarinloggningen har gått ut",
+                "permission_denied": "Behörighet nekad"
+            }
         }
     },
 
@@ -63,7 +96,13 @@
         "errors": {
             "invalid_competence": "Kunde inte ladda kompetenser",
             "competence_not_found": "Inga kompetenser hittades",
-            "unauthorized": "Inte autentiserad"
+            "unauthorized": "Inte autentiserad",
+            "operation_failed": "Ett oväntat fel uppstod",
+            "auth": {
+                "login_session_invalid": "Inloggningssessionen är ogiltig",
+                "user_login_expired": "Användarinloggningen har gått ut",
+                "permission_denied": "Behörighet nekad"
+            }
         }
     },
 
@@ -71,7 +110,13 @@
         "errors": {
             "invalid_fetch": "Kunde inte hämta ansökningar",
             "no_applications": "Inga ansökningar hittades",
-            "unauthorized": "Inte behörig"
+            "unauthorized": "Inte behörig",
+            "operation_failed": "Ett oväntat fel uppstod",
+            "auth": {
+                "login_session_invalid": "Inloggningssessionen är ogiltig",
+                "user_login_expired": "Användarinloggningen har gått ut",
+                "permission_denied": "Behörighet nekad"
+            }
         }
     },
 
@@ -81,7 +126,13 @@
             "no_application_exists": "Ansökan finns inte",
             "competence_not_found": "Kompetens hittades inte",
             "availability_not_found": "Tillgänglighet hittades inte",
-            "unauthorized": "Inte behörig"
+            "unauthorized": "Inte behörig",
+            "operation_failed": "Ett oväntat fel uppstod",
+            "auth": {
+                "login_session_invalid": "Inloggningssessionen är ogiltig",
+                "user_login_expired": "Användarinloggningen har gått ut",
+                "permission_denied": "Behörighet nekad"
+            }
         }
     },
 
@@ -90,7 +141,13 @@
         "errors": {
             "status_change": "Ogiltig statusuppdatering",
             "status_not_found": "Status hittades inte",
-            "unauthorized": "Inte behörig"
+            "unauthorized": "Inte behörig",
+            "operation_failed": "Ett oväntat fel uppstod",
+            "auth": {
+                "login_session_invalid": "Inloggningssessionen är ogiltig",
+                "user_login_expired": "Användarinloggningen har gått ut",
+                "permission_denied": "Behörighet nekad"
+            }
         }
     },
 
@@ -274,7 +331,7 @@
             "update_status_error": "Misslyckades med att uppdatera status. Försök igen."
         }
     },
-    
+
     "applicationForm": {
         "title": "Jobbansökan",
         "subtitle": "Fyll i dina kompetenser och din tillgänglighet för att ansöka.",

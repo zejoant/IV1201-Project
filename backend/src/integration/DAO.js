@@ -83,7 +83,7 @@ class DAO {
           cause: err,
           info: { DAO: `Failed sequelize call findOne where: username = ${username}` },
         },
-        `invalid_credentials`,
+        `unknown_error`,
       );
     }
   }
@@ -159,7 +159,7 @@ class DAO {
           cause: err,
           info: { DAO: `Failed sequelize call findByPk for ${id}.` },
         },
-        'user_not_found',
+        'unknown_error',
       );
     }
   }

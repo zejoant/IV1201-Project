@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 
 function Login({ setCurrentUser, switchToRegister }) {
-  const {t, i18n} = useTranslation();
+  const {t} = useTranslation();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -174,10 +174,6 @@ function Login({ setCurrentUser, switchToRegister }) {
           </p>
         </div>
       </div>
-      <div>
-      <button onClick={() => {i18n.changeLanguage('en'); localStorage.setItem('language','en')}}>English</button>
-      <button onClick={() => {i18n.changeLanguage('sv'); localStorage.setItem('language','sv')}}>Svenska</button>
-        </div>
     </div>
   );
 }

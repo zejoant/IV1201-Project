@@ -46,7 +46,7 @@ class Authorization {
         const authCookie = req.cookies.auth;
 
         if (!authCookie) {
-            res.status(403).json({ message: "Login session invalid" });
+            res.status(403).json({ error: "auth.login_session_invalid" });
             return false;
         }
         try {
@@ -58,7 +58,7 @@ class Authorization {
             return true;
         } catch (err) {
             res.clearCookie("auth");
-            res.status(403).json({ message: "User login expired" });
+            res.status(403).json({ error: "auth.user_login_expired" });
             return false;
         }
     }
@@ -84,7 +84,7 @@ class Authorization {
         const authCookie = req.cookies.auth;
 
         if (!authCookie) {
-            res.status(403).json({ message: "Login session invalid" });
+            res.status(403).json({ error: "auth.login_session_invalid" });
             return false;
         }
         try {
@@ -94,7 +94,7 @@ class Authorization {
 
             if (person.role_id == 2) {
                 res.clearCookie("auth");
-                res.status(403).json({ message: "Permission denied" });
+                res.status(403).json({ error: "auth.permission_denied" });
                 return false;
             }
 
@@ -105,7 +105,7 @@ class Authorization {
 
         } catch (err) {
             res.clearCookie("auth");
-            res.status(403).json({ message: "User login expired" });
+            res.status(403).json({ error: "auth.user_login_expired" });
             return false;
         }
     }

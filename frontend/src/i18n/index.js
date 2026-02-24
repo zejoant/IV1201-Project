@@ -3,6 +3,18 @@ import { initReactI18next } from 'react-i18next';
 import en from './en2.json';
 import sv from './sv2.json';
 
+// Supported languages
+const supportedLngs = ['en', 'sv'];
+
+// Get saved language from localStorage, if any
+const savedLng = localStorage.getItem('language');
+
+// Get browser language (first two letters, e.g., 'en' or 'sv')
+const browserLng = (navigator.language || navigator.userLanguage).slice(0, 2);
+
+// Determine which language to use: localStorage first, then browser, fallback 'en'
+const defaultLng = savedLng || (supportedLngs.includes(browserLng) ? browserLng : 'en');
+
 /**
  * i18n configuration for the application.
  *
@@ -22,7 +34,7 @@ i18n
       en: { translation: en },
       sv: { translation: sv },
     },
-    lng: localStorage.language, // Default language
+    lng: defaultLng, // Default language
     fallbackLng: 'en', // Fallback if key is missing
     debug: false, // Set to true to debug missing keys
     interpolation: {
