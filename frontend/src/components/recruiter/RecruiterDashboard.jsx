@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../contexts/UserContext';
+import { useTranslation } from 'react-i18next';
 import './RecruiterDashboard.css';
 
 /**
@@ -18,6 +19,7 @@ function RecruiterDashboard() {
   const [error, setError] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: 'job_application_id', direction: 'asc' });
   const navigate = useNavigate();
+  const {t} = useTranslation();
 
   // Fetch all applications on component mount
   useEffect(() => {
@@ -35,14 +37,14 @@ function RecruiterDashboard() {
         const data = await res.json();
 
         if (!res.ok) {
-          const err = new Error(data.error || 'Failed to fetch applications');
+          const err = new Error(`errors.${data.error}` || 'errors.invalid_fetch');
           err.custom = true;
           throw err;
         }
 
         setApplications(data.success || []);
       } catch (err) {
-        setError(err.type? err.message : "An error occured while fetching applications");
+        setError(err.type? err.message : 'errors.offline_recruiterDashboard');
       } finally {
         setLoading(false);
       }
@@ -115,25 +117,25 @@ function RecruiterDashboard() {
       {/* Main content: applications table with sorting */}
       <main className="recruiter-main">
         <div className="recruiter-content">
-          <h2 className="recruiter-page-title">All Applications</h2>
-          {loading && <div className="recruiter-loading">Loading applications...</div>}
-          {error && <div className="recruiter-error">{error}</div>}
+          <h2 className="recruiter-page-title">{t('recruiterDashboard.title')}</h2>
+          {loading && <div className="recruiter-loading">{t('recruiterDashboard.loading')}</div>}
+          {error && <div className="recruiter-error">{t(`recruiterDashboard.${error}`)}</div>}
           {!loading && !error && (
             <div className="recruiter-table-container">
               <table className="recruiter-table">
                 <thead>
                   <tr>
                     <th onClick={() => requestSort('name')}>
-                      Name {sortConfig.key === 'name' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
+                      {t('recruiterDashboard.columns.name')} {sortConfig.key === 'name' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
                     </th>
                     <th onClick={() => requestSort('surname')}>
-                      Surname {sortConfig.key === 'surname' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
+                      {t('recruiterDashboard.columns.surname')} {sortConfig.key === 'surname' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
                     </th>
                     <th onClick={() => requestSort('job_application_id')}>
-                      Application ID {sortConfig.key === 'job_application_id' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
+                      {t('recruiterDashboard.columns.applicationId')} {sortConfig.key === 'job_application_id' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
                     </th>
                     <th onClick={() => requestSort('status')}>
-                      Status {sortConfig.key === 'status' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
+                      {t('recruiterDashboard.columns.status')} {sortConfig.key === 'status' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
                     </th>
                   </tr>
                 </thead>
@@ -144,12 +146,12 @@ function RecruiterDashboard() {
                         <td>{app.name}</td>
                         <td>{app.surname}</td>
                         <td>{app.job_application_id}</td>
-                        <td><span className={`recruiter-status-badge ${getStatusClass(app.status)}`}>{app.status}</span></td>
+                        <td><span className={`recruiter-status-badge ${getStatusClass(app.status)}`}>{t(`recruiterDashboard.status.${app.status}`)}</span></td>
                       </tr>
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="4" className="recruiter-no-data">No applications found</td>
+                      <td colSpan="4" className="recruiter-no-data">{t('recruiterDashboard.noData')}</td>
                     </tr>
                   )}
                 </tbody>

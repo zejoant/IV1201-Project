@@ -73,8 +73,8 @@ class LoginApi extends RequestHandler {
        */
       this.router.post("/sign_in",
         [
-          body("username").trim().isLength({ min: 3, max: 30 }).withMessage('Username must be between 3-30 characters').isAlphanumeric().withMessage('Username must contain only letters and numbers'),
-          body("password").isLength({ min: 8 }).withMessage("Password must be at least 8 characters"),
+          body("username").trim().isLength({ min: 3, max: 30 }).withMessage('invalid_username_length').isAlphanumeric().withMessage('invalid_username_chars'),
+          body("password").isLength({ min: 8 }).withMessage('invalid_password_length'),
         ],
         async (req, res, next) => {
           try {
@@ -89,14 +89,14 @@ class LoginApi extends RequestHandler {
             const person = await this.contr.login(username);
 
             if (!person) {
-              this.sendResponse(res, 401, "Invalid credentials")
+              this.sendResponse(res, 401, 'invalid_credentials')
               return;
             }
 
             const match = await bcrypt.compare(password, person.password)
 
             if (!match) {
-              this.sendResponse(res, 401, "Invalid credentials")
+              this.sendResponse(res, 401, 'invalid_credentials')
               return;
             }
             // send cookie 
@@ -127,12 +127,12 @@ class LoginApi extends RequestHandler {
        */
       this.router.post("/sign_up",
         [
-          body("username").trim().isLength({ min: 3, max: 30 }).withMessage("Username must be between 3 and 30 characters").isAlphanumeric().withMessage("Username must contain only letters and numbers"),
-          body("name").notEmpty().withMessage("Name is required").isAlpha().withMessage("Name must contain only letters"),
-          body("surname").notEmpty().withMessage("Surname is required").isAlpha().withMessage("Surname must contain only letters"),
-          body("pnr").isNumeric({no_symbols:true}).withMessage("Personnummer must contain only numbers").isLength({min:12, max:12}).withMessage("Personnummer must be 12 digits"),
-          body("email").normalizeEmail().isEmail().withMessage("Email must be a valid email address"),
-          body("password").isLength({ min: 8 }).withMessage("Password must be at least 8 characters long"),
+          body("username").trim().isLength({ min: 3, max: 30 }).withMessage('invalid_username_length').isAlphanumeric().withMessage('invalid_username_chars'),
+          body("name").notEmpty().withMessage('invalid_name').isAlpha().withMessage('invalid_name_letters'),
+          body("surname").notEmpty().withMessage('invalid_surname').isAlpha().withMessage('invalid_surname_letters'),
+          body("pnr").isNumeric({no_symbols:true}).withMessage('invalid_pnr').isLength({min:12, max:12}).withMessage('invalid_pnr_length'),
+          body("email").normalizeEmail().isEmail().withMessage('invalid_email'),
+          body("password").isLength({ min: 8 }).withMessage('invalid_password_length'),
         ],
         async (req, res, next) => {
           try {
@@ -151,7 +151,7 @@ class LoginApi extends RequestHandler {
             const person = await this.contr.createAccount({ name, surname, pnr, email, username, password: hashedPassword, role_id });
 
             if (!person) {
-              this.sendResponse(res, 401, "Account creation failed");
+              this.sendResponse(res, 401, "invalid_account_creation");
               return;
             }
             this.sendResponse(res, 200, "Account created!")
@@ -195,7 +195,7 @@ class LoginApi extends RequestHandler {
             const person = await this.contr.findUserById(req.user.id);
 
             if (!person) {
-              this.sendResponse(res, 404, "Person not found");
+              this.sendResponse(res, 404, 'invalid_fetch');
               return;
             }
             this.sendResponse(res, 201, person)

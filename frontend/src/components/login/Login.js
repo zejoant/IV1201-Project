@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import './Login.css';
+import { useTranslation } from 'react-i18next';
 
 
 function Login({ setCurrentUser, switchToRegister }) {
+  const {t} = useTranslation();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -23,13 +25,13 @@ function Login({ setCurrentUser, switchToRegister }) {
         method: 'POST',
         credentials: 'include', // Important for cookie-based sessions
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ username, password}),
       });
 
       const data = await res.json();
       
       if (!res.ok) {
-        const err = new Error(data.error || 'Login failed');
+        const err = new Error(`errors.${data.error}` || 'errors.invalid_credentials');
         err.custom = true;
         throw err;
       }
@@ -45,7 +47,7 @@ function Login({ setCurrentUser, switchToRegister }) {
 
       
       if (!profileRes.ok) {
-        const err = new Error(profileData.error || 'Failed to fetch user profile');
+        const err = new Error(`errors.${profileData.error}` || 'errors.invalid_fetch');
         err.custom = true;
         throw err;
       }
@@ -58,7 +60,7 @@ function Login({ setCurrentUser, switchToRegister }) {
       localStorage.setItem('currentUser', JSON.stringify(user));
       setCurrentUser(user);
     } catch (err) {
-      setError(err.custom ? err.message : 'An error occurred during login');
+      setError(err.custom ? err.message : 'errors.offline_login');
     } finally {
       setLoading(false);
     }
@@ -68,21 +70,21 @@ function Login({ setCurrentUser, switchToRegister }) {
     <div className="login-container">
       <div className="login-card">
         <div className="login-header">
-          <h2 className="login-title">Welcome Back</h2>
-          <p className="login-subtitle">Sign in to your recruitment account</p>
+          <h2 className="login-title">{t("login.title")}</h2>
+          <p className="login-subtitle">{t('login.subtitle')}</p>
         </div>
 
         {/* Error alert */}
         {error && (
           <div className="login-error-alert">
             <span className="login-error-icon">⚠️</span>
-            {error}
+            {t(`login.${error}`)}
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="login-form">
           <div className="login-input-group">
-            <label className="login-label">Username</label>
+            <label className="login-label">{t('login.username')}</label>
             <input
               type="text"
               value={username}
@@ -91,22 +93,22 @@ function Login({ setCurrentUser, switchToRegister }) {
                 setUsername(value);
 
                 if (!/^[A-Za-z0-9]+$/.test(value)) {
-                  e.target.setCustomValidity("Username can only contain letters and numbers");
+                  e.target.setCustomValidity(t('login.usernameValidation'));
                 } else if(value.length < 3 || value.length > 30){
-                  e.target.setCustomValidity("Username must be between 3 and 30 characters");
+                  e.target.setCustomValidity(t('login.usernameLength'));
                 } else {
                   e.target.setCustomValidity("");
                 }
               }}
               required
               className="login-input"
-              placeholder="Enter your username"
+              placeholder={t('login.usernamePlaceholder')}
             />
           </div>
 
           <div className="login-input-group">
             <div className="login-label-container">
-              <label className="login-label">Password</label>
+              <label className="login-label">{t('login.password')}</label>
             </div>
             <input
               type="password"
@@ -116,14 +118,14 @@ function Login({ setCurrentUser, switchToRegister }) {
                 setPassword(value);
 
                 if (value.length < 8) {
-                  e.target.setCustomValidity("Password must be at least 8 characters long");
+                  e.target.setCustomValidity(t('login.passwordLength'));
                 } else {
                   e.target.setCustomValidity("");
                 }
               }}
               required
               className="login-input"
-              placeholder="Enter your password"
+              placeholder={t('login.passwordPlaceholder')}
             />
           </div>
 
@@ -135,22 +137,22 @@ function Login({ setCurrentUser, switchToRegister }) {
             {loading ? (
               <span className="login-button-content">
                 <span className="login-spinner"></span>
-                Logging in...
+                {t('login.loggingIn')}
               </span>
             ) : (
-              'Sign In'
+              <p>{t('login.signIn')}</p>
             )}
           </button>
         </form>
 
         <div className="login-footer">
           <p className="login-footer-text">
-            Don't have an account?{' '}
+            {t('login.noAccount')}{' '}
             <button
               onClick={switchToRegister}
               className="login-link-button"
             >
-              Sign up
+              {t('login.signUp')}
             </button>
           </p>
         </div>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { UserContext } from '../../contexts/UserContext';
+import { useTranslation } from 'react-i18next';
 import './ApplicationForm.css';
 
 /**
@@ -34,6 +35,8 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
   const [loadingCompetences, setLoadingCompetences] = useState(true);
   const [fetchError, setFetchError] = useState('');
 
+  const {t} = useTranslation();
+
   // Fetch available competences on component mount
   useEffect(() => {
     const fetchCompetences = async () => {
@@ -50,7 +53,7 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
         const data = await res.json();
         
         if (!res.ok) {
-          const err = new Error(data.error || 'Failed to load competences');
+          const err = new Error(`errors.${data.error}` || 'errors.invalid_application');
           err.custom = true;
           throw err;
         }
@@ -58,7 +61,7 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
         // The backend returns data wrapped in 'success' or directly as array
         setCompetenceOptions(data.success || data);
       } catch (err) {
-        setFetchError(err.custom ? err.message : 'An error occurred while loading competences');
+        setFetchError(err.custom ? err.message  : 'errors.offline_application');
       } finally {
         setLoadingCompetences(false);
       }
@@ -87,26 +90,26 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
   // Handle adding an experience to the list
   const handleAddExperience = () => {
     if(!competenceId) {
-      setError('Please select a competence');
+      setError('validation.selectCompetence');
       return;
     }
 
     if(!yearsOfExperience) {
-      setError('Please write years of experience');
+      setError('validation.writeExperience');
       return;
     }
-    const years = parseFloat(yearsOfExperience).toFixed(1);
+    const years = Number(parseFloat(yearsOfExperience).toFixed(1));
     if(years === 0){
-      setError('Not enough years of experience');
+      setError('validation.notEnoughExperience');
       return;
     }
     if (isNaN(years) || years < 0) {
-      setError('Years of experience must be a positive number');
+      setError('validation.experiencePositive');
       return;
     }
     
     if (years > 50) {
-      setError('Years of experience cannot exceed 50');
+      setError('validation.experienceMax');
       return;
     }
     
@@ -116,7 +119,7 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
     );
     
     if (isAlreadyAdded) {
-      setError('This competence has already been added to your profile');
+      setError('validation.competenceExists');
       return;
     }
     
@@ -126,7 +129,7 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
     );
     
     if (!selectedCompetence) {
-      setError('Please select a valid competence');
+      setError('validation.invalidCompetence');
       return;
     }
     
@@ -151,7 +154,7 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
   // Handle adding an availability period
   const handleAddAvailability = () => {
     if (!fromDate || !toDate) {
-      setError('Please select both start and end dates');
+      setError('validation.selectDates');
       return;
     }
     
@@ -161,12 +164,12 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
     const todayUTC = toUTCDate(getTodayUTCString());
     
     if (fromUTC < todayUTC) {
-      setError('Start date cannot be in the past');
+      setError('validation.startPast');
       return;
     }
     
     if (fromUTC > toUTC) {
-      setError('Start date cannot be after end date');
+      setError('validation.startAfterEnd');
       return;
     }
     
@@ -181,7 +184,7 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
     });
     
     if (hasOverlap) {
-      setError('This availability period overlaps with an existing period');
+      setError('validation.overlappingPeriod');
       return;
     }
     
@@ -207,12 +210,12 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
     e.preventDefault();
     
     if (experienceList.length === 0) {
-      setError('Please add at least one competence');
+      setError('validation.addCompetenceRequired');
       return;
     }
     
     if (availabilityList.length === 0) {
-      setError('Please add at least one availability period');
+      setError('validation.addAvailabilityRequired');
       return;
     }
     
@@ -224,7 +227,7 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
       // Format data for API according to backend requirements
       const expertise = experienceList.map(item => ({
         competence_id: item.competence_id,
-        yoe: item.yoe,
+        yoe: item.yoe, //TODO: THIS IS A STRING NOW NOT A FLOAT? ALSO FIX ERROR MESSAGE "COULD NOT ADD EXPERTISE" TO BE PRETTY WITH JSON FILES TRANSLATIONS
       }));
       
       const availability = availabilityList.map(item => ({
@@ -252,13 +255,13 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
       const data = await res.json();
       
       if (!res.ok) {
-        const err = new Error(data.error || 'Failed to submit application');
+        const err = new Error(`errors.${data.error}` || 'errors.invalid_application');
         err.custom = true;
         throw err;
       }
       
       // Show success message
-      setSuccess('Application submitted successfully!');
+      setSuccess('submitted');
       
       // Reset form after successful submission
       setTimeout(() => {
@@ -277,7 +280,7 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
       
     } catch (err) {
       console.error('Application submission error:', err);
-      setError(err.custom ? err.message : 'An error occurred while submitting your application');
+      setError(err.custom ? err.message : 'errors.invalid_application');
     } finally {
       setIsSubmitting(false);
     }
@@ -326,12 +329,12 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
             onClick={onBackToProfile}
             className="application-back-button"
           >
-            ← Back 
+            ← {t('applicationForm.back')} 
           </button>
           <div className="application-header-content">
-            <h2 className="application-title">Apply for a Position</h2>
+            <h2 className="application-title">{t('applicationForm.title')}</h2>
             <p className="application-subtitle">
-              Complete your application by adding your expertise and availability
+              {t('applicationForm.subtitle')}
             </p>
           </div>
         </div>
@@ -340,21 +343,21 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
         {error && (
           <div className="application-error-alert">
             <span className="application-error-icon">⚠️</span>
-            {error}
+            {t(`applicationForm.${error}`)}
           </div>
         )}
         
         {success && (
           <div className="application-success-alert">
             <span className="application-success-icon">✅</span>
-            {success}
+            {t(`applicationForm.success.${success}`)}
           </div>
         )}
         
         {fetchError && (
           <div className="application-error-alert">
             <span className="application-error-icon">⚠️</span>
-            {fetchError}
+            {t(`applicationForm.${fetchError}`)}
           </div>
         )}
         
@@ -363,15 +366,15 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
           <div className="application-section">
             <h3 className="application-section-title">
               <span className="application-section-icon">🎯</span>
-              Competence Areas
+              {t('applicationForm.sections.competenceTitle')}
             </h3>
             <p className="application-section-description">
-              Select your competence areas and years of experience in each area
+              {t('applicationForm.sections.competenceDescription')}
             </p>
             
             <div className="application-input-group-row">
               <div className="application-input-group">
-                <label className="application-label">Competence Area</label>
+                <label className="application-label">{t('applicationForm.labels.competenceArea')}</label>
                 <select
                   value={competenceId}
                   onChange={(e) => setCompetenceId(e.target.value)}
@@ -379,18 +382,18 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
                   disabled={loadingCompetences}
                 >
                   <option value="">
-                    {loadingCompetences ? 'Loading competences...' : 'Select a competence area'}
+                    {loadingCompetences ? t('applicationForm.placeholders.loadingCompetences') : t('applicationForm.placeholders.selectCompetence')}
                   </option>
                   {competenceOptions.map((comp) => (
                     <option key={comp.competence_id} value={comp.competence_id}>
-                      {comp.name}
+                      {t(`applicationForm.competences.${comp.name}`)} 
                     </option>
                   ))}
                 </select>
               </div>
               
               <div className="application-input-group">
-                <label className="application-label">Years of Experience</label>
+                <label className="application-label">{t('applicationForm.labels.yearsExperience')}</label>
                 <input
                   type="number"
                   value={yearsOfExperience}
@@ -399,9 +402,9 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
                   max="50"
                   step="0.5"
                   className="application-input"
-                  placeholder="e.g., 3.5"
+                  placeholder={t('applicationForm.placeholders.experienceExample')}
                 />
-                <small className="application-input-hint">Can include one decimal</small>
+                <small className="application-input-hint">{t('applicationForm.experience.decimalHint')}</small>
               </div>
               
               <button
@@ -410,21 +413,21 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
                 className="application-add-button"
                 disabled={loadingCompetences}
               >
-                Add Competence
+                {t('applicationForm.buttons.addCompetence')}
               </button>
             </div>
             
             {/* Experience List */}
             {experienceList.length > 0 && (
               <div className="application-list-container">
-                <h4 className="application-list-title">Added Competence Areas</h4>
+                <h4 className="application-list-title">{t('applicationForm.lists.addedCompetences')}</h4>
                 <div className="application-list">
                   {experienceList.map((item, index) => (
                     <div key={index} className="application-list-item">
                       <div className="application-list-item-content">
-                        <span className="application-list-item-name">{item.competence_name}</span>
+                        <span className="application-list-item-name">{t(`applicationForm.competences.${item.competence_name}`)}</span>
                         <span className="application-list-item-details">
-                          {item.yoe} {item.yoe === 1 ? 'year' : 'years'} of experience
+                          {item.yoe} {item.yoe === 1.0 ? t('applicationForm.experience.year') : t('applicationForm.experience.years')} {t('applicationForm.experience.of_experience')}
                         </span>
                       </div>
                       <button
@@ -432,7 +435,7 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
                         onClick={() => handleRemoveExperience(index)}
                         className="application-remove-button"
                       >
-                        Remove
+                        {t('applicationForm.buttons.remove')}
                       </button>
                     </div>
                   ))}
@@ -445,17 +448,19 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
           <div className="application-section">
             <h3 className="application-section-title">
               <span className="application-section-icon">📅</span>
-              Availability Periods
+              {t('applicationForm.lists.availabilityPeriods')}
             </h3>
             <p className="application-section-description">
-              Add periods when you are available to work
+              {t('applicationForm.sections.availabilityDescription')}
             </p>
             
             <div className="application-input-group-row">
               <div className="application-input-group">
-                <label className="application-label">From Date</label>
-                <input
-                  type="date"
+                <label className="application-label">{t('applicationForm.labels.fromDate')}</label>
+                {/* TODO: TYPE:DATE IS SYSTEM DEPENDANT AND WILL OVERWRITE PLACEHOLDER,
+                IF TRANSLATION IS WANTED HAVE TO CHANGE TO ANOTHER TYPE OR SOMETHING IDK */}
+                <input 
+                type="date" 
                   value={fromDate}
                   onChange={(e) => setFromDate(e.target.value)}
                   className="application-input"
@@ -464,7 +469,7 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
               </div>
               
               <div className="application-input-group">
-                <label className="application-label">To Date</label>
+                <label className="application-label">{t('applicationForm.labels.toDate')}</label>
                 <input
                   type="date"
                   value={toDate}
@@ -479,20 +484,20 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
                 onClick={handleAddAvailability}
                 className="application-add-button"
               >
-                Add Period
+                {t('applicationForm.buttons.addPeriod')}
               </button>
             </div>
             
             {/* Availability List */}
             {availabilityList.length > 0 && (
               <div className="application-list-container">
-                <h4 className="application-list-title">Added Availability Periods</h4>
+                <h4 className="application-list-title">{t('applicationForm.lists.addedAvailability')}</h4>
                 <div className="application-list">
                   {availabilityList.map((item, index) => (
                     <div key={index} className="application-list-item">
                       <div className="application-list-item-content">
                         <span className="application-list-item-name">
-                          {formatDateForDisplay(item.from_date)} to {formatDateForDisplay(item.to_date)}
+                          {formatDateForDisplay(item.from_date)} {t('applicationForm.to')} {formatDateForDisplay(item.to_date)}
                         </span>
                       </div>
                       <button
@@ -500,7 +505,7 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
                         onClick={() => handleRemoveAvailability(index)}
                         className="application-remove-button"
                       >
-                        Remove
+                        {t('applicationForm.buttons.remove')}
                       </button>
                     </div>
                   ))}
@@ -512,15 +517,15 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
           {/* Summary Section */}
           {(experienceList.length > 0 || availabilityList.length > 0) && (
             <div className="application-summary">
-              <h3 className="application-summary-title">Application Summary</h3>
+              <h3 className="application-summary-title">{t('applicationForm.sections.summaryTitle')}</h3>
               
               {experienceList.length > 0 && (
                 <div className="application-summary-section">
-                  <h4 className="application-summary-subtitle">Competence Areas:</h4>
+                  <h4 className="application-summary-subtitle">{t('applicationForm.sections.competenceTitle')}:</h4>
                   <ul className="application-summary-list">
                     {experienceList.map((item, index) => (
                       <li key={index} className="application-summary-item">
-                        {item.competence_name} ({item.yoe} {item.yoe === 1 ? 'year' : 'years'})
+                        {t(`applicationForm.competences.${item.competence_name}`)} ({item.yoe} {item.yoe === 1.0 ? t('applicationForm.experience.year') : t('applicationForm.experience.years')})
                       </li>
                     ))}
                   </ul>
@@ -529,11 +534,11 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
               
               {availabilityList.length > 0 && (
                 <div className="application-summary-section">
-                  <h4 className="application-summary-subtitle">Availability Periods:</h4>
+                  <h4 className="application-summary-subtitle">{t('applicationForm.sections.availabilityTitle')}:</h4>
                   <ul className="application-summary-list">
                     {availabilityList.map((item, index) => (
                       <li key={index} className="application-summary-item">
-                        {formatDateForDisplay(item.from_date)} to {formatDateForDisplay(item.to_date)}
+                        {formatDateForDisplay(item.from_date)} {t('applicationForm.to')} {formatDateForDisplay(item.to_date)}
                       </li>
                     ))}
                   </ul>
@@ -552,16 +557,16 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
               {isSubmitting ? (
                 <span className="application-button-content">
                   <span className="application-spinner"></span>
-                  Submitting Application...
+                  {t('applicationForm.buttons.submitting')}
                 </span>
               ) : (
-                'Submit Application'
+                <p>{t('applicationForm.buttons.submit')}</p>
               )}
             </button>
           </div>
           
           <p className="application-note">
-            Note: You can submit multiple applications. Each new application will replace your previous one.
+            {t('applicationForm.note')}
           </p>
         </form>
       </div>

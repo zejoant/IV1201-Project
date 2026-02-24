@@ -1,0 +1,325 @@
+{
+  "login": {
+    "title": "Welcome Back",
+    "subtitle": "Sign in to your recruitment account",
+    "username": "Username",
+    "password": "Password",
+    "signIn": "Sign In",
+    "loggingIn": "Logging in...",
+    "noAccount": "Don't have an account?",
+    "signUp": "Sign up",
+    "usernamePlaceholder": "Enter your username",
+    "passwordPlaceholder": "Enter your password",
+    "usernameValidation": "Username can only contain letters and numbers",
+
+    "errors": {
+      "invalid_credentials": "Invalid credentials",
+      "offline_login": "An error occurred during login",
+      "invalid_name_letters": "Name must only contain letters",
+      "invalid_pnr": "Person number must be a number", 
+      "invalid_pnr_length": "Person number must be exactly 12 digits",
+      "invalid_username_chars": "Username can only contain letters and numbers",
+      "invalid_username_length": "Username must be between 3 and 30 characters",
+      "invalid_password_length": "Password must be at least 8 characters long",
+      "invalid_fetch": "Failed to fetch user credentials",
+      "invalid_name": "Name is required",
+      "invalid_surname": "Surname is required",
+      "invalid_surname_letters": "Surname must only contain letters",
+      "invalid_email": "Email must be a valid email address",
+      "user_not_found": "Could not find user"
+    }
+  },
+
+  "applicationForm": {
+    "title": "Apply for a Position",
+    "subtitle": "Complete your application by adding your expertise and availability",
+    "back": "Back",
+    "to": "to",
+
+    "validation": {
+      "selectCompetence": "Please select a competence",
+      "writeExperience": "Please write years of experience",
+      "notEnoughExperience": "Not enough years of experience",
+      "experiencePositive": "Years of experience must be a positive number",
+      "experienceMax": "Years of experience cannot exceed 50",
+      "competenceExists": "This competence has already been added to your profile",
+      "invalidCompetence": "Please select a valid competence",
+      "selectDates": "Please select both start and end dates",
+      "startPast": "Start date cannot be in the past",
+      "startAfterEnd": "Start date cannot be after end date",
+      "overlappingPeriod": "This availability period overlaps with an existing period",
+      "addCompetenceRequired": "Please add at least one competence",
+      "addAvailabilityRequired": "Please add at least one availability period",
+      "submitFailed": "Failed to submit application",
+      "submitGeneric": "An error occurred while submitting your application"
+    },
+
+    "errors": {
+      "invalid_competence": "Failed to load competences",
+      "offline_competence": "An error occurred while loading competences",
+      "invalid_application": "Failed to submit application",
+      "offline_application": "An error occurred while submitting your application",
+      "cannot_add_competence": "Could not add competence",
+      "no_competence": "Not enough expertises",
+      "yoe_numerical": "Years of experience must be numerical",
+      "competence_format": "Expertise is the wrong format",
+      "no_availability": "Not enough availabilities",
+      "start_date_format": "Availability start date is not correctly formated",
+      "end_date_format": "Availability end date is not correctly formated",
+      "missing_field": "Missing required fields",
+      "cannot_add_ava": "Could not add competence",
+      "competence_not_found": "Could not find competence"
+    },
+
+    "success": {
+      "submitted": "Application submitted successfully!"
+    },
+
+    "sections": {
+      "competenceTitle": "Competence Areas",
+      "competenceDescription": "Select your competence areas and years of experience in each area",
+      "availabilityTitle": "Availability Periods",
+      "availabilityDescription": "Add periods when you are available to work",
+      "summaryTitle": "Application Summary"
+    },
+
+    "labels": {
+      "competenceArea": "Competence Area",
+      "yearsExperience": "Years of Experience",
+      "fromDate": "From Date",
+      "toDate": "To Date"
+    },
+
+    "placeholders": {
+      "selectCompetence": "Select a competence area",
+      "loadingCompetences": "Loading competences...",
+      "experienceExample": "e.g., 3.5"
+    },
+
+    "buttons": {
+      "addCompetence": "Add Competence",
+      "addPeriod": "Add Period",
+      "remove": "Remove",
+      "submit": "Submit Application",
+      "submitting": "Submitting Application..."
+    },
+
+    "competences":{
+      "ticket sales": "ticket sales",
+      "lotteries": "lotteries",
+      "roller coaster operation": "roller coaster operation"
+    },
+
+    "lists": {
+      "addedCompetences": "Added Competence Areas",
+      "addedAvailability": "Added Availability Periods",
+      "competenceAreas": "Competence Areas:",
+      "availabilityPeriods": "Availability Periods:"
+    },
+
+    "experience": {
+      "year": "year",
+      "years": "years",
+      "decimalHint": "Can include one decimal",
+      "of_experience": "of experience"
+    },
+
+    "note": "Note: You can submit multiple applications. Each new application will replace your previous one."
+  },
+
+  "applicationDetail": {
+    "loading": "Loading application details...",
+    "applicationNotFound": "Application not found",
+    "backToApplications": "← Back to Applications",
+    "title": "Application Details",
+    "personalInformation": "Personal Information",
+    "name": "Name",
+    "email": "Email",
+    "pnr": "Person Number",
+    "notAvailable": "N/A",
+    "areasOfExpertise": "Areas of Expertise",
+    "noExpertise": "No expertise provided.",
+    "fullDetailsUnavailable": "Full details unavailable",
+    "year": "year",
+    "years": "years",
+    "unknown": "Unknown",
+    "availabilityPeriods": "Availability Periods",
+    "noAvailability": "No availability periods provided.",
+    "to": "to",
+    "changeStatus": "Change Status",
+    "accept": "Accept",
+    "reject": "Reject",
+    "markUnhandled": "Mark as Unhandled",
+    "updating": "Updating...",
+
+    "errors": {
+      "no_application": "Application not found",
+      "no_application_exists": "Job application does not exist",
+      "status_change": "An error occurred while updating status",
+      "status_not_found": "status not found",
+      "competence_not_found": "Could not find competence",
+      "availability_not_found": "Could not find availability"
+    },
+
+    "validation": {
+      "application_fetch_fail": "Failed to fetch application",
+      "application_not_found": "Application not found",
+      "load_full_application": "Failed to load full application details",
+      "application_fetch_error": "An error occurred while fetching application details",
+      "application_update_failed": "Update failed",
+      "update_status_error": "An error occurred while updating status"
+    },
+
+    "status": {
+      "accepted": "accepted",
+      "rejected": "rejected",
+      "unhandled": "unhandled"
+    },
+
+    "competences":{
+      "ticket sales": "ticket sales",
+      "lotteries": "lotteries",
+      "roller coaster operation": "roller coaster operation"
+    }
+  },
+
+"recruiterDashboard": {
+    "title": "All Applications",
+    "loading": "Loading applications...",
+    "error": "An error occurred while fetching applications",
+    "noData": "No applications found",
+    "columns": {
+        "name": "First Name",
+        "surname": "Last Name",
+        "applicationId": "Application ID",
+        "status": "Status"
+    },
+
+    "errors": {
+      "offline_recruiterDashboard": "An error occurred when fetching applications",
+      "invalid_fetch": "Failed to fetch applications",
+      "user_not_found": "Could not find user",
+      "no_applications": "Could not find applications"
+    },
+
+    "status":{
+      "accepted": "Accepted",
+      "rejected": "Rejected",
+      "unhandled": "Unhandled"
+    }
+},
+
+"register": {
+    "title": "Create Account",
+    "subtitle": "Join our recruitment platform today",
+    "labels": {
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email Address",
+      "personNumber": "Person Number",
+      "username": "Username",
+      "password": "Password"
+    },
+    "placeholders": {
+      "firstName": "Enter your first name",
+      "lastName": "Enter your last name",
+      "email": "Enter your email address",
+      "personNumber": "Enter your person number",
+      "username": "Choose a username",
+      "password": "Create a strong password"
+    },
+    "validation": {
+      "lettersOnlyName": "Name must only contain letters",
+      "lettersOnlySurname": "Surname must only contain letters",
+      "personNumberLength": "Person number must be exactly 12 digits",
+      "usernameChars": "Username can only contain letters and numbers",
+      "usernameLength": "Username must be between 3 and 30 characters",
+      "passwordLength": "Password must be at least 8 characters long"
+    },
+
+    "errors": {
+      "invalid_credentials": "Invalid credentials",
+      "offline_login": "An error occurred during registration",
+      "invalid_name_letters": "Name must only contain letters",
+      "invalid_pnr": "Person number must be a number", 
+      "invalid_pnr_length": "Person number must be exactly 12 digits",
+      "invalid_username_chars": "Username can only contain letters and numbers",
+      "invalid_username_length": "Username must be between 3 and 30 characters",
+      "invalid_password_length": "Password must be at least 8 characters long",
+      "invalid_fetch": "Failed to fetch user credentials",
+      "invalid_name": "Name is required",
+      "invalid_surname": "Surname is required",
+      "invalid_surname_letters": "Surname must only contain letters",
+      "invalid_email": "Email must be a valid email address",
+      "invalid_account_creation": "Account creation failed",
+      "missing_field": "Missing required fields",
+      "user_exists": "User already exists",
+      "creation_failed": "Could not create user"
+    },
+
+    "passwordStrength": {
+      "weak": "Weak",
+      "good": "Good",
+      "strong": "Strong",
+      "tips": [
+        "At least 8 characters",
+        "Include uppercase letters",
+        "Include numbers",
+        "Include special characters"
+      ]
+    },
+    "buttons": {
+      "createAccount": "Create Account",
+      "creatingAccount": "Creating Account...",
+      "accountAlready": "Already have an account?",
+      "signIn": "Sign In"
+    },
+    "alerts": {
+      "error": "An error occurred during registration",
+      "success": "Account created successfully!"
+    },
+    "divider": "OR"
+  },
+
+  "footer": {
+    "copyright": "Recruitment Platform. All rights reserved."
+  },
+
+  "header": {
+    "brand": "Recruitment Platform",
+    "logout": "Logout",
+    "role": {
+      "recruiter": "Recruiter",
+      "applicant": "Applicant"
+    }
+  },
+
+  "personPage": {
+    "welcomeTitle": "Welcome back,",
+    "welcomeSubtitle": "Manage your job applications and profile",
+
+    "personalInformation": "Personal Information",
+    "active": "Active",
+
+    "labels": {
+      "name": "Name",
+      "surname": "Surname",
+      "username": "Username",
+      "email": "Email",
+      "personNumber": "Person Number"
+    },
+
+    "notProvided": "Not provided",
+    "lastUpdated": "Last updated:",
+
+    "actions": {
+      "submitApplication": "Submit Application",
+      "submitDescription": "Apply for a position at the amusement park",
+      "applyNow": "Apply Now",
+
+      "myApplications": "My Applications",
+      "manageDescription": "View and manage your submitted applications",
+      "viewAll": "View All"
+    }
+  }
+}

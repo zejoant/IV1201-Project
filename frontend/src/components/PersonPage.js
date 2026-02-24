@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { UserContext } from '../contexts/UserContext';
 import './PersonPage.css';
+import { useTranslation } from 'react-i18next';
 
 /**
  * PersonPage component – the main dashboard for applicant users.
@@ -15,6 +16,7 @@ import './PersonPage.css';
  */
 function PersonPage({ onApplyNow, onViewMyApplications }) {
   const { currentUser } = useContext(UserContext);
+  const {t} = useTranslation();
   
   return (
     <div className="personpage-container">
@@ -26,10 +28,10 @@ function PersonPage({ onApplyNow, onViewMyApplications }) {
           <div className="personpage-welcome-section">
             <div className="personpage-welcome-content">
               <h2 className="personpage-welcome-title">
-                Welcome back, <span className="personpage-highlight">{currentUser.username}</span>!
+                {t('personPage.welcomeTitle')} <span className="personpage-highlight">{currentUser.username}</span>!
               </h2>
               <p className="personpage-welcome-subtitle">
-                Manage your job applications and profile
+                {t('personPage.welcomeSubtitle')}
               </p>
             </div>
             <div className="personpage-welcome-decoration">
@@ -42,32 +44,32 @@ function PersonPage({ onApplyNow, onViewMyApplications }) {
             <div className="personpage-card-header">
               <h3 className="personpage-card-title">
                 <span className="personpage-card-icon">👤</span>
-                Personal Information
+                {t('personPage.personalInformation')}
               </h3>
-              <div className="personpage-card-badge">Active</div>
+              <div className="personpage-card-badge">{t('personPage.active')}</div>
             </div>
             
             <div className="personpage-info-grid">
               <div className="personpage-info-item">
-                <span className="personpage-info-label">Name</span>
-                <span className="personpage-info-value">{currentUser.name || 'Not provided'}</span>
+                <span className="personpage-info-label">{t('personPage.labels.name')}</span>
+                <span className="personpage-info-value">{currentUser.name || t('personPage.notProvided')}</span>
               </div>
               <div className="personpage-info-item">
-                <span className="personpage-info-label">Surname</span>
-                <span className="personpage-info-value">{currentUser.surname || 'Not provided'}</span>
+                <span className="personpage-info-label">{t('personPage.labels.surname')}</span>
+                <span className="personpage-info-value">{currentUser.surname || t('personPage.notProvided')}</span>
               </div>
               <div className="personpage-info-item">
-                <span className="personpage-info-label">Username</span>
+                <span className="personpage-info-label">{t('personPage.labels.username')}</span>
                 <span className="personpage-info-value">{currentUser.username}</span>
               </div>
               <div className="personpage-info-item">
-                <span className="personpage-info-label">Email</span>
-                <span className="personpage-info-value">{currentUser.email || 'Not provided'}</span>
+                <span className="personpage-info-label">{t('personPage.labels.email')}</span>
+                <span className="personpage-info-value">{currentUser.email || t('personPage.notProvided')}</span>
               </div>
               {/* Person number can be shown if available */}
               {currentUser.person_number && (
                 <div className="personpage-info-item">
-                  <span className="personpage-info-label">Person Number</span>
+                  <span className="personpage-info-label">{t('personPage.labels.personNumber')}</span>
                   <span className="personpage-info-value">{currentUser.person_number}</span>
                 </div>
               )}
@@ -75,7 +77,7 @@ function PersonPage({ onApplyNow, onViewMyApplications }) {
 
             <div className="personpage-card-footer">
               <span className="personpage-footer-note">
-                Last updated: {new Date().toLocaleDateString()}
+                {t('personPage.lastUpdated')} {new Date().toLocaleDateString()}
               </span>
             </div>
           </div>
@@ -87,15 +89,15 @@ function PersonPage({ onApplyNow, onViewMyApplications }) {
               <div className="personpage-action-icon personpage-action-icon-1">
                 📝
               </div>
-              <h4 className="personpage-action-title">Submit Application</h4>
+              <h4 className="personpage-action-title">{t('personPage.actions.submitApplication')}</h4>
               <p className="personpage-action-description">
-                Apply for a position at the amusement park
+                {t('personPage.actions.submitDescription')}
               </p>
               <button 
                 className="personpage-action-button"
                 onClick={onApplyNow}
               >
-                Apply Now
+                {t('personPage.actions.applyNow')}
               </button>
             </div>
             
@@ -104,15 +106,15 @@ function PersonPage({ onApplyNow, onViewMyApplications }) {
            <div className="personpage-action-icon personpage-action-icon-2">
               📋
            </div>
-              <h4 className="personpage-action-title">My Applications</h4>
+              <h4 className="personpage-action-title">{t('personPage.actions.myApplications')}</h4>
                <p className="personpage-action-description">
-            View and manage your submitted applications
+            {t('personPage.actions.manageDescription')}
            </p>
         <button
             className="personpage-action-button"
              onClick={onViewMyApplications}
             >
-            View All
+            {t('personPage.actions.viewAll')}
           </button>
             </div>
           </div>

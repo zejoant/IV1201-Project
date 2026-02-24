@@ -50,6 +50,7 @@ class RequestHandler {
         if(Array.isArray(body)){
           body = body[0].msg;
         }
+        console.log(body)
         res.status(status).json({ ["error"]: body });
       }
     }
