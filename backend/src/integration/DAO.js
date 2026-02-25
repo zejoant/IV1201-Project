@@ -257,6 +257,7 @@ class DAO {
       }
 
       const newApp = await JobApplication.create({ person_id: id, status: status });
+      console.log(newApp)
 
       return newApp;
     } catch (err) {

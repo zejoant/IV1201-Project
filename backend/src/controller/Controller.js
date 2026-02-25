@@ -15,8 +15,8 @@ class Controller {
    * Creates a controller instance and initializes DAO access.
    * @constructor
    */
-  constructor() {
-    this.DAO = new DAO();
+  constructor(dao) {
+    this.DAO = dao || new DAO();
     this.transactionManager = this.DAO.getTransactionManager();
   }
 

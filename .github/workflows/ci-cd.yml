@@ -33,7 +33,7 @@ jobs:
       run: |
         cd backend
         # Run tests if any, otherwise just echo
-        if [ -f tests/sample.test.js ]; then npm test; else echo "No backend tests"; fi
+        if [ -f **/tests/**/*.test.js]; then npx jest test; else echo "No backend tests"; fi
 
     # Frontend
     - name: Install Frontend Dependencies
