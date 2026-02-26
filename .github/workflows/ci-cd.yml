@@ -32,14 +32,18 @@ jobs:
     - name: Run Backend Tests
       run: |
         cd backend
-        # Run tests if any, otherwise just echo
-        if [ -f **/tests/**/*.test.js]; then npx jest test; else echo "No backend tests"; fi
+        # Check if any test files exist
+        if find tests -type f -name "*.test.js" | grep -q .; then
+          npx jest
+        else
+          echo "No backend tests"
+        fi
 
     # Frontend
     - name: Install Frontend Dependencies
       run: |
         cd frontend
-        npm install
+        npm install --legacy-peer-deps
 
     - name: Run Frontend Tests
       run: |
