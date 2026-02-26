@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import "./Register.css";
+import Footer from "../Footer";
 
 /**
  * Registration form component allowing new users to create an account.
@@ -21,7 +22,6 @@ function Register({ setCurrentUser, switchToLogin }) {
   const [pnr, setPersonNumber] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false); // new state for success
   const [passwordStrength, setPasswordStrength] = useState(0);
   const {t} = useTranslation();
 
@@ -146,6 +146,7 @@ function Register({ setCurrentUser, switchToLogin }) {
   };
 
   return (
+   <>
     <div className="register-container">
       <div className="register-card">
         <div className="register-header">
@@ -382,7 +383,10 @@ function Register({ setCurrentUser, switchToLogin }) {
         </form>
       </div>
     </div>
+    <Footer />
+    </>
   );
 }
+
 
 export default Register;
