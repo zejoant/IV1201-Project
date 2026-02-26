@@ -40,14 +40,17 @@ class ApplicationApi extends RequestHandler {
           const {expertise, availability} = req.body;
 
           const application = await this.contr.createApplication(expertise, availability, req.user.id);
+          logger.info(`Attempt to submit application by user: ${req.user.id}`);
 
           if (!application) {
             this.sendResponse(res, 401, {message: "Invalid application"})
+            logger.warn(`Failure to submit application by user: ${req.user.id}`);
             return;
           }
 
           this.sendResponse(res, 200, {message: "sent application"});
         } catch (err) {
+          logger.error(`Error when attempting to submit application by user: ${req.user.id} , error: ${err}`);
           next(err);
         }
       });

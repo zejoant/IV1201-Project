@@ -87,13 +87,13 @@ class LoginApi extends RequestHandler {
 
             const { username, password } = req.body;
 
-            logger.info(`Login attempt for username=${username}`);
+            logger.info(`Login attempt for username: ${username}`);
 
             const person = await this.contr.login(username);
 
             if (!person) {
               this.sendResponse(res, 401, 'invalid_credentials')
-              logger.warn(`Failed login attempt for username=${username}`);
+              logger.warn(`Failed login attempt for username: ${username}`);
               return;
             }
 
@@ -101,15 +101,15 @@ class LoginApi extends RequestHandler {
 
             if (!match) {
               this.sendResponse(res, 401, 'invalid_credentials')
-              logger.warn(`Failed login attempt for userId=${person.person_id}`);
+              logger.warn(`Failed login attempt for userId: ${person.person_id}`);
               return;
             }
             // send cookie 
             Authorization.sendCookie(person, res);
-            logger.info(`Login attempt for userId=${person.person_id}`);
+            logger.info(`Login attempt for userId: ${person.person_id}`);
             this.sendResponse(res, 200, "Logged in success");
           } catch (err) {
-            logger.error(`Login error: error=${err.message}`);
+            logger.error(`Login error: ${err.message}`);
             next(err);
           }
         });
@@ -155,15 +155,15 @@ class LoginApi extends RequestHandler {
             const SALT_ROUNDS = 12;
             const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
 
-            logger.info(`Attempt to create new account: username=${username}, email=${email}`);
+            logger.info(`Attempt to create new account: username: ${username}, email: ${email}`);
             const person = await this.contr.createAccount({ name, surname, pnr, email, username, password: hashedPassword, role_id });
 
             if (!person) {
-              logger.warn(`Account creation failed: username=${username}, email=${email}`);
+              logger.warn(`Account creation failed: username: ${username}, email: ${email}`);
               this.sendResponse(res, 401, "invalid_account_creation");
               return;
             }
-            logger.info(`Created new account: username=${username}, name=${name}, surname=${surname} email=${email}`);
+            logger.info(`Created new account: username: ${username}, name: ${name}, surname: ${surname} email: ${email}`);
             this.sendResponse(res, 200, "Account created!")
           } catch (err) {
             logger.error(`Account creation error: ${err.message}`);
