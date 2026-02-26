@@ -1,6 +1,15 @@
+/**
+ * Entry point of the React application.
+ * Renders the root App component inside React.StrictMode
+ * into the DOM element with id 'root'.
+ *
+ * @module index
+ */
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
+import './i18n'; 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

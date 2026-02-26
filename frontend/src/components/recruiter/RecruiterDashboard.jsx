@@ -1,14 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../../contexts/UserContext';
+import { useTranslation } from 'react-i18next';
 import './RecruiterDashboard.css';
 
-function RecruiterDashboard({ currentUser, handleLogout }) {
+/**
+ * Recruiter dashboard displaying a sortable table of all job applications.
+ * Allows recruiters to view applications and navigate to details.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered dashboard
+ */
+function RecruiterDashboard() {
+  const { logout } = useContext(UserContext);
   // State: applications list, loading, error, sort settings
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: 'job_application_id', direction: 'asc' });
   const navigate = useNavigate();
+  const {t} = useTranslation();
 
   // Fetch all applications on component mount
   useEffect(() => {
@@ -18,19 +29,28 @@ function RecruiterDashboard({ currentUser, handleLogout }) {
         const res = await fetch('/application/list_applications', {
           credentials: 'include',
         });
-        if (!res.ok) {
-          throw new Error('Failed to fetch applications');
-        }
+
+        if (res.status === 403) {
+          logout()
+        } 
+
         const data = await res.json();
+
+        if (!res.ok) {
+          const err = new Error(`list_applications.errors.${data.error}` || 'recruiterDashboard.errors.invalid_fetch');
+          err.custom = true;
+          throw err;
+        }
+
         setApplications(data.success || []);
       } catch (err) {
-        setError(err.message);
+        setError(err.type? err.message : 'recruiterDashboard.errors.offline');
       } finally {
         setLoading(false);
       }
     };
     fetchApplications();
-  }, []);
+  }, [logout]);
 
   // Sort applications based on selected column
   const sortedApplications = React.useMemo(() => {
@@ -52,7 +72,13 @@ function RecruiterDashboard({ currentUser, handleLogout }) {
     return sorted;
   }, [applications, sortConfig]);
 
-  // Toggle sort direction when header clicked
+  /**
+   * Updates the sort configuration when a column header is clicked.
+   * Toggles between ascending and descending order for the same key,
+   * or sets a new key with ascending order.
+   *
+   * @param {string} key - The column key to sort by
+   */
   const requestSort = (key) => {
     setSortConfig(prev => ({
       key,
@@ -60,7 +86,12 @@ function RecruiterDashboard({ currentUser, handleLogout }) {
     }));
   };
 
-  // Return CSS class based on application status
+  /**
+   * Returns a CSS class name based on the application status.
+   *
+   * @param {string} status - Application status ('accepted', 'rejected', or other)
+   * @returns {string} CSS class for styling the status badge
+   */
   const getStatusClass = (status) => {
     switch (status) {
       case 'accepted': return 'status-accepted';
@@ -69,57 +100,42 @@ function RecruiterDashboard({ currentUser, handleLogout }) {
     }
   };
 
-  // Navigate to application details page
+  /**
+   * Navigates to the detailed view of the selected application.
+   * Passes the application data via router state.
+   *
+   * @param {Object} app - The application object
+   */
   const handleRowClick = (app) => {
     navigate(`/recruiter/application/${app.job_application_id}`, { state: { application: app } });
   };
 
   return (
     <div className="recruiter-container">
-      {/* Navigation bar with user info and logout */}
-      <nav className="recruiter-navbar">
-        <div className="recruiter-nav-content">
-          <div className="recruiter-brand">
-            <h1 className="recruiter-logo">Recruitment Platform</h1>
-          </div>
-          <div className="recruiter-nav-actions">
-            <div className="recruiter-user-badge">
-              <div className="recruiter-avatar">
-                {currentUser.username?.charAt(0) || 'U'}
-              </div>
-              <span className="recruiter-username">{currentUser.username}</span>
-              <span className="recruiter-user-role">Recruiter</span>
-            </div>
-            <button onClick={handleLogout} className="recruiter-logout-button">
-              <span>Logout</span>
-              <span className="recruiter-logout-icon">→</span>
-            </button>
-          </div>
-        </div>
-      </nav>
 
+      
       {/* Main content: applications table with sorting */}
       <main className="recruiter-main">
         <div className="recruiter-content">
-          <h2 className="recruiter-page-title">All Applications</h2>
-          {loading && <div className="recruiter-loading">Loading applications...</div>}
-          {error && <div className="recruiter-error">Error: {error}</div>}
+          <h2 className="recruiter-page-title">{t('recruiterDashboard.title')}</h2>
+          {loading && <div className="recruiter-loading">{t('recruiterDashboard.loading')}</div>}
+          {error && <div className="recruiter-error">{t(error)}</div>}
           {!loading && !error && (
             <div className="recruiter-table-container">
               <table className="recruiter-table">
                 <thead>
                   <tr>
                     <th onClick={() => requestSort('name')}>
-                      Name {sortConfig.key === 'name' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
+                      {t('recruiterDashboard.columns.name')} {sortConfig.key === 'name' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
                     </th>
                     <th onClick={() => requestSort('surname')}>
-                      Surname {sortConfig.key === 'surname' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
+                      {t('recruiterDashboard.columns.surname')} {sortConfig.key === 'surname' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
                     </th>
                     <th onClick={() => requestSort('job_application_id')}>
-                      Application ID {sortConfig.key === 'job_application_id' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
+                      {t('recruiterDashboard.columns.application_id')} {sortConfig.key === 'job_application_id' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
                     </th>
                     <th onClick={() => requestSort('status')}>
-                      Status {sortConfig.key === 'status' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
+                      {t('recruiterDashboard.columns.status')} {sortConfig.key === 'status' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
                     </th>
                   </tr>
                 </thead>
@@ -130,12 +146,12 @@ function RecruiterDashboard({ currentUser, handleLogout }) {
                         <td>{app.name}</td>
                         <td>{app.surname}</td>
                         <td>{app.job_application_id}</td>
-                        <td><span className={`recruiter-status-badge ${getStatusClass(app.status)}`}>{app.status}</span></td>
+                        <td><span className={`recruiter-status-badge ${getStatusClass(app.status)}`}>{t(`recruiterDashboard.status.${app.status}`)}</span></td>
                       </tr>
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="4" className="recruiter-no-data">No applications found</td>
+                      <td colSpan="4" className="recruiter-no-data">{t('recruiterDashboard.no_data')}</td>
                     </tr>
                   )}
                 </tbody>

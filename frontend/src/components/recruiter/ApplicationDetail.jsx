@@ -1,8 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { UserContext } from '../../contexts/UserContext';
 import './ApplicationDetail.css';
+import { useTranslation } from 'react-i18next';
 
-function ApplicationDetail({ currentUser, handleLogout }) {
+/**
+ * Displays detailed information about a single job application.
+ * Recruiters can view personal details, competences, availability,
+ * and update the application status.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered application detail view
+ */
+function ApplicationDetail() {
+  const { logout } = useContext(UserContext);
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
@@ -10,6 +21,8 @@ function ApplicationDetail({ currentUser, handleLogout }) {
   const [loading, setLoading] = useState(true);
   const [detailError, setDetailError] = useState(''); 
   const [updating, setUpdating] = useState(false);
+
+  const {t} = useTranslation();
 
   useEffect(() => {
     const fetchApplicationDetails = async () => {
@@ -23,18 +36,32 @@ function ApplicationDetail({ currentUser, handleLogout }) {
           const listRes = await fetch('/application/list_applications', {
             credentials: 'include',
           });
-          if (!listRes.ok) throw new Error('Failed to fetch applications list');
+
+          if (listRes.status === 403) {
+            logout()
+          } 
+
           const listData = await listRes.json();
+
+          if (!listRes.ok) {
+            const err = new Error(`list_applications.errors.${listData.error}` || 'applicationDetail.errors.application_fetch_fail');
+            err.custom = true;
+            throw err;
+          }
           const found = listData.success?.find(
             (app) => app.job_application_id === parseInt(id)
           );
-          if (!found) throw new Error(`Application with ID ${id} not found`);
+          if (!found) {
+            const err = new Error(`applicationDetail.errors.application_not_found`);
+            err.custom = true;
+            throw err;
+          }
           appBasic = found;
         }
-        
+
         // Set basic info immediately so user sees something
         setApplication(appBasic);
-        
+
         // Now fetch full details
         const requestBody = {
           job_application_id: parseInt(id),
@@ -50,28 +77,46 @@ function ApplicationDetail({ currentUser, handleLogout }) {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(requestBody),
         });
-        
-        if (!res.ok) {
-          const errorData = await res.json().catch(() => ({}));
-          throw new Error(errorData.message || 'Failed to load full application details');
-        }
-        
+
+        if (res.status === 403) {
+          logout()
+        } 
+
         const data = await res.json();
+
+        if (!res.ok) {
+          const err = new Error(`get_application.errors.${data.error}` || 'applicationDetail.errors.load_full_application');
+          err.custom = true;
+          throw err;
+        }
+
         setApplication(data.success || data);
       } catch (err) {
-        console.error('Error fetching application details:', err);
-        setDetailError(err.message);
-        // application already has basic info from appBasic, so no need to set again
+        //console.error('Error fetching application details:', err);
+        setDetailError(err.custom ? err.message : 'applicationDetail.errors.application_fetch_error');
       } finally {
         setLoading(false);
       }
     };
 
     fetchApplicationDetails();
-  }, [id, location.state]);
+  }, [id, location.state, logout]);
 
+  /**
+   * Updates the status of the current application.
+   * Sends a PATCH request to the server and updates local state on success.
+   *
+   * @param {string} newStatus - New status value ('accepted', 'rejected', or 'unhandled')
+   * @returns {Promise<void>}
+   */
   const handleStatusChange = async (newStatus) => {
     if (!application) return;
+    
+    // Store previous status for potential rollback
+    const previousStatus = application.status;
+    
+
+    setApplication(prev => ({ ...prev, status: newStatus }));
     setUpdating(true);
     setDetailError('');
     try {
@@ -85,30 +130,58 @@ function ApplicationDetail({ currentUser, handleLogout }) {
           job_application_id: application.job_application_id,
         }),
       });
+
+      if (res.status === 403) {
+        logout()
+      } 
+
+      const data = await res.json();
+
       if (!res.ok) {
-        const errData = await res.json();
-        throw new Error(errData.message || 'Update failed');
+        // If request fails, rollback to previous status
+        setApplication(prev => ({ ...prev, status: previousStatus }));
+        const err = new Error(`update_application.errors.${data.error}` || 'applicationDetail.errors.application_update_failed');
+        err.custom = true;
+        throw err;
       }
-      const updated = await res.json();
-      setApplication(updated);
-      alert('Status updated successfully');
+
+      const updatedApp = data.success || data;
+      if (updatedApp && typeof updatedApp === 'object') {
+        setApplication(prev => ({ ...prev, ...updatedApp }));
+      }
+
+
     } catch (err) {
-      if (err.message.includes('conflict') || err.message.includes('modified')) {
-        alert('This application has been modified by another user. Please refresh.');
-      } else {
-        setDetailError(err.message);
-      }
+      // Set a user-friendly error message
+      let errorMessage = err.custom ? err.message : 'applicationDetail.errors.update_status_error';
+      //if (err.message.includes('conflict') || err.message.includes('modified')) {
+      //  errorMessage = 'This application has been modified by another user. Please refresh.';
+      //}
+      setDetailError(errorMessage);
     } finally {
       setUpdating(false);
     }
   };
 
+  /**
+   * Formats a date string into a human‑readable long date.
+   *
+   * @param {string} dateString - ISO date string
+   * @returns {string} Formatted date (e.g., "January 1, 2025") or "N/A" if invalid
+   */
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    const userLanguage = localStorage.language || navigator.language; 
+    return date.toLocaleDateString(userLanguage, { year: 'numeric', month: 'long', day: 'numeric' });
   };
 
+  /**
+   * Returns a CSS class name based on the application status.
+   *
+   * @param {string} status - Application status
+   * @returns {string} CSS class for styling the status badge
+   */
   const getStatusClass = (status) => {
     switch (status) {
       case 'accepted': return 'detail-status-accepted';
@@ -117,134 +190,121 @@ function ApplicationDetail({ currentUser, handleLogout }) {
     }
   };
 
-  if (loading) return <div className="recruiter-detail-loading">Loading application details...</div>;
-  if (!application) return <div className="recruiter-detail-error">Application not found</div>;
+  if (loading) return <div className="recruiter-detail-loading">{t('applicationDetail.loading')}</div>;
+  if (!application) return <div className="recruiter-detail-error">{t('applicationDetail.application_not_found')}</div>;
 
   return (
     <div className="recruiter-detail-container">
-      <nav className="recruiter-detail-navbar">
-        <div className="recruiter-detail-nav-content">
-          <div className="recruiter-detail-brand">
-            <h1 className="recruiter-detail-logo">Recruitment Platform</h1>
-          </div>
-          <div className="recruiter-detail-nav-actions">
-            <div className="recruiter-detail-user-badge">
-              <div className="recruiter-detail-avatar">
-                {currentUser.username?.charAt(0) || 'U'}
-              </div>
-              <span className="recruiter-detail-username">{currentUser.username}</span>
-              <span className="recruiter-detail-user-role">Recruiter</span>
-            </div>
-            <button onClick={handleLogout} className="recruiter-detail-logout-button">
-              <span>Logout</span>
-              <span className="recruiter-detail-logout-icon">→</span>
-            </button>
-          </div>
-        </div>
-      </nav>
 
       <main className="recruiter-detail-main">
         <div className="recruiter-detail-content">
           <button className="recruiter-detail-back-button" onClick={() => navigate('/recruiter')}>
-            ← Back to Applications
+            {t('applicationDetail.back_to_applications')}
           </button>
 
           <div className="recruiter-detail-card">
             <div className="recruiter-detail-header">
-              <h2>Application Details</h2>
+              <h2>{t('applicationDetail.title')}</h2>
               <div className={`recruiter-detail-status-badge ${getStatusClass(application.status)}`}>
-                {application.status}
+                {t(`applicationDetail.status.${application.status}`)}
               </div>
             </div>
 
             <section className="recruiter-detail-section">
-              <h3>Personal Information</h3>
+              <h3>{t('applicationDetail.personal_info')}</h3>
               <div className="recruiter-detail-info-grid">
                 <div className="recruiter-detail-info-item">
-                  <span className="recruiter-detail-info-label">Name</span>
+                  <span className="recruiter-detail-info-label">{t('applicationDetail.name')}</span>
                   <span className="recruiter-detail-info-value">
-                    {application.name} {application.surname}
+                    {application.name}
                   </span>
                 </div>
                 <div className="recruiter-detail-info-item">
-                  <span className="recruiter-detail-info-label">Email</span>
-                  <span className="recruiter-detail-info-value">{application.email || 'N/A'}</span>
-                </div>
-                <div className="recruiter-detail-info-item">
-                  <span className="recruiter-detail-info-label">Person Number</span>
+                  <span className="recruiter-detail-info-label">{t('applicationDetail.surname')}</span>
                   <span className="recruiter-detail-info-value">
-                    {application.pnr || application.person_number || application.ssn || 'N/A'}
+                    {application.surname}
                   </span>
                 </div>
+                {/*<div className="recruiter-detail-info-item">
+                  <span className="recruiter-detail-info-label">{t('applicationDetail.email')}</span>
+                  <span className="recruiter-detail-info-value">{application.email || t('applicationDetail.not_available')}</span>
+                </div>
+                <div className="recruiter-detail-info-item">
+                  <span className="recruiter-detail-info-label">{t('applicationDetail.pnr')}</span>
+                  <span className="recruiter-detail-info-value">
+                    {application.pnr || application.person_number || application.ssn || t('applicationDetail.not_available')}
+                  </span>
+                </div>*/}
               </div>
             </section>
 
             <section className="recruiter-detail-section">
-              <h3>Areas of Expertise</h3>
+              <h3>{t('applicationDetail.aoe')}</h3>
               {application.competences && Array.isArray(application.competences) && application.competences.length > 0 ? (
                 <ul className="recruiter-detail-list">
                   {application.competences.map((exp, index) => {
                     if (!exp) return null;
-                    const name = exp.name || 'Unknown';
+                    const name = exp.name || t('applicationDetail.unknown');
                     const yoe = exp.yoe ? parseFloat(exp.yoe) : 0;
                     return (
                       <li key={index} className="recruiter-detail-list-item">
-                        {name} – {yoe} {yoe === 1 ? 'year' : 'years'}
+                        {t(`applicationDetail.competences.${name}`)} – {yoe} {yoe === 1 ? t('applicationDetail.year') : t('applicationDetail.years')}
                       </li>
                     );
                   })}
                 </ul>
               ) : (
-                <p>{detailError ? 'Full details unavailable' : 'No expertise provided.'}</p>
+                <p>{detailError ? t('applicationDetail.fullDetailsUnavailable') : t('applicationDetail.no_expertise')}</p>
               )}
             </section>
 
             <section className="recruiter-detail-section">
-              <h3>Availability Periods</h3>
+              <h3>{t('applicationDetail.availability_periods')}</h3>
               {application.availabilities && Array.isArray(application.availabilities) && application.availabilities.length > 0 ? (
                 <ul className="recruiter-detail-list">
                   {application.availabilities.map((period, index) => {
                     if (!period) return null;
-                    const from = period.from_date ? formatDate(period.from_date) : 'N/A';
-                    const to = period.to_date ? formatDate(period.to_date) : 'N/A';
+                    const from = period.from_date ? formatDate(period.from_date) : t('applicationDetail.not_available');
+                    const to = period.to_date ? formatDate(period.to_date) : t('applicationDetail.not_available');
                     return (
                       <li key={index} className="recruiter-detail-list-item">
-                        {from} to {to}
+                        {from} {t('applicationDetail.to')} {to}
                       </li>
                     );
                   })}
                 </ul>
               ) : (
-                <p>{detailError ? 'Full details unavailable' : 'No availability periods provided.'}</p>
+                <p>{detailError ? t('applicationDetail.full_details_unavailable') : t('applicationDetail.noAvailability')}</p>
               )}
             </section>
 
             <section className="recruiter-detail-actions">
-              <h3>Change Status</h3>
+              <h3>{t('applicationDetail.change_status')}</h3>
               <div className="recruiter-detail-buttons">
                 <button
                   className="recruiter-detail-button accept"
                   onClick={() => handleStatusChange('accepted')}
                   disabled={updating || application.status === 'accepted'}
                 >
-                  Accept
+                  {t('applicationDetail.accept')}
                 </button>
                 <button
                   className="recruiter-detail-button reject"
                   onClick={() => handleStatusChange('rejected')}
                   disabled={updating || application.status === 'rejected'}
                 >
-                  Reject
+                  {t('applicationDetail.reject')}
                 </button>
                 <button
                   className="recruiter-detail-button unhandled"
                   onClick={() => handleStatusChange('unhandled')}
                   disabled={updating || application.status === 'unhandled'}
                 >
-                  Mark as Unhandled
+                  {t('applicationDetail.mark_unhandled')}
                 </button>
               </div>
-              {updating && <p className="recruiter-detail-updating">Updating...</p>}
+              {detailError && <div className="recruiter-detail-error-message">{detailError}</div>}
+              {updating && <p className="recruiter-detail-updating">{t('applicationDetail.updating')}</p>}
             </section>
           </div>
         </div>

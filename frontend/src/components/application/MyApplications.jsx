@@ -1,14 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { UserContext } from '../../contexts/UserContext';
 import './MyApplications.css';
 
-function MyApplications({ currentUser, onBackToProfile }) {
+/**
+ * Displays a list of job applications submitted by the currently logged‑in user.
+ * Fetches applications from the backend, filters by the current user, and allows
+ * sorting (by application ID as a proxy for date) and cancelling (soft delete)
+ * of applications that are not already cancelled.
+ *
+ * @component
+ * @param {Object} props - Component props
+ * @param {Function} props.onBackToProfile - Callback invoked when the user clicks the back button
+ * @returns {JSX.Element} The rendered MyApplications component
+ */
+function MyApplications({ onBackToProfile }) {
+  const { currentUser, logout } = useContext(UserContext);
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [sortOrder, setSortOrder] = useState('desc'); // 'asc' or 'desc' for date (ID as proxy)
-  const [deleteConfirm, setDeleteConfirm] = useState(null); // stores application id to delete
+  const [sortOrder, setSortOrder] = useState('desc'); 
+  const [deleteConfirm, setDeleteConfirm] = useState(null); 
 
-  // Fetch all applications and filter by current user
+
   useEffect(() => {
     const fetchMyApplications = async () => {
       try {
@@ -16,24 +29,32 @@ function MyApplications({ currentUser, onBackToProfile }) {
         const res = await fetch('/application/list_applications', {
           credentials: 'include',
         });
-        if (!res.ok) {
-          throw new Error('Failed to fetch applications');
-        }
+
+        if (res.status === 403) {
+          logout()
+        } 
+
         const data = await res.json();
+        
+        if (!res.ok) {
+          const err = new Error(data.error || 'Failed to fetch applications');
+          err.custom = true;
+          throw err;
+        }
         // data.success is expected to be an array of applications
         const allApps = data.success || [];
         // Filter applications belonging to current user
         const myApps = allApps.filter(app => app.person_id === currentUser.person_id);
         setApplications(myApps);
       } catch (err) {
-        setError(err.message);
+        setError(err.custom ? err.message : 'An error occurred while fetching your applications');
       } finally {
         setLoading(false);
       }
     };
 
     fetchMyApplications();
-  }, [currentUser.person_id]);
+  }, [currentUser.person_id, logout]);
 
   // Handle delete (cancel) confirmation
   const confirmDelete = (app) => {
@@ -59,16 +80,23 @@ function MyApplications({ currentUser, onBackToProfile }) {
         }),
       });
 
+      if (res.status === 403) {
+        logout()
+      } 
+
+      const data = await res.json();
+
       if (!res.ok) {
-        const errData = await res.json();
-        throw new Error(errData.message || 'Failed to cancel application');
+        const err = new Error(data.error || 'Failed to cancel application');
+        err.custom = true;
+        throw err;
       }
 
       // Remove from local state
       setApplications(prev => prev.filter(app => app.job_application_id !== deleteConfirm.job_application_id));
       setDeleteConfirm(null);
     } catch (err) {
-      alert(`Error: ${err.message}`);
+      setError(err.custom ? err.message : 'An error occurred while cancelling the application');
     }
   };
 
