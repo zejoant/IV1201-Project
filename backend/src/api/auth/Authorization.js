@@ -1,6 +1,8 @@
 'use strict'
 
 const jwt = require("jsonwebtoken");
+const logger = require("../../utils/logger");
+
 
 /**
  * Utility class for handling user authentication and authorization.

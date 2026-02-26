@@ -109,7 +109,7 @@ class LoginApi extends RequestHandler {
             logger.info(`Login attempt for userId=${person.person_id}`);
             this.sendResponse(res, 200, "Logged in success");
           } catch (err) {
-            logger.error(`Login error: ${err.message}`);
+            logger.error(`Login error: error=${err.message}`);
             next(err);
           }
         });
