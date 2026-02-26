@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Login.css';
 import { useTranslation } from 'react-i18next';
-
+import LanguageButton from '../LanguageButton/LanguageButton';
 import Footer from "../Footer";
 
 function Login({ setCurrentUser, switchToRegister }) {
@@ -76,6 +76,8 @@ function Login({ setCurrentUser, switchToRegister }) {
   };
 
   return (
+   <>
+    <LanguageButton />     
     <div className="login-container">
       <div className="login-card">
         <div className="login-header">
@@ -177,6 +179,7 @@ function Login({ setCurrentUser, switchToRegister }) {
       </div>
       <Footer />
     </div>
+   </>
   );
 }
 

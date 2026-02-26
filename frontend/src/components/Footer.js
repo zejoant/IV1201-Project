@@ -11,17 +11,13 @@ import {useTranslation} from 'react-i18next';
  */
 function Footer() {
   const currentYear = new Date().getFullYear();
-  const {t, i18n} = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <footer className="footer">
       <div className="footer-content">
         <div className="footer-copyright">
           &copy; {currentYear} {t('footer.copyright')}
-        </div>
-        <div>
-      <button className="lang-btn" onClick={() => {i18n.changeLanguage('en'); localStorage.setItem('language','en-US')}}>English</button>
-      <button className="lang-btn" onClick={() => {i18n.changeLanguage('sv'); localStorage.setItem('language','sv-SE')}}>Svenska</button>
         </div>
       </div>
     </footer>
