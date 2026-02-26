@@ -298,13 +298,8 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
     // Create date object at UTC midnight
     const date = new Date(Date.UTC(year, month - 1, day));
     // Use browser's default language but force UTC interpretation
-    const userLanguage = navigator.language || 'en-US';
-    return date.toLocaleDateString(userLanguage, {
-      timeZone: 'UTC',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
+    const userLanguage = localStorage.language || navigator.language;
+    return date.toLocaleDateString(userLanguage, {timeZone: 'UTC', year: 'numeric', month: 'long', day: 'numeric'});
   };
   
   /**

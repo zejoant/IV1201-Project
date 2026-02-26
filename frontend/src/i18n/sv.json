@@ -1,327 +1,405 @@
 {
-  "login": {
-    "title": "Välkommen tillbaka",
-    "subtitle": "Logga in på ditt rekryteringskonto",
-    "username": "Användarnamn",
-    "password": "Lösenord",
-    "signIn": "Logga in",
-    "loggingIn": "Loggar in...",
-    "noAccount": "Har du inget konto?",
-    "signUp": "Registrera dig",
-    "usernamePlaceholder": "Ange ditt användarnamn",
-    "passwordPlaceholder": "Ange ditt lösenord",
-    "usernameValidation": "Användarnamn får endast innehålla bokstäver och siffror",
-    "missing_field": "Obligatoriska fält saknas",
+    "sign_in": {
+        "success": "Inloggning lyckades",
+        "errors": {
+            "invalid_username_length": "Användarnamnet måste vara mellan 3 och 30 tecken",
+            "invalid_username_chars": "Användarnamnet får endast innehålla bokstäver och siffror",
+            "invalid_password_length": "Lösenordet måste vara minst 8 tecken långt",
+            "invalid_credentials": "Ogiltigt användarnamn eller lösenord",
+            "invalid_fetch": "Misslyckades med att hämta användaruppgifter",
+            "unknown_error": "Ett oväntat fel uppstod",
+            "operation_failed": "Ett oväntat fel uppstod",
+            "auth": {
+                "login_session_invalid": "Inloggningssessionen är ogiltig",
+                "user_login_expired": "Användarinloggningen har gått ut",
+                "permission_denied": "Behörighet nekad"
+            }
+        }
+    },
 
-    "errors": {
-      "invalid_credentials": "Felaktig inloggning",
-      "offline_login": "Något gick fel under inlogging",
-      "invalid_name_letters": "Namnet får endast innehålla bokstäver",
-      "invalid_pnr": "Personnummret måste vara siffror",
-      "invalid_pnr_length": "Personnumret måste vara exakt 12 siffror",
-      "invalid_username_chars": "Användarnamn får endast innehålla bokstäver och siffror",
-      "invalid_username_length": "Användarnamn måste vara mellan 3 och 30 tecken",
-      "invalid_password_length": "Lösenordet måste vara minst 8 tecken långt",
-      "invalid_fetch": "Det gick inte att få tag på användaren",
-      "invalid_name": "Namn krävs",
-      "invalid_surname": "Efternamn krävs",
-      "invalid_surname_letters": "Efternamn får endast innehålla bokstäver",
-      "invalid_email": "E-post måste vara i rätt e-post format",
-      "user_not_found": "Kunde inte hitta användaren"
+    "sign_up": {
+        "success": "Kontot skapades framgångsrikt",
+        "errors": {
+            "invalid_name": "Namn krävs",
+            "invalid_name_letters": "Namnet får endast innehålla bokstäver",
+            "invalid_surname": "Efternamn krävs",
+            "invalid_surname_letters": "Efternamnet får endast innehålla bokstäver",
+            "invalid_pnr": "Personnumret måste vara numeriskt",
+            "invalid_pnr_length": "Personnumret måste vara exakt 12 siffror",
+            "invalid_email": "E-postadressen måste vara giltig",
+            "invalid_username_length": "Användarnamnet måste vara mellan 3 och 30 tecken",
+            "invalid_username_chars": "Användarnamnet får endast innehålla bokstäver och siffror",
+            "invalid_password_length": "Lösenordet måste vara minst 8 tecken långt",
+            "missing_field": "Obligatoriska fält saknas",
+            "user_exists": "Användaren finns redan",
+            "invalid_account_creation": "Misslyckades med att skapa konto",
+            "creation_failed": "Kunde inte skapa konto",
+            "operation_failed": "Ett oväntat fel uppstod",
+            "auth": {
+                "login_session_invalid": "Inloggningssessionen är ogiltig",
+                "user_login_expired": "Användarinloggningen har gått ut",
+                "permission_denied": "Behörighet nekad"
+            }
+        }
+    },
+
+    "sign_out": {
+        "success": "Utloggning lyckades",
+        "errors": {
+            "operation_failed": "Ett oväntat fel uppstod",
+            "auth": {
+                "login_session_invalid": "Inloggningssessionen är ogiltig",
+                "user_login_expired": "Användarinloggningen har gått ut",
+                "permission_denied": "Behörighet nekad"
+            }
+        }
+    },
+
+    "id": {
+        "errors": {
+            "invalid_fetch": "Kunde inte hämta användare",
+            "unauthorized": "Inte autentiserad",
+            "unknown_error": "Ett oväntat fel uppstod när användaren skapades",
+            "operation_failed": "Ett oväntat fel uppstod",
+            "auth": {
+                "login_session_invalid": "Inloggningssessionen är ogiltig",
+                "user_login_expired": "Användarinloggningen har gått ut",
+                "permission_denied": "Behörighet nekad"
+            }
+        }
+    },
+
+    "apply": {
+        "success": "Ansökan skickades in framgångsrikt",
+        "errors": {
+            "no_competence": "Minst en kompetens krävs",
+            "yoe_numerical": "År av erfarenhet måste vara numeriskt",
+            "competence_format": "Ogiltigt kompetensformat",
+            "no_availability": "Minst en tillgänglighetsperiod krävs",
+            "start_date_format": "Startdatum måste vara ett giltigt datum",
+            "end_date_format": "Slutdatum måste vara ett giltigt datum",
+            "invalid_application": "Misslyckades med att skicka in ansökan",
+            "cannot_add_competence": "Kunde inte lägga till kompetens",
+            "cannot_add_ava": "Kunde inte lägga till tillgänglighet",
+            "missing_field": "Obligatoriska fält saknas",
+            "unauthorized": "Inte autentiserad",
+            "operation_failed": "Ett oväntat fel uppstod",
+            "auth": {
+                "login_session_invalid": "Inloggningssessionen är ogiltig",
+                "user_login_expired": "Användarinloggningen har gått ut",
+                "permission_denied": "Behörighet nekad"
+            }
+        }
+    },
+
+    "list_competences": {
+        "errors": {
+            "invalid_competence": "Kunde inte ladda kompetenser",
+            "competence_not_found": "Inga kompetenser hittades",
+            "unauthorized": "Inte autentiserad",
+            "operation_failed": "Ett oväntat fel uppstod",
+            "auth": {
+                "login_session_invalid": "Inloggningssessionen är ogiltig",
+                "user_login_expired": "Användarinloggningen har gått ut",
+                "permission_denied": "Behörighet nekad"
+            }
+        }
+    },
+
+    "list_applications": {
+        "errors": {
+            "invalid_fetch": "Kunde inte hämta ansökningar",
+            "no_applications": "Inga ansökningar hittades",
+            "unauthorized": "Inte behörig",
+            "operation_failed": "Ett oväntat fel uppstod",
+            "auth": {
+                "login_session_invalid": "Inloggningssessionen är ogiltig",
+                "user_login_expired": "Användarinloggningen har gått ut",
+                "permission_denied": "Behörighet nekad"
+            }
+        }
+    },
+
+    "get_application": {
+        "errors": {
+            "no_application": "Ansökan hittades inte",
+            "no_application_exists": "Ansökan finns inte",
+            "competence_not_found": "Kompetens hittades inte",
+            "availability_not_found": "Tillgänglighet hittades inte",
+            "unauthorized": "Inte behörig",
+            "operation_failed": "Ett oväntat fel uppstod",
+            "auth": {
+                "login_session_invalid": "Inloggningssessionen är ogiltig",
+                "user_login_expired": "Användarinloggningen har gått ut",
+                "permission_denied": "Behörighet nekad"
+            }
+        }
+    },
+
+    "update_application": {
+        "success": "Ansökningsstatus uppdaterad",
+        "errors": {
+            "status_change": "Ogiltig statusuppdatering",
+            "status_not_found": "Status hittades inte",
+            "unauthorized": "Inte behörig",
+            "operation_failed": "Ett oväntat fel uppstod",
+            "auth": {
+                "login_session_invalid": "Inloggningssessionen är ogiltig",
+                "user_login_expired": "Användarinloggningen har gått ut",
+                "permission_denied": "Behörighet nekad"
+            }
+        }
+    },
+
+
+
+
+
+
+
+
+
+    "register": {
+        "title": "Skapa konto",
+        "subtitle": "Gå med i vår rekryteringsplattform idag",
+        "divider": "ELLER",
+        "labels": {
+            "first_name": "Förnamn",
+            "last_name": "Efternamn",
+            "email": "E-postadress",
+            "pnr": "Personnummer",
+            "username": "Användarnamn",
+            "password": "Lösenord"
+        },
+        "placeholders": {
+            "first_name": "Ange ditt förnamn",
+            "last_name": "Ange ditt efternamn",
+            "email": "Ange din e-postadress",
+            "pnr": "Ange ditt personnummer",
+            "username": "Välj ett användarnamn",
+            "password": "Skapa ett starkt lösenord"
+        },
+        "errors": {
+            "missing_field": "Detta fält är obligatoriskt",
+            "invalid_email": "Ange en giltig e-postadress",
+            "invalid_account_creation": "Misslyckades med att skapa konto",
+            "password_length": "Lösenordet måste vara minst 8 tecken långt",
+            "offline_login": "Kunde inte ansluta till servern. Försök igen senare",
+            "pnr_length": "Personnumret måste vara exakt 12 siffror",
+            "username_length": "Användarnamnet måste vara mellan 3 och 30 tecken"
+        },
+        "password_strength": {
+            "weak": "Svagt",
+            "good": "Bra",
+            "strong": "Starkt",
+            "tips": [
+                "Minst 8 tecken",
+                "Inkludera versaler",
+                "Inkludera siffror",
+                "Inkludera specialtecken"
+            ]
+        },
+        "buttons": {
+            "create_account": "Skapa konto",
+            "creating_account": "Skapar konto...",
+            "account_already": "Har du redan ett konto?",
+            "sign_in": "Logga in"
+        },
+        "alerts": {
+            "success": "Kontot skapades! Omdirigerar till inloggning..."
+        }
+    },
+
+    "login": {
+        "title": "Välkommen tillbaka",
+        "subtitle": "Logga in på ditt konto",
+        "username": "Användarnamn",
+        "password": "Lösenord",
+        "username_placeholder": "Ange ditt användarnamn",
+        "password_placeholder": "Ange ditt lösenord",
+        "sign_in": "Logga in",
+        "logging_in": "Loggar in...",
+        "no_account": "Har du inget konto?",
+        "sign_up": "Registrera dig",
+        "errors": {
+            "missing_field": "Detta fält är obligatoriskt.",
+            "invalid_username_length": "Användarnamnet måste vara mellan 3 och 30 tecken.",
+            "invalid_credentials": "Ogiltigt användarnamn eller lösenord.",
+            "invalid_fetch": "Misslyckades med att hämta användarprofil.",
+            "offline_login": "Kan inte ansluta. Kontrollera din internetanslutning.",
+            "password_length": "Lösenordet måste vara minst 8 tecken långt"
+        }
+    },
+
+    "footer": {
+        "copyright": "Rekryteringsplattform. Alla rättigheter förbehållna."
+    },
+
+    "header": {
+        "brand": "Rekryteringsplattform",
+        "logout": "Logga ut",
+        "recruiter": "Rekryterare",
+        "applicant": "Sökande"
+    },
+
+    "personPage": {
+        "welcome_title": "Välkommen",
+        "welcome_subtitle": "Hantera din profil och dina ansökningar här.",
+        "personal_info": "Personlig information",
+        "active": "Aktiv",
+        "not_provided": "Ej angivet",
+        "last_updated": "Senast uppdaterad:",
+        "labels": {
+            "name": "Förnamn",
+            "surname": "Efternamn",
+            "username": "Användarnamn",
+            "email": "E-post",
+            "pnr": "Personnummer"
+        },
+        "actions": {
+            "submit_application": "Skicka in ansökan",
+            "submit_description": "Ansök om lediga tjänster snabbt och enkelt.",
+            "apply_now": "Ansök nu",
+            "my_applications": "Mina ansökningar",
+            "manage_description": "Visa och hantera dina inskickade ansökningar.",
+            "view_all": "Visa alla"
+        }
+    },
+
+    "recruiterDashboard": {
+        "title": "Ansökningsöversikt",
+        "loading": "Laddar ansökningar...",
+        "no_data": "Inga ansökningar hittades.",
+        "columns": {
+            "name": "Förnamn",
+            "surname": "Efternamn",
+            "application_id": "Ansöknings-ID",
+            "status": "Status"
+        },
+        "status": {
+            "accepted": "Godkänd",
+            "rejected": "Avslagen",
+            "pending": "Väntande",
+            "unhandled": "Obehandlad"
+        },
+        "errors": {
+            "invalid_fetch": "Misslyckades med att ladda ansökningar.",
+            "offline": "Kan inte ansluta. Kontrollera din internetanslutning."
+        }
+    },
+
+    "applicationDetail": {
+        "title": "Ansökningsdetaljer",
+        "loading": "Laddar ansökningsdetaljer...",
+        "application_not_found": "Ansökan hittades inte.",
+        "back_to_applications": "← Tillbaka till ansökningar",
+        "personal_info": "Personlig information",
+        "name": "Namn",
+        "surname": "Efternamn",
+        "email": "E-post",
+        "pnr": "Personnummer",
+        "not_available": "Ej tillgängligt",
+        "aoe": "Kompetensområden",
+        "availability_periods": "Tillgänglighetsperioder",
+        "no_expertise": "Inga kompetensområden angivna.",
+        "noAvailability": "Inga tillgänglighetsperioder angivna.",
+        "full_details_unavailable": "Fullständiga ansökningsdetaljer är för närvarande inte tillgängliga.",
+        "unknown": "Okänd",
+        "year": "år",
+        "years": "år",
+        "to": "till",
+        "change_status": "Ändra ansökningsstatus",
+        "accept": "Godkänn",
+        "reject": "Avslå",
+        "mark_unhandled": "Markera som obehandlad",
+        "updating": "Uppdaterar status...",
+        "status": {
+            "accepted": "Godkänd",
+            "rejected": "Avslagen",
+            "unhandled": "Obehandlad"
+        },
+        "competences": {
+            "ticket sales": "biljettförsäljning",
+            "lotteries": "lotterier",
+            "roller coaster operation": "drift av berg- och dalbana"
+        },
+        "errors": {
+            "application_fetch_fail": "Misslyckades med att ladda ansökan.",
+            "application_not_found": "Den begärda ansökan kunde inte hittas.",
+            "load_full_application": "Kunde inte ladda fullständiga ansökningsdetaljer.",
+            "application_update_failed": "Misslyckades med att uppdatera ansökningsstatus.",
+            "application_fetch_error": "Kunde inte hämta ansökningsdata.",
+            "update_status_error": "Misslyckades med att uppdatera status. Försök igen."
+        }
+    },
+
+    "applicationForm": {
+        "title": "Jobbansökan",
+        "subtitle": "Fyll i dina kompetenser och din tillgänglighet för att ansöka.",
+        "back": "Tillbaka",
+        "note": "Vänligen granska din information noggrant innan du skickar in.",
+        "loading": "Laddar...",
+        "sections": {
+            "competence_title": "Kompetensområden",
+            "competence_description": "Välj dina färdigheter och ange dina års erfarenhet.",
+            "availability_title": "Tillgänglighet",
+            "availability_description": "Välj perioder då du är tillgänglig för arbete.",
+            "summary_title": "Ansökningssammanfattning"
+        },
+        "labels": {
+            "competence_area": "Kompetensområde",
+            "years_experience": "År av erfarenhet",
+            "from_date": "Från datum",
+            "to_date": "Till datum"
+        },
+        "placeholders": {
+            "select_competence": "Välj en kompetens",
+            "loading_competences": "Laddar kompetenser...",
+            "experience_example": "t.ex. 2.5"
+        },
+        "buttons": {
+            "add_competence": "Lägg till",
+            "add_period": "Lägg till period",
+            "remove": "Ta bort",
+            "submit": "Skicka in ansökan",
+            "submitting": "Skickar..."
+        },
+        "lists": {
+            "added_competences": "Tillagda kompetenser",
+            "added_availability": "Tillagda tillgänglighetsperioder",
+            "availability_periods": "Tillgänglighetsperioder"
+        },
+        "experience": {
+            "year": "år",
+            "years": "år",
+            "of_experience": "av erfarenhet",
+            "decimal_hint": "Du kan använda decimaler (t.ex. 1.5)."
+        },
+        "to": "till",
+        "success": {
+            "submitted": "Din ansökan har skickats in framgångsrikt!"
+        },
+        "errors": {
+            "invalid_application": "Misslyckades med att skicka in ansökan.",
+            "offline_application": "Kan inte ansluta. Kontrollera din internetanslutning.",
+            "select_competence": "Vänligen välj en kompetens.",
+            "write_experience": "Vänligen ange dina års erfarenhet.",
+            "not_enough_experience": "Erfarenheten måste vara större än 0.",
+            "experience_positive": "Erfarenheten måste vara ett positivt tal.",
+            "experience_max": "Erfarenheten får inte överstiga 50 år.",
+            "competence_exists": "Denna kompetens har redan lagts till.",
+            "invalid_competence": "Ogiltig kompetens vald.",
+            "select_dates": "Vänligen välj både start- och slutdatum.",
+            "start_dast": "Startdatum kan inte vara i det förflutna.",
+            "start_after_end": "Startdatum kan inte vara efter slutdatum.",
+            "overlapping_period": "Tillgänglighetsperioder får inte överlappa varandra.",
+            "add_competence_required": "Vänligen lägg till minst en kompetens.",
+            "add_availability_required": "Vänligen lägg till minst en tillgänglighetsperiod."
+        },
+        "competences": {
+            "ticket sales": "biljettförsäljning",
+            "lotteries": "lotterier",
+            "roller coaster operation": "drift av berg- och dalbana"
+        }
     }
-  },
-
-  "applicationForm": {
-    "title": "Ansök om en tjänst",
-    "subtitle": "Slutför din ansökan genom att lägga till din kompetens och tillgänglighet",
-    "back": "Tillbaka",
-    "to": "till",
-
-    "validation": {
-      "selectCompetence": "Välj en kompetens",
-      "writeExperience": "Ange antal års erfarenhet",
-      "notEnoughExperience": "Otillräcklig erfarenhet",
-      "experiencePositive": "Erfarenhet måste vara ett positivt tal",
-      "experienceMax": "Erfarenhet kan inte överstiga 50 år",
-      "competenceExists": "Denna kompetens har redan lagts till",
-      "invalidCompetence": "Välj en giltig kompetens",
-      "selectDates": "Välj både start- och slutdatum",
-      "startPast": "Startdatum kan inte vara i det förflutna",
-      "startAfterEnd": "Startdatum kan inte vara efter slutdatum",
-      "overlappingPeriod": "Denna period överlappar med en befintlig period",
-      "addCompetenceRequired": "Lägg till minst en kompetens",
-      "addAvailabilityRequired": "Lägg till minst en tillgänglighetsperiod",
-      "submitFailed": "Misslyckades att skicka ansökan",
-      "submitGeneric": "Ett fel uppstod när ansökan skickades"
-    },
-
-    "errors":{
-      "invalid_competence": "Misslyckades att ladda kompetenser",
-      "offline_competence": "Ett fel uppstod vid hämtning av kompetenser",
-      "invalid_application": "Misslyckades att skicka ansökan",
-      "offline_application": "Ett fel uppstod när ansökan skickades",
-      "cannot_add_competence": "Det gick inte att lägga till kompetensområdet",
-      "no_competence": "Inte tillräckligt med expertis",
-      "yoe_numerical": "År av erfarenhet måste vara numerisk",
-      "competence_format": "Expertis är fel format",
-      "no_availability": "Inte tillräckligt med tillgänglighetperioder",
-      "start_date_format": "Tillgänglighetsperiodens startdatum är inte korrekt formaterat",
-      "end_date_format": "Tillgänglighetsperiodens slutdatum är inte korrekt formaterat",
-      "missing_field": "Obligatoriska fält saknas",
-      "cannot_add_ava": "Kunde inte lägga till kompetens",
-      "competence_not_found": "Kunde inte hitta kompetens"
-    },
-
-    "success": {
-      "submitted": "Ansökan skickades framgångsrikt!"
-    },
-
-    "sections": {
-      "competenceTitle": "Kompetensområden",
-      "competenceDescription": "Välj dina kompetensområden och antal års erfarenhet",
-      "availabilityTitle": "Tillgänglighetsperioder",
-      "availabilityDescription": "Lägg till perioder då du är tillgänglig för arbete",
-      "summaryTitle": "Ansökningsöversikt"
-    },
-
-    "labels": {
-      "competenceArea": "Kompetensområde",
-      "yearsExperience": "Antal års erfarenhet",
-      "fromDate": "Från datum",
-      "toDate": "Till datum"
-    },
-
-    "placeholders": {
-      "selectCompetence": "Välj ett kompetensområde",
-      "loadingCompetences": "Laddar kompetenser...",
-      "experienceExample": "t.ex. 3.5"
-    },
-
-    "buttons": {
-      "addCompetence": "Lägg till kompetens",
-      "addPeriod": "Lägg till period",
-      "remove": "Ta bort",
-      "submit": "Skicka ansökan",
-      "submitting": "Skickar ansökan..."
-    },
-
-    "competences":{
-      "ticket sales": "biljettförsäljning",
-      "lotteries": "lotterier",
-      "roller coaster operation": "berg-och dalbana operation"
-    },
-
-    "lists": {
-      "addedCompetences": "Tillagda kompetensområden",
-      "addedAvailability": "Tillagda tillgänglighetsperioder",
-      "competenceAreas": "Kompetensområden:",
-      "availabilityPeriods": "Tillgänglighetsperioder:"
-    },
-
-    "experience": {
-      "year": "år",
-      "years": "år",
-      "decimalHint": "Kan innehålla en decimal",
-      "of_experience": "av erfarenhet"
-    },
-
-    "note": "Obs: Du kan skicka flera ansökningar. Varje ny ansökan ersätter den föregående."
-  },
-
-  "applicationDetail": {
-    "loading": "Läser in ansökningsdetaljer...",
-    "applicationNotFound": "Ansökan hittades inte",
-    "backToApplications": "← Tillbaka till ansökningar",
-    "title": "Ansökningsdetaljer",
-    "personalInformation": "Personlig information",
-    "name": "Namn",
-    "email": "E-post",
-    "pnr": "Personnummer",
-    "notAvailable": "Ej tillgänglig",
-    "areasOfExpertise": "Kompetensområden",
-    "noExpertise": "Ingen kompetens angiven.",
-    "fullDetailsUnavailable": "Fullständiga uppgifter är inte tillgängliga",
-    "year": "år",
-    "years": "år",
-    "unknown": "Okänt",
-    "availabilityPeriods": "Tillgänglighetsperioder",
-    "noAvailability": "Inga tillgänglighetsperioder angivna.",
-    "to": "till",
-    "changeStatus": "Ändra status",
-    "accept": "Acceptera",
-    "reject": "Avvisa",
-    "markUnhandled": "Markera som obehandlad",
-    "updating": "Uppdaterar...",
-
-    "errors": {
-      "no_application": "Ansökan hittades inte",
-      "no_application_exists": "Ansökan kunde inte hittas",
-      "status_change": "Ett fel uppstod under uppdatering av status",
-      "status_not_found": "Status hittades inte",
-      "competence_not_found": "Kunde inte hitta kompetens",
-      "availability_not_found": "Kunde inte hitta tillgänglighetsperiod"
-    },
-
-    "validation": {
-      "application_fetch_fail": "Kunde inte hämta ansökan",
-      "application_not_found": "Ansökan hittades inte",
-      "load_full_application": "Kunde inte hämta informationen",
-      "application_fetch_error": "Ett fel uppstod när ansökan hämtades",
-      "application_update_failed": "Misslyckades att uppdatera ansökan",
-      "update_status_error": "Misslyckades att uppdatera status"
-    },
-
-    "status": {
-      "accepted": "accepterad",
-      "rejected": "avvisad",
-      "unhandled": "obehandlad"
-    },
-
-    "competences":{
-      "ticket sales": "biljettförsäljning",
-      "lotteries": "lotterier",
-      "roller coaster operation": "berg-och dalbana operation"
-    }
-  },
-
-  "recruiterDashboard": {
-    "title": "Alla Ansökningar",
-    "loading": "Laddar ansökningar...",
-    "error": "Ett fel uppstod vid hämtning av ansökningar",
-    "noData": "Inga ansökningar hittades",
-    "columns": {
-      "name": "Namn",
-      "surname": "Efternamn",
-      "applicationId": "Ansöknings-ID",
-      "status": "Status"
-    },
-
-    "errors": {
-      "invalid_fetch": "Misslyckades att få tag på applikationer",
-      "offline_recruiterDashoard": "Något gick fel när applikationer hämtades",
-      "user_not_found": "Kunde inte hitta användaren",
-      "no_applications": "Kunde inte hitta ansökningar"
-    },
-
-    "status":{
-      "accepted": "Accepterad",
-      "rejected": "Avvisad",
-      "unhandled": "Obehandlad"
-    }
-
-  },
-
-  "register": {
-    "title": "Skapa konto",
-    "subtitle": "Gå med i vår rekryteringsplattform idag",
-    "labels": {
-      "firstName": "Förnamn",
-      "lastName": "Efternamn",
-      "email": "E-postadress",
-      "personNumber": "Personnummer",
-      "username": "Användarnamn",
-      "password": "Lösenord"
-    },
-    "placeholders": {
-      "firstName": "Ange ditt förnamn",
-      "lastName": "Ange ditt efternamn",
-      "email": "Ange din e-postadress",
-      "personNumber": "Ange ditt personnummer",
-      "username": "Välj ett användarnamn",
-      "password": "Skapa ett starkt lösenord"
-    },
-    "validation": {
-      "lettersOnlyName": "Namnet får endast innehålla bokstäver",
-      "lettersOnlySurname": "Efternamnet får endast innehålla bokstäver",
-      "personNumberLength": "Personnumret måste vara exakt 12 siffror",
-      "usernameChars": "Användarnamn får endast innehålla bokstäver och siffror",
-      "usernameLength": "Användarnamn måste vara mellan 3 och 30 tecken",
-      "passwordLength": "Lösenordet måste vara minst 8 tecken långt"
-    },
-
-    "errors":{
-     "invalid_credentials": "Felaktig inloggning",
-      "offline_login": "Något gick fel under registrering",
-      "invalid_name_letters": "Namnet får endast innehålla bokstäver",
-      "invalid_pnr": "Personnummret måste vara siffror",
-      "invalid_pnr_length": "Personnumret måste vara exakt 12 siffror",
-      "invalid_username_chars": "Användarnamn får endast innehålla bokstäver och siffror",
-      "invalid_username_length": "Användarnamn måste vara mellan 3 och 30 tecken",
-      "invalid_password_length": "Lösenordet måste vara minst 8 tecken långt",
-      "invalid_fetch": "Det gick inte att få tag på användaren",
-      "invalid_name": "Namn krävs",
-      "invalid_surname": "Efternamn krävs",
-      "invalid_surname_letters": "Efternamn får endast innehålla bokstäver",
-      "invalid_email": "E-post måste vara i rätt e-post format",
-      "invalid_account_creation": "Misslyckades att skapa konto",
-      "missing_field": "Obligatoriska fält saknas",
-      "user_exists": "Användaren finns redan",
-      "creation_failed": "Kunde inte skapa användare"
-    },
-
-    "passwordStrength": {
-      "weak": "Svagt",
-      "good": "Bra",
-      "strong": "Starkt",
-      "tips": [
-        "Minst 8 tecken",
-        "Inkludera stora bokstäver",
-        "Inkludera siffror",
-        "Inkludera specialtecken"
-      ]
-    },
-    "buttons": {
-      "createAccount": "Skapa konto",
-      "creatingAccount": "Skapar konto...",
-      "signIn": "Logga in",
-      "accountAlready": "Har du redan ett konto?"
-    },
-    "alerts": {
-      "error": "Ett fel uppstod under registreringen",
-      "success": "Konto skapades framgångsrikt!"
-    },
-    "divider": "ELLER"
-  },
-
-  "footer": {
-    "copyright": "Rekryteringsplattform. Alla rättigheter förbehållna."
-  },
-
-  "header": {
-    "brand": "Rekryteringsplattform",
-    "logout": "Logga ut",
-    "role": {
-      "recruiter": "Rekryterare",
-      "applicant": "Sökande"
-    }
-  },
-
-  "personPage": {
-    "welcomeTitle": "Välkommen tillbaka,",
-    "welcomeSubtitle": "Hantera dina jobbansökningar och din profil",
-
-    "personalInformation": "Personlig information",
-    "active": "Aktiv",
-
-    "labels": {
-      "name": "Namn",
-      "surname": "Efternamn",
-      "username": "Användarnamn",
-      "email": "E-post",
-      "personNumber": "Personnummer"
-    },
-
-    "notProvided": "Ej angivet",
-    "lastUpdated": "Senast uppdaterad:",
-
-    "actions": {
-      "submitApplication": "Skicka ansökan",
-      "submitDescription": "Ansök om en tjänst på nöjesparken",
-      "applyNow": "Ansök nu",
-
-      "myApplications": "Mina ansökningar",
-      "manageDescription": "Visa och hantera dina skickade ansökningar",
-      "viewAll": "Visa alla"
-    }
-  }
 }

@@ -1,10 +1,10 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import en from './en2.json';
-import sv from './sv2.json';
+import en from './en.json';
+import sv from './sv.json';
 
 // Supported languages
-const supportedLngs = ['en', 'sv'];
+const supportedLngs = ['en-US', 'sv-SE'];
 
 // Get saved language from localStorage, if any
 const savedLng = localStorage.getItem('language');
@@ -13,7 +13,7 @@ const savedLng = localStorage.getItem('language');
 const browserLng = (navigator.language || navigator.userLanguage).slice(0, 2);
 
 // Determine which language to use: localStorage first, then browser, fallback 'en'
-const defaultLng = savedLng || (supportedLngs.includes(browserLng) ? browserLng : 'en');
+const defaultLng = savedLng || (supportedLngs.includes(browserLng) ? browserLng : 'en-US');
 
 /**
  * i18n configuration for the application.
@@ -35,7 +35,7 @@ i18n
       sv: { translation: sv },
     },
     lng: defaultLng, // Default language
-    fallbackLng: 'en', // Fallback if key is missing
+    fallbackLng: 'en-US', // Fallback if key is missing
     debug: false, // Set to true to debug missing keys
     interpolation: {
       escapeValue: false, // React already does escaping

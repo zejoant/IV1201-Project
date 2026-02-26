@@ -1,148 +1,324 @@
+"use strict";
+
+/**
+ * @file ApplicationApi route tests
+ *
+ * Integration-style tests for Application API routes using Express and Supertest.
+ *
+ * The tests verify:
+ *  - Authentication behavior
+ *  - Request validation
+ *  - Controller interaction
+ *  - HTTP status responses
+ *
+ * External dependencies such as Authorization and controllers are mocked
+ * to isolate route-layer behavior.
+ *
+ * Frameworks:
+ *  - Jest (testing & mocking)
+ *  - Supertest (HTTP assertions)
+ *  - Express (test server)
+ */
+const request = require("supertest");
+const express = require("express");
 const ApplicationApi = require("../../src/api/ApplicationApi");
+
+/**
+ * Mock Authorization middleware.
+ *
+ * checkLogin:
+ *   Simulates user authentication.
+ *
+ * checkRecruiter:
+ *   Simulates recruiter authorization checks.
+ */
+jest.mock("../../src/api/auth/Authorization", () => ({
+  checkLogin: jest.fn(),
+  checkRecruiter: jest.fn(),
+}));
+
 const Authorization = require("../../src/api/auth/Authorization");
-const { validationResult } = require("express-validator");
 
-jest.mock("../../src/api/auth/Authorization");
-jest.mock("express-validator");
+/**
+ * Creates a mocked Application controller.
+ *
+ * Each method represents database logic normally handled
+ * by the controller layer. All functions are mocked so
+ * behavior can be controlled inside tests.
+ *
+ * @returns {Object} mocked controller
+ */
+function createMockController() {
+  return {
+    createApplication: jest.fn(),
+    getCompetence: jest.fn(),
+    listApplications: jest.fn(),
+    getApplication: jest.fn(),
+    updateApplication: jest.fn(),
+  };
+}
 
-describe("ApplicationApi", () => {
-  let api;
+/**
+ * Creates an Express test application and registers routes.
+ *
+ * The real controller and DB initialization are bypassed.
+ *
+ * @param {Object} mockController mocked controller instance
+ * @returns {Express.Application} configured test app
+ */
+function setupApp(mockController) {
+  const app = express();
+  app.use(express.json());
+
+  const api = new ApplicationApi();
+
+  // inject mocked controller
+  api.contr = mockController;
+
+  // avoid DB initialization
+  api.getController = jest.fn();
+
+  api.registerHandler();
+
+  app.use("/application", api.router);
+
+  return app;
+}
+
+/**
+ * Test suite for ApplicationApi routes.
+ */
+describe("ApplicationApi Routes", () => {
+
+  let app;
   let mockController;
-  let mockSendResponse;
 
-  beforeEach(async () => {
-    api = new ApplicationApi();
+  /**
+   * Reset mocks and recreate application before each test.
+   * Default authentication succeeds.
+   */
+  beforeEach(() => {
+    jest.clearAllMocks();
 
-    // Mock controller with dummy functions
-    mockController = {
-      createApplication: jest.fn(),
-      getCompetence: jest.fn(),
-      listApplications: jest.fn(),
-      getApplication: jest.fn(),
-      updateApplication: jest.fn(),
-    };
-    api.contr = mockController;
+    mockController = createMockController();
+    app = setupApp(mockController);
 
-    // Mock sendResponse
-    mockSendResponse = jest.fn();
-    api.sendResponse = mockSendResponse;
-
-    // Default authorization: always true
+    // default auth success
     Authorization.checkLogin.mockResolvedValue(true);
     Authorization.checkRecruiter.mockResolvedValue(true);
-
-    // Default validationResult
-    validationResult.mockReturnValue({
-      isEmpty: () => true,
-      array: () => [],
-    });
-    await api.registerHandler();
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
+  /**
+   * POST /application/apply
+   * Tests application submission flow.
+   */
+  describe("POST /application/apply", () => {
 
-  describe("POST /apply", () => {
-    it("submits a new application successfully", async () => {
-      const req = {
-        body: {
-          expertise: [{ competence_id: 1, yoe: 2 }],
-          availability: [{ from_date: "2026-01-01", to_date: "2026-01-10" }],
-        },
-        user: { id: 5 },
-      };
-      const res = {};
-
-      mockController.createApplication.mockResolvedValue("fake_app");
-
-      // Extract the handler
-      const handler = api.router.stack.find(l => l.route?.path === "/apply").route.stack[0].handle;
-
-      await handler(req, res);
-
-      expect(mockController.createApplication).toHaveBeenCalledWith(
-        req.body.expertise,
-        req.body.availability,
-        req.user.id
-      );
-      expect(mockSendResponse).toHaveBeenCalledWith(res, 200, "sent application");
-    });
-
-    it("returns 400 when validation fails", async () => {
-      validationResult.mockReturnValue({
-        isEmpty: () => false,
-        array: () => [{ msg: "error" }],
+     /**
+     * Should submit an application successfully when user is authenticated.
+     *
+     * Expected:
+     *  - HTTP 200 response
+     *  - createApplication controller called
+     */
+    test("200 - submit application successfully", async () => {
+      Authorization.checkLogin.mockImplementation((req, res) => {
+        req.user = { id: 10 }; // simulate logged-in user
+        return true;
       });
 
-      const req = { body: {} };
-      const res = {};
+      mockController.createApplication.mockResolvedValue({ id: 10 });
 
-      const handler = api.router.stack.find(l => l.route?.path === "/apply").route.stack[0].handle;
+      const res = await request(app)
+        .post("/application/apply")
+        .send({
+          expertise: [{ competence_id: 1, yoe: 2 }],
+          availability: [{
+            from_date: "2026-01-01",
+            to_date: "2026-01-10"
+          }]
+        });
 
-      await handler(req, res);
+      expect(res.status).toBe(200);
 
-      expect(mockSendResponse).toHaveBeenCalledWith(res, 400, [{ msg: "error" }]);
+      expect(mockController.createApplication)
+        .toHaveBeenCalledWith(
+          expect.any(Array),
+          expect.any(Array),
+          10
+        );
+    });
+
+    /**
+     * Should return 400 when validation fails.
+     */
+    test("400 - validation fails", async () => {
+      const res = await request(app)
+        .post("/application/apply")
+        .send({}); // missing fields
+
+      expect(res.status).toBe(400);
+    });
+
+    /**
+     * Should return 401 when user is not logged in.
+     */
+    test("401 - not logged in", async () => {
+      Authorization.checkLogin.mockImplementation((req, res) => {
+        res.status(401).json("unauthorized");
+        return false;
+      });
+
+      const res = await request(app)
+        .post("/application/apply")
+        .send({
+          expertise: [{ competence_id: 1, yoe: 2 }],
+          availability: [{ from_date: "2026-01-01", to_date: "2026-01-10" }]
+        });
+
+      expect(res.status).toBe(401);
     });
   });
 
-  /*describe("GET /list_competences", () => {
-    it("returns competences", async () => {
-      const req = {};
-      const res = {};
-      mockController.getCompetence.mockResolvedValue([{ name: "JavaScript" }]);
+  /**
+   * GET /application/list_competences
+   * Tests competence retrieval.
+   */
+  describe("GET /application/list_competences", () => {
 
-      const handler = api.router.stack.find(l => l.route?.path === "/list_competences").route.stack[0].handle;
+    /**
+     * Should return competences successfully.
+     */
+    test("200 - returns competences", async () => {
+      mockController.getCompetence.mockResolvedValue([{ id: 1, name: "ticket sales" }]);
 
-      await handler(req, res);
+      const res = await request(app).get("/application/list_competences");
 
+      expect(res.status).toBe(200);
       expect(mockController.getCompetence).toHaveBeenCalled();
-      expect(mockSendResponse).toHaveBeenCalledWith(res, 200, [{ name: "JavaScript" }]);
+    });
+
+    /**
+     * Should return 404 if no competences exist.
+     */
+    test("404 - no competences found", async () => {
+      mockController.getCompetence.mockResolvedValue(null);
+
+      const res = await request(app).get("/application/list_competences");
+
+      expect(res.status).toBe(404);
     });
   });
 
-  describe("GET /list_applications", () => {
-    it("returns applications", async () => {
-      const req = {};
-      const res = {};
-      mockController.listApplications.mockResolvedValue([{ person_id: 1, name: "Alice" }]);
+  /**
+   * GET /application/list_applications
+   * Recruiter-only endpoint tests.
+   */
+  describe("GET /application/list_applications", () => {
 
-      const handler = api.router.stack.find(l => l.route?.path === "/list_applications").route.stack[0].handle;
+    /**
+     * Recruiter successfully retrieves applications.
+     */
+    test("200 - recruiter gets applications", async () => {
 
-      await handler(req, res);
+      mockController.listApplications.mockResolvedValue([{ id: 1, status: "unhandled" }]);
 
+      const res = await request(app).get("/application/list_applications");
+
+      expect(res.status).toBe(200);
       expect(mockController.listApplications).toHaveBeenCalled();
-      expect(mockSendResponse).toHaveBeenCalledWith(res, 200, [{ person_id: 1, name: "Alice" }]);
+    });
+
+    /**
+     * Should return 401 if recruiter authorization fails.
+     */
+    test("401 - recruiter auth fails", async () => {
+      Authorization.checkRecruiter.mockImplementation((c, req, res) => {
+        res.status(401).json("unauthorized");
+        return false;
+      });
+
+      const res = await request(app).get("/application/list_applications");
+
+      expect(res.status).toBe(401);
     });
   });
 
-  describe("POST /get_application", () => {
-    it("returns a specific application", async () => {
-      const req = { body: { job_application_id: 1, person_id: 1, status: "unhandled", name: "Bob", surname: "Smith" } };
-      const res = {};
-      mockController.getApplication.mockResolvedValue({ id: 1, name: "Bob" });
+  /**
+   * POST /application/get_application
+   * Tests fetching a single application.
+   */
+  describe("POST /application/get_application", () => {
 
-      const handler = api.router.stack.find(l => l.route?.path === "/get_application").route.stack[0].handle;
+    /**
+     * Should return application when valid request is sent.
+     */
+    test("200 - returns application", async () => {
+      mockController.getApplication.mockResolvedValue({id: 1,status: "unhandled"});
 
-      await handler(req, res);
+      const res = await request(app)
+        .post("/application/get_application")
+        .send({job_application_id: 1, person_id: 1, status: "unhandled", name: "John", surname: "Doe"});
 
-      expect(mockController.getApplication).toHaveBeenCalledWith(req.body);
-      expect(mockSendResponse).toHaveBeenCalledWith(res, 200, { id: 1, name: "Bob" });
+      expect(res.status).toBe(200);
+      expect(mockController.getApplication).toHaveBeenCalled();
+    });
+
+    /**
+     * Should return 400 on validation failure.
+     */
+    test("400 - validation fails", async () => {
+      const res = await request(app)
+        .post("/application/get_application")
+        .send({});
+
+      expect(res.status).toBe(400);
     });
   });
 
-  describe("PATCH /update_application", () => {
-    it("updates application status", async () => {
-      const req = { body: { job_application_id: 1, status: "accepted" } };
-      const res = {};
-      mockController.updateApplication.mockResolvedValue([1]);
+  /**
+   * PATCH /application/update_application
+   * Tests updating application status.
+   */
+  describe("PATCH /application/update_application", () => {
 
-      const handler = api.router.stack.find(l => l.route?.path === "/update_application").route.stack[0].handle;
+    /**
+     * Should update application status successfully.
+     */
+    test("200 - updates status", async () => {
+      mockController.updateApplication.mockResolvedValue(1);
 
-      await handler(req, res);
+      const res = await request(app)
+        .patch("/application/update_application")
+        .send({job_application_id: 1, status: "accepted"});
 
-      expect(mockController.updateApplication).toHaveBeenCalledWith(req.body);
-      expect(mockSendResponse).toHaveBeenCalledWith(res, 200, [1]);
+      expect(res.status).toBe(200);
+      expect(mockController.updateApplication)
+        .toHaveBeenCalledWith({job_application_id: 1, status: "accepted"});
     });
-  });*/
+
+    /**
+     * Should return 400 when validation fails.
+     */
+    test("400 - validation error", async () => {
+      const res = await request(app)
+        .patch("/application/update_application")
+        .send({job_application_id: "bad"});
+
+      expect(res.status).toBe(400);
+    });
+
+    /**
+     * Should return 404 when application does not exist.
+     */
+    test("404 - application not found", async () => {
+      mockController.updateApplication.mockResolvedValue(null);
+
+      const res = await request(app)
+        .patch("/application/update_application")
+        .send({job_application_id: 1,status: "accepted"});
+
+      expect(res.status).toBe(404);
+    });
+  });
 });

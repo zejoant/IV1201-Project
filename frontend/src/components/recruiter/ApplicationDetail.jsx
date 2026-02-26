@@ -172,7 +172,8 @@ function ApplicationDetail() {
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    const userLanguage = localStorage.language || navigator.language; 
+    return date.toLocaleDateString(userLanguage, { year: 'numeric', month: 'long', day: 'numeric' });
   };
 
   /**
@@ -215,10 +216,16 @@ function ApplicationDetail() {
                 <div className="recruiter-detail-info-item">
                   <span className="recruiter-detail-info-label">{t('applicationDetail.name')}</span>
                   <span className="recruiter-detail-info-value">
-                    {application.name} {application.surname}
+                    {application.name}
                   </span>
                 </div>
                 <div className="recruiter-detail-info-item">
+                  <span className="recruiter-detail-info-label">{t('applicationDetail.surname')}</span>
+                  <span className="recruiter-detail-info-value">
+                    {application.surname}
+                  </span>
+                </div>
+                {/*<div className="recruiter-detail-info-item">
                   <span className="recruiter-detail-info-label">{t('applicationDetail.email')}</span>
                   <span className="recruiter-detail-info-value">{application.email || t('applicationDetail.not_available')}</span>
                 </div>
@@ -227,7 +234,7 @@ function ApplicationDetail() {
                   <span className="recruiter-detail-info-value">
                     {application.pnr || application.person_number || application.ssn || t('applicationDetail.not_available')}
                   </span>
-                </div>
+                </div>*/}
               </div>
             </section>
 
