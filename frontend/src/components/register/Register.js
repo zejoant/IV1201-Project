@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import "./Register.css";
+import LanguageButton from '../LanguageButton/LanguageButton';
 import Footer from "../Footer";
 
 /**
@@ -148,6 +149,7 @@ function Register({ setCurrentUser, switchToLogin }) {
 
   return (
    <>
+  <LanguageButton />        
     <div className="register-container">
       <div className="register-card">
         <div className="register-header">
