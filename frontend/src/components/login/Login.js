@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './Login.css';
 import { useTranslation } from 'react-i18next';
 
+import Footer from "../Footer";
 
 function Login({ setCurrentUser, switchToRegister }) {
   const {t} = useTranslation();
@@ -166,14 +167,28 @@ function Login({ setCurrentUser, switchToRegister }) {
           <p className="login-footer-text">
             {t('login.no_account')}{' '}
             <button
-              onClick={switchToRegister}
-              className="login-link-button"
+              type="submit"
+              disabled={loading}
+              className={`login-button ${loading ? 'login-button-loading' : ''}`}
             >
               {t('login.sign_up')}
             </button>
-          </p>
+          </form>
+
+          <div className="login-footer">
+            <p className="login-footer-text">
+              Don't have an account?{' '}
+              <button
+                onClick={switchToRegister}
+                className="login-link-button"
+              >
+                Sign up
+              </button>
+            </p>
+          </div>
         </div>
       </div>
+      <Footer />  
     </div>
   );
 }
