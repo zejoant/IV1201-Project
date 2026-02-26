@@ -15,6 +15,7 @@ import Footer from "../Footer";
  */
 function Register({ setCurrentUser, switchToLogin }) {
   const [username, setUsername] = useState("");
+  const [success, setSuccess] = useState(false); 
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");

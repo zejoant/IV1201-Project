@@ -167,28 +167,15 @@ function Login({ setCurrentUser, switchToRegister }) {
           <p className="login-footer-text">
             {t('login.no_account')}{' '}
             <button
-              type="submit"
-              disabled={loading}
-              className={`login-button ${loading ? 'login-button-loading' : ''}`}
+              onClick={switchToRegister}
+              className="login-link-button"
             >
-              {t('login.sign_up')}
+            {t('login.sign_up')}
             </button>
-          </form>
-
-          <div className="login-footer">
-            <p className="login-footer-text">
-              Don't have an account?{' '}
-              <button
-                onClick={switchToRegister}
-                className="login-link-button"
-              >
-                Sign up
-              </button>
-            </p>
-          </div>
+          </p>
         </div>
       </div>
-      <Footer />  
+      <Footer />
     </div>
   );
 }

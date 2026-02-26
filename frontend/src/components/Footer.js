@@ -20,8 +20,8 @@ function Footer() {
           &copy; {currentYear} {t('footer.copyright')}
         </div>
         <div>
-      <button onClick={() => {i18n.changeLanguage('en'); localStorage.setItem('language','en-US')}}>English</button>
-      <button onClick={() => {i18n.changeLanguage('sv'); localStorage.setItem('language','sv-SE')}}>Svenska</button>
+      <button className="lang-btn" onClick={() => {i18n.changeLanguage('en'); localStorage.setItem('language','en-US')}}>English</button>
+      <button className="lang-btn" onClick={() => {i18n.changeLanguage('sv'); localStorage.setItem('language','sv-SE')}}>Svenska</button>
         </div>
       </div>
     </footer>

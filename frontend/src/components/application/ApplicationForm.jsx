@@ -516,7 +516,7 @@ function ApplicationForm({ onApplicationComplete, onBackToProfile }) {
               
               {experienceList.length > 0 && (
                 <div className="application-summary-section">
-                  <h4 className="application-summary-subtitle">{t('applicationForm.sections.competenceTitle')}:</h4>
+                  <h4 className="application-summary-subtitle">{t('applicationForm.sections.competence_title')}:</h4>
                   <ul className="application-summary-list">
                     {experienceList.map((item, index) => (
                       <li key={index} className="application-summary-item">
