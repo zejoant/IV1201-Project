@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import "./Register.css";
 import Footer from "../Footer";
 
@@ -22,6 +23,7 @@ function Register({ setCurrentUser, switchToLogin }) {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
+  const {t} = useTranslation();
 
   /**
    * Updates the password state and recalculates its strength.
@@ -53,6 +55,14 @@ function Register({ setCurrentUser, switchToLogin }) {
     setError("");
     setLoading(true);
 
+    const form = e.target;
+
+    if (!form.checkValidity()) {
+      form.reportValidity(); // Shows your custom messages
+      setLoading(false);
+      return;
+    }
+
     try {
       // Step 1: Register the user
       const res = await fetch("/account/sign_up", {
@@ -71,12 +81,19 @@ function Register({ setCurrentUser, switchToLogin }) {
       const data = await res.json();
       
       if (!res.ok) {
-        const err = new Error(data.error || "Registration failed");
+        const err = new Error(`sign_up.errors.${data.error}` || 'register.errors.invalid_account_creation');
         err.custom = true;
         throw err;
       }
 
-      switchToLogin();
+      //show success and switch to login
+      setSuccess(true);
+
+      // Optional: Wait 2 seconds before redirecting to login
+      setTimeout(() => {
+        switchToLogin();
+      }, 2000);
+      
       /*// Step 2: Auto-login after successful registration
       const loginRes = await fetch("/account/sign_in", {
         method: "POST",
@@ -96,7 +113,7 @@ function Register({ setCurrentUser, switchToLogin }) {
       localStorage.setItem("currentUser", JSON.stringify(loginData));
       setCurrentUser(loginData);*/
     } catch (err) {
-      setError(err.custom ? err.message : "An error occurred during registration");
+      setError(err.custom ? err.message : 'register.errors.offline_login');
     } finally {
       setLoading(false);
     }
@@ -123,9 +140,9 @@ function Register({ setCurrentUser, switchToLogin }) {
    */
   const getStrengthText = (strength) => {
     if (strength === 0) return "";
-    if (strength <= 2) return "Weak";
-    if (strength === 3) return "Good";
-    return "Strong";
+    if (strength <= 2) return t('register.password_strength.weak');
+    if (strength === 3) return t('register.password_strength.good');
+    return t('register.password_strength.strong');
   };
 
   return (
@@ -136,88 +153,91 @@ function Register({ setCurrentUser, switchToLogin }) {
           <div className="register-icon-container">
             <span className="register-icon">📝</span>
           </div>
-          <h2 className="register-title">Create Account</h2>
-          <p className="register-subtitle">Join our recruitment platform today</p>
+          <h2 className="register-title">{t('register.title')}</h2>
+          <p className="register-subtitle">{t('register.subtitle')}</p>
         </div>
         
         {error && (
           <div className="register-error-alert">
             <span className="register-error-icon">⚠️</span>
-            {error}
+            {t(error)}
           </div>
         )}
         
-        <form onSubmit={handleSubmit} className="register-form">
+        <form noValidate onSubmit={handleSubmit} className="register-form">
           <div className="register-form-row">
             <div className="register-input-group">
               <label className="register-label">
-                First Name <span className="register-required">*</span>
+                {t('register.labels.first_name')} <span className="register-required">*</span>
               </label>
               <input
                 type="text"
                 value={name}
-                onChange={(e) => {
-                  const value = e.target.value.replace(/[^A-Za-z ]/g, "");
-                  setName(value);
-
-                  // Custom validation on every change
-                  if (!/^[A-Za-z ]+$/.test(value)){
-                    e.target.setCustomValidity(
-                      "Name must only contain letters"
-                    );
-                  } else {
+                onChange={(e) => {setName(e.target.value.replace(/[^A-Za-z ]/g, "")); e.target.setCustomValidity(t(''));}}
+                required
+                onInvalid={(e) => {
+                  const value = e.target.value;
+                  if (value.length === 0){
+                    e.target.setCustomValidity(t('register.errors.missing_field'));
+                  }
+                  else {
                     e.target.setCustomValidity("");
                   }
                 }}
-                required
                 className="register-input"
-                placeholder="Enter your first name"
+                placeholder={t('register.placeholders.first_name')}
               />
             </div>
             
             <div className="register-input-group">
               <label className="register-label">
-                Last Name <span className="register-required">*</span>
+                {t('register.labels.last_name')} <span className="register-required">*</span>
               </label>
               <input
                 type="text"
                 value={surname}
-                onChange={(e) => {
-                  const value = e.target.value.replace(/[^A-Za-z ]/g, "");
-                  setSurname(value);
-
-                  // Custom validation on every change
-                  if (!/^[A-Za-z ]+$/.test(value)){
-                    e.target.setCustomValidity(
-                      "Name must only contain letters"
-                    );
-                  } else {
+                onChange={(e) => {setSurname(e.target.value.replace(/[^A-Za-z ]/g, "")); e.target.setCustomValidity(t(''));}}
+                required
+                onInvalid={(e) => {
+                  const value = e.target.value;
+                  if (value.length === 0){
+                    e.target.setCustomValidity(t('register.errors.missing_field'));
+                  }
+                  else {
                     e.target.setCustomValidity("");
                   }
                 }}
-                required
                 className="register-input"
-                placeholder="Enter your last name"
+                placeholder={t('register.placeholders.last_name')}
               />
             </div>
           </div>
           
           <div className="register-input-group">
             <label className="register-label">
-              Email Address <span className="register-required">*</span>
+              {t('register.labels.email')} <span className="register-required">*</span>
             </label>
             <input
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {setEmail(e.target.value); e.target.setCustomValidity(t(''));}}
               required
+              onInvalid={(e) => {
+                const value = e.target.value;
+                if (value.length === 0){
+                  e.target.setCustomValidity(t('register.errors.missing_field'));
+                }
+                else {
+                  e.target.setCustomValidity(t('register.errors.invalid_email'));
+                }
+              }}
               className="register-input"
-              placeholder="Enter your email address"
+              placeholder={t('register.placeholders.email')}
             />
           </div>
           <div className="register-input-group">
             <label className="register-label">
-             Person Number <span className="register-required">*</span>
+             {t('register.labels.pnr')} <span className="register-required">*</span>
          </label>
           <input
             type="text"
@@ -225,24 +245,28 @@ function Register({ setCurrentUser, switchToLogin }) {
             onChange={(e) => {
               const value = e.target.value.replace(/\D/g, "");
               setPersonNumber(value);
-
-              // Custom validation on every change
-              if (!/^\d{12}$/.test(value)) {
+            }}
+            pattern="\d{12}"
+            required
+            onInvalid={(e) => {
+              const value = e.target.value;
+              if (value.length === 0){
+                e.target.setCustomValidity(t('register.errors.missing_field'));
+              } else if (value.length !== 12) {
                 e.target.setCustomValidity(
-                  "Person number must be exactly 12 digits"
+                  t("register.errors.pnr_length")
                 );
               } else {
                 e.target.setCustomValidity("");
               }
             }}
-            required
             className="register-input"
-            placeholder="Enter your person number"
+            placeholder={t('register.placeholders.pnr')}
           />
           </div>
           <div className="register-input-group">
             <label className="register-label">
-              Username <span className="register-required">*</span>
+              {t('register.labels.username')} <span className="register-required">*</span>
             </label>
             <input
               type="text"
@@ -250,25 +274,29 @@ function Register({ setCurrentUser, switchToLogin }) {
               onChange={(e) => {
                 const value = e.target.value.replace(/[^A-Za-z0-9]/g, "");
                 setUsername(value);
-
-                if (!/^[A-Za-z0-9]+$/.test(value)) {
-                  e.target.setCustomValidity("Username can only contain letters and numbers");
+              }}
+              required
+              maxLength={30}
+              minLength={3}
+              onInvalid={(e) => {
+                const value = e.target.value;
+                if (value.length === 0){
+                  e.target.setCustomValidity(t('register.errors.missing_field'));
                 } else if(value.length < 3 || value.length > 30){
-                  e.target.setCustomValidity("Username must be between 3 and 30 characters");
+                  e.target.setCustomValidity(t('register.errors.username_length'));
                 } else {
                   e.target.setCustomValidity("");
                 }
               }}
-              required
               className="register-input"
-              placeholder="Choose a username"
+              placeholder={t('register.placeholders.username')}
             />
           </div>
           
           <div className="register-input-group">
             <div className="register-label-container">
               <label className="register-label">
-                Password <span className="register-required">*</span>
+                {t('register.labels.password')} <span className="register-required">*</span>
               </label>
               <div className="register-strength-indicator">
                 <span className="register-strength-text">
@@ -282,18 +310,21 @@ function Register({ setCurrentUser, switchToLogin }) {
               value={password}
               onChange={(e) => {
                 handlePasswordChange(e);
-
+              }}
+              minLength={8}
+              required
+              onInvalid={(e) => {
                 const value = e.target.value;
-
-                if (value.length < 8) {
-                  e.target.setCustomValidity("Password must be at least 8 characters long");
+                if (value.length === 0){
+                  e.target.setCustomValidity(t('register.errors.missing_field'));
+                } else if (value.length < 8) {
+                  e.target.setCustomValidity(t('register.errors.password_length'));
                 } else {
                   e.target.setCustomValidity("");
                 }
               }}
-              required
               className="register-input"
-              placeholder="Create a strong password"
+              placeholder={t('register.placeholders.password')}
             />
             <div className="register-password-strength">
               <div className="register-strength-bars">
@@ -308,13 +339,20 @@ function Register({ setCurrentUser, switchToLogin }) {
                 ))}
               </div>
               <div className="register-password-tips">
-                <p className="register-tip">• At least 8 characters</p>
-                <p className="register-tip">• Include uppercase letters</p>
-                <p className="register-tip">• Include numbers</p>
-                <p className="register-tip">• Include special characters</p>
+                <p className="register-tip">• {t('register.password_strength.tips.0')}</p>
+                <p className="register-tip">• {t('register.password_strength.tips.1')}</p>
+                <p className="register-tip">• {t('register.password_strength.tips.2')}</p>
+                <p className="register-tip">• {t('register.password_strength.tips.3')}</p>
               </div>
             </div>
           </div>
+          
+          {success && (
+            <div className="register-success-alert">
+              <span className="register-error-icon"></span>
+              {t('register.alerts.success')}
+            </div>
+          )}
           
           <button 
             type="submit" 
@@ -324,15 +362,15 @@ function Register({ setCurrentUser, switchToLogin }) {
             {loading ? (
               <span className="register-button-content">
                 <span className="register-spinner"></span>
-                Creating Account...
+                {t('register.buttons.creating_account')}
               </span>
             ) : (
-              "Create Account"
+              <p>{t('register.buttons.create_account')}</p>
             )}
           </button>
           
           <div className="register-divider">
-            <span className="register-divider-text">OR</span>
+            <span className="register-divider-text">{t('register.divider')}</span>
           </div>
           
           <button 
@@ -340,7 +378,7 @@ function Register({ setCurrentUser, switchToLogin }) {
             onClick={switchToLogin}
             className="register-switch-button"
           >
-            Already have an account? <span className="register-switch-highlight">Sign In</span>
+            {t('register.buttons.account_already')} <span className="register-switch-highlight">{t('register.buttons.sign_in')}</span>
           </button>
         </form>
       </div>

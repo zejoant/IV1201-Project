@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../contexts/UserContext';
+import { useTranslation } from 'react-i18next';
 import './Header.css';
 
 /**
@@ -12,6 +13,7 @@ import './Header.css';
  */
 function Header() {
   const { currentUser, logout } = useContext(UserContext);
+  const {t} = useTranslation();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -25,7 +27,7 @@ function Header() {
     <nav className="header-navbar">
       <div className="header-nav-content">
         <div className="header-brand" onClick={() => navigate('/')}>
-          <h1 className="header-logo">Recruitment Platform</h1>
+          <h1 className="header-logo">{t('header.brand')}</h1>
         </div>
         <div className="header-nav-actions">
           <div className="header-user-badge">
@@ -34,11 +36,11 @@ function Header() {
             </div>
             <span className="header-username">{currentUser.username}</span>
             <span className="header-user-role">
-              {currentUser.role_id === 1 ? 'Recruiter' : 'Applicant'}
+              {currentUser.role_id === 1 ? t('header.recruiter') : t('header.applicant')}
             </span>
           </div>
           <button onClick={handleLogout} className="header-logout-button">
-            <span>Logout</span>
+            <span>{t('header.logout')}</span>
             <span className="header-logout-icon">→</span>
           </button>
         </div>

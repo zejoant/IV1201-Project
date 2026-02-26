@@ -83,7 +83,7 @@ class DAO {
           cause: err,
           info: { DAO: `Failed sequelize call findOne where: username = ${username}` },
         },
-        `Could not find user ${username}`,
+        `unknown_error`,
       );
     }
   }
@@ -117,7 +117,7 @@ class DAO {
       Checker.isNumberBetween(role_id, 1, 3, 'role id')
 
       if (!name || !surname || !email || !username || !password) {
-        throw new Error("Missing required fields");
+        throw new Error('missing_field');
       }
 
       //Check if user already exists
@@ -125,7 +125,7 @@ class DAO {
       const existingUser = await Person.findOne({ where: { username, pnr, email } });
 
       if (existingUser) {
-        throw new Error("Username already exists");
+        throw new Error('user_exists');
       }
 
       const newPerson = await Person.create({ name, surname, pnr, email, password, role_id, username });
@@ -137,7 +137,7 @@ class DAO {
           cause: err,
           info: { DAO: 'Failed call sequelize call create or findOne.' },
         },
-        `Could not create user ${username}`,
+        `creation_failed`,
       );
     }
   }
@@ -159,7 +159,7 @@ class DAO {
           cause: err,
           info: { DAO: `Failed sequelize call findByPk for ${id}.` },
         },
-        'Could not find user.',
+        'unknown_error',
       );
     }
   }
@@ -185,7 +185,7 @@ class DAO {
           cause: err,
           info: { DAO: `Failed sequelize call findAll for ${id} or failed createCompetenceProfileDTO.` },
         },
-        'Could not find competence',
+        'competence_not_found',
       );
     }
   }
@@ -208,7 +208,7 @@ class DAO {
           cause: err,
           info: { DAO: `Failed sequelize call findOne for ${id}.` },
         },
-        'Could not find competence',
+        'competence_not_found',
       );
     }
   }
@@ -234,7 +234,7 @@ class DAO {
           cause: err,
           info: { DAO: `Failed sequelize call findAll for ${id} or createAvailabilityDTO` },
         },
-        'Could not find availability.',
+        'availability_not_found.',
       );
     }
   }
@@ -253,7 +253,7 @@ class DAO {
       Checker.isMatches(status, /^(unhandled|rejected|accepted)$/, 'status');
 
       if (!id || !status) {
-        throw new Error("Missing required fields");
+        throw new Error("missing_field");
       }
 
       const newApp = await JobApplication.create({ person_id: id, status: status });
@@ -265,7 +265,7 @@ class DAO {
           cause: err,
           info: { DAO: `Failed sequelize call create for ${id}` },
         },
-        'Could not submit application.',
+        'invalid_application',
       );
     }
   }
@@ -285,7 +285,7 @@ class DAO {
         Checker.isNumberBetween(expertise.yoe, 0, 50, 'years of experience')
       
       if (!id || !expertise) {
-        throw new Error("Missing required fields");
+        throw new Error("missing_field");
       }
       const newExpertise = await CompetenceProfile.create({ person_id: id, competence_id: expertise.competence_id, years_of_experience: expertise.yoe });
 
@@ -296,7 +296,7 @@ class DAO {
           cause: err,
           info: { DAO: `Failed sequelize call create for ${id}` },
         },
-        'Could not add expertise.',
+        'cannot_add_competence',
       );
     }
   }
@@ -315,7 +315,7 @@ class DAO {
       Checker.isDateString(availability.to_date, 'to date')
 
       if (!id || !availability) {
-        throw new Error("Missing required fields");
+        throw new Error("missing_field");
       }
 
       const newAvailibility = await Availability.create({ person_id: id, from_date: new Date(availability.from_date), to_date: new Date(availability.to_date) });
@@ -327,7 +327,7 @@ class DAO {
           cause: err,
           info: { DAO: `Failed sequelize call create for ${id}` },
         },
-        'Could not add availibility.',
+        'cannot_add_ava',
       );
     }
   }
@@ -350,7 +350,7 @@ class DAO {
           cause: err,
           info: { DAO: `Failed sequelize call findAll for ${id} or createCompetenceDTO` },
         },
-        'Could not find competence.',
+        'competence_not_found',
       );
     }
   }
@@ -373,7 +373,7 @@ class DAO {
           cause: err,
           info: { DAO: 'Failed sequelize call findAll or createJobApplicationDTO' },
         },
-        'Could not find applications.',
+        'no_applications',
       );
     }
   }
@@ -397,7 +397,7 @@ class DAO {
           cause: err,
           info: { DAO: `Failed sequelize call findAll for ${body.job_application_id}` },
         },
-        'Could not update status.',
+        'status_change.',
       );
     }
   }

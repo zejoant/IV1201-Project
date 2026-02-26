@@ -52,7 +52,7 @@ class ErrorResponseSender extends ErrorHandler {
                 return next(err);
             }
             console.log(err.jse_shortmsg)
-            res.status(500).send({ error: err.jse_shortmsg || err.message || 'Operation failed' });
+            res.status(500).send({ error: err.jse_shortmsg || err.message || 'operation_failed' });
         });
     }
 }

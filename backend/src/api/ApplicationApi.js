@@ -75,12 +75,12 @@ class ApplicationApi extends RequestHandler {
       */
       this.router.post("/apply",
         [
-          body("expertise").isArray({min : 1}).withMessage("Not enough expertises"),
-          body("expertise.*.yoe").isFloat({min : 0, max:50}).withMessage("Years of experience must be numerical"),
-          body("expertise.*.competence_id").isInt({min:1, max:3}).withMessage("Expertise is the wrong format"),
-          body("availability").isArray({min : 1}).withMessage("Not enough availabilities"),
-          body("availability.*.from_date").isISO8601().withMessage("Availability start date is not correctly formated"),
-          body("availability.*.to_date").isISO8601().withMessage("Availability end date is not correctly formated"),
+          body("expertise").isArray({min : 1}).withMessage("no_competence"),
+          body("expertise.*.yoe").isFloat({min : 0, max:50}).withMessage("yoe_numerical"),
+          body("expertise.*.competence_id").isInt({min:1, max:3}).withMessage("competence_format"),
+          body("availability").isArray({min : 1}).withMessage("no_availability"),
+          body("availability.*.from_date").isISO8601().withMessage("start_date_format"),
+          body("availability.*.to_date").isISO8601().withMessage("end_date_format"),
         ],
         async (req, res, next) => {
           try {
@@ -99,7 +99,7 @@ class ApplicationApi extends RequestHandler {
             const application = await this.contr.createApplication(expertise, availability, req.user.id);
 
             if (!application) {
-              this.sendResponse(res, 401,"Invalid application")
+              this.sendResponse(res, 401,"invalid_application")
               return;
             }
 
@@ -131,7 +131,7 @@ class ApplicationApi extends RequestHandler {
             const competence = await this.contr.getCompetence();
 
             if (!competence) {
-              this.sendResponse(res, 404, "competence not found");
+              this.sendResponse(res, 404, "invalid_competence");
               return;
             }
             this.sendResponse(res, 200, competence)
@@ -163,7 +163,7 @@ class ApplicationApi extends RequestHandler {
             const applications = await this.contr.listApplications();
 
             if (!applications) {
-              this.sendResponse(res, 404, "Applications not found");
+              this.sendResponse(res, 404, 'invalid_fetch');
               return;
             }
             this.sendResponse(res, 200, applications)
@@ -191,11 +191,11 @@ class ApplicationApi extends RequestHandler {
       */
       this.router.post("/get_application",
         [
-          body('job_application_id').isInt({min:1}).withMessage("Job application does not exist"),
-          body('person_id').isInt({min:1}).withMessage("Job application does not exist"),
-          body('status').matches(/^(unhandled|rejected|accepted)$/).withMessage("Job application does not exist"),
-          body('name').isAlpha().withMessage("Job application does not exist"),
-          body('surname').isAlpha().withMessage("Job application does not exist"),
+          body('job_application_id').isInt({min:1}).withMessage("no_application_exists"),
+          body('person_id').isInt({min:1}).withMessage("no_application_exists"),
+          body('status').matches(/^(unhandled|rejected|accepted)$/).withMessage("no_application_exists"),
+          body('name').isAlpha().withMessage("no_application_exists"),
+          body('surname').isAlpha().withMessage("no_application_exists"),
         ],
         async (req, res, next) => {
           try {
@@ -212,7 +212,7 @@ class ApplicationApi extends RequestHandler {
             const application = await this.contr.getApplication(req.body);
 
             if (!application) {
-              this.sendResponse(res, 404, "Application not found");
+              this.sendResponse(res, 404, "no_application");
               return;
             }
             this.sendResponse(res, 200, application)
@@ -237,8 +237,8 @@ class ApplicationApi extends RequestHandler {
       */
       this.router.patch("/update_application",
         [
-          body('status').matches(/^(unhandled|rejected|accepted)$/).withMessage("Unable to change status"),
-          body('job_application_id').isInt({min:1}).withMessage("Unable to change status"),
+          body('status').matches(/^(unhandled|rejected|accepted)$/).withMessage("status_change"),
+          body('job_application_id').isInt({min:1}).withMessage("status_change"),
         ],
         async (req, res, next) => {
           try {
@@ -255,7 +255,7 @@ class ApplicationApi extends RequestHandler {
             const status = await this.contr.updateApplication(req.body);
 
             if (!status) {
-              this.sendResponse(res, 404, "status not found");
+              this.sendResponse(res, 404, "status_not_found");
               return;
             }
             this.sendResponse(res, 200, status)
