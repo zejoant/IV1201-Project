@@ -3,7 +3,6 @@ import { describe, it, vi } from 'vitest';
 import AppContent from '../src/App'; 
 import { UserContext } from '../src/UserContext';
 import '@testing-library/jest-dom';
-import { MemoryRouter } from 'react-router-dom';
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
@@ -32,7 +31,7 @@ describe('App Component', () => {
     expect(screen.getByText('login.sign_up')).toBeInTheDocument();
   });
 
-  /*it('renders recruiter dashboard for recruiter role', async () => {
+  it('renders recruiter dashboard for recruiter role', () => {
   const mockUser = { role_id: ROLE_RECRUITER };
 
   render(
@@ -41,10 +40,10 @@ describe('App Component', () => {
     </UserContext.Provider>
   );
 
-  await screen.findByText('recruiter.dashboard');
+  screen.findByText('recruiter.dashboard');
 });
 
-it('renders applicant profile page for non-recruiter role', async () => {
+it('renders applicant profile page for non-recruiter role', () => {
   const mockUser = { role_id: 2 }; // applicant
 
   render(
@@ -53,8 +52,8 @@ it('renders applicant profile page for non-recruiter role', async () => {
     </UserContext.Provider>
   );
 
-  await screen.findByText('person.page');
-});*/
+  screen.findByText('person.page');
+});
 
   it('switches to register form when clicking register', () => {
     render(
