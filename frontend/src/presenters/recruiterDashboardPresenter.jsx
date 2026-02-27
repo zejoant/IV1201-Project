@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { UserContext } from '../../contexts/UserContext';
+import { UserContext } from '../UserContext';
 import { useTranslation } from 'react-i18next';
-import './RecruiterDashboard.css';
+import RecruiterDashboardView from '../views/recruiterDashboardView';
 
 /**
  * Recruiter dashboard displaying a sortable table of all job applications.
@@ -111,56 +111,16 @@ function RecruiterDashboard() {
   };
 
   return (
-    <div className="recruiter-container">
-
-      
-      {/* Main content: applications table with sorting */}
-      <main className="recruiter-main">
-        <div className="recruiter-content">
-          <h2 className="recruiter-page-title">{t('recruiterDashboard.title')}</h2>
-          {loading && <div className="recruiter-loading">{t('recruiterDashboard.loading')}</div>}
-          {error && <div className="recruiter-error">{t(error)}</div>}
-          {!loading && !error && (
-            <div className="recruiter-table-container">
-              <table className="recruiter-table">
-                <thead>
-                  <tr>
-                    <th onClick={() => requestSort('name')}>
-                      {t('recruiterDashboard.columns.name')} {sortConfig.key === 'name' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
-                    </th>
-                    <th onClick={() => requestSort('surname')}>
-                      {t('recruiterDashboard.columns.surname')} {sortConfig.key === 'surname' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
-                    </th>
-                    <th onClick={() => requestSort('job_application_id')}>
-                      {t('recruiterDashboard.columns.application_id')} {sortConfig.key === 'job_application_id' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
-                    </th>
-                    <th onClick={() => requestSort('status')}>
-                      {t('recruiterDashboard.columns.status')} {sortConfig.key === 'status' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {sortedApplications.length > 0 ? (
-                    sortedApplications.map((app) => (
-                      <tr key={app.job_application_id} onClick={() => handleRowClick(app)} className="recruiter-table-row">
-                        <td>{app.name}</td>
-                        <td>{app.surname}</td>
-                        <td>{app.job_application_id}</td>
-                        <td><span className={`recruiter-status-badge ${getStatusClass(app.status)}`}>{t(`recruiterDashboard.status.${app.status}`)}</span></td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="4" className="recruiter-no-data">{t('recruiterDashboard.no_data')}</td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
-      </main>
-    </div>
+    <RecruiterDashboardView
+      t={t}
+      loading={loading}
+      error={error}
+      sortConfig={sortConfig}
+      sortedApplications={sortedApplications}
+      requestSort={requestSort}
+      getStatusClass={getStatusClass}
+      handleRowClick={handleRowClick}
+    />
   );
 }
 

@@ -1,23 +1,40 @@
-import React, { useContext } from 'react';
-import { UserContext } from '../contexts/UserContext';
-import './PersonPage.css';
-import { useTranslation } from 'react-i18next';
+import '../cssFiles/personPage.css';
 
 /**
- * PersonPage component – the main dashboard for applicant users.
- * Displays personal information and provides quick actions to apply
- * for a position or view existing applications.
+ * PersonPageView Component
+ *
+ * Displays the authenticated user's personal dashboard page.
+ * The view presents user information, a welcome section, and
+ * quick action cards allowing the user to perform actions such
+ * as submitting applications or viewing existing ones.
+ *
+ * This is a presentational component that receives all data and
+ * event handlers via props and does not manage its own state.
  *
  * @component
- * @param {Object} props - Component props
- * @param {Function} props.onApplyNow - Callback to navigate to the application form
- * @param {Function} props.onViewMyApplications - Callback to navigate to the user's applications list
- * @returns {JSX.Element} The rendered applicant dashboard
+ *
+ * @param {Object} props - Component properties.
+ * @param {Object} props.currentUser - The currently authenticated user.
+ * @param {string} props.currentUser.username - User's username.
+ * @param {string} [props.currentUser.name] - User's first name.
+ * @param {string} [props.currentUser.surname] - User's surname.
+ * @param {string} [props.currentUser.email] - User's email address.
+ * @param {string} [props.currentUser.person_number] - User's personal identification number.
+ *
+ * @param {Function} props.t - Translation function used for internationalized text.
+ *
+ * @param {Function} props.onApplyNow - Callback triggered when the user chooses to submit a new application.
+ * @param {Function} props.onViewMyApplications - Callback triggered when the user wants to view their applications.
+ *
+ * @returns {JSX.Element} Rendered personal dashboard page.
  */
-function PersonPage({ onApplyNow, onViewMyApplications }) {
-  const { currentUser } = useContext(UserContext);
-  const {t} = useTranslation();
-  
+function PersonPageView({
+  currentUser,
+  t,
+  onApplyNow,
+  onViewMyApplications
+}) {
+
   return (
     <div className="personpage-container">
       
@@ -124,4 +141,4 @@ function PersonPage({ onApplyNow, onViewMyApplications }) {
   );
 }
 
-export default PersonPage;
+export default PersonPageView;

@@ -1,28 +1,6 @@
-import React, { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { UserContext } from '../contexts/UserContext';
-import { useTranslation } from 'react-i18next';
-import './Header.css';
+import '../cssFiles/header.css';
 
-/**
- * Application header displayed on all authenticated pages.
- * Shows brand, user info and logout button.
- * 
- * @component
- * @returns {JSX.Element|null} The header component or null if not logged in
- */
-function Header() {
-  const { currentUser, logout } = useContext(UserContext);
-  const {t} = useTranslation();
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
-
-  if (!currentUser) return null;
-
+function HeaderView({ currentUser, t, onLogout, navigate, LanguageButton}) {
   return (
     <nav className="header-navbar">
       <div className="header-nav-content">
@@ -39,7 +17,8 @@ function Header() {
               {currentUser.role_id === 1 ? t('header.recruiter') : t('header.applicant')}
             </span>
           </div>
-          <button onClick={handleLogout} className="header-logout-button">
+          {<LanguageButton/>}
+          <button onClick={onLogout} className="header-logout-button">
             <span>{t('header.logout')}</span>
             <span className="header-logout-icon">→</span>
           </button>
@@ -49,4 +28,4 @@ function Header() {
   );
 }
 
-export default Header;
+export default HeaderView;

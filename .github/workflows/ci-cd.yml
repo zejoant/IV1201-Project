@@ -40,12 +40,12 @@ jobs:
         fi
 
     # Frontend
-    - name: Install Frontend Dependencies
-      run: |
-        cd frontend
-        npm install --legacy-peer-deps
-
     - name: Run Frontend Tests
       run: |
         cd frontend
-        if [ -f src/App.test.js ]; then npm test -- --watchAll=false; else echo "No frontend tests"; fi
+        # Check if frontend/tests exists and contains at least one test file
+        if [ -d tests ] && [ "$(find tests -type f -name '*.test.*')" ]; then
+          npm test -- --watchAll=false
+        else
+          echo "No frontend tests found in frontend/tests"
+        fi
