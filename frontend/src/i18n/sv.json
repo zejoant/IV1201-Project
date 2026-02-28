@@ -390,7 +390,7 @@
             "competence_exists": "Denna kompetens har redan lagts till.",
             "invalid_competence": "Ogiltig kompetens vald.",
             "select_dates": "Vänligen välj både start- och slutdatum.",
-            "start_dast": "Startdatum kan inte vara i det förflutna.",
+            "start_past": "Startdatum kan inte vara i det förflutna.",
             "start_after_end": "Startdatum kan inte vara efter slutdatum.",
             "overlapping_period": "Tillgänglighetsperioder får inte överlappa varandra.",
             "add_competence_required": "Vänligen lägg till minst en kompetens.",

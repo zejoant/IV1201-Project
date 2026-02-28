@@ -117,29 +117,29 @@ function ApplicationFormPresenter({ onApplicationComplete, onBackToProfile }) {
      */
     const handleAddExperience = () => {
         if (!competenceId) {
-            setError('applicationForm.error.select_competence');
+            setError('applicationForm.errors.select_competence');
             return;
         }
 
         if (!yearsOfExperience) {
-            setError('applicationForm.error.write_experience');
+            setError('applicationForm.errors.write_experience');
             return;
         }
 
         const years = Number(parseFloat(yearsOfExperience).toFixed(1));
 
         if (years === 0) {
-            setError('applicationForm.error.not_enough_experience');
+            setError('applicationForm.errors.not_enough_experience');
             return;
         }
 
         if (isNaN(years) || years < 0) {
-            setError('applicationForm.error.experience_positive');
+            setError('applicationForm.errors.experience_positive');
             return;
         }
 
         if (years > 50) {
-            setError('applicationForm.error.experience_max');
+            setError('applicationForm.errors.experience_max');
             return;
         }
 
@@ -148,7 +148,7 @@ function ApplicationFormPresenter({ onApplicationComplete, onBackToProfile }) {
         );
 
         if (isAlreadyAdded) {
-            setError('applicationForm.error.competence_exists');
+            setError('applicationForm.errors.competence_exists');
             return;
         }
 
@@ -157,7 +157,7 @@ function ApplicationFormPresenter({ onApplicationComplete, onBackToProfile }) {
         );
 
         if (!selectedCompetence) {
-            setError('applicationForm.error.invalid_competence');
+            setError('applicationForm.errors.invalid_competence');
             return;
         }
 
@@ -193,7 +193,7 @@ function ApplicationFormPresenter({ onApplicationComplete, onBackToProfile }) {
      */
     const handleAddAvailability = () => {
         if (!fromDate || !toDate) {
-            setError('applicationForm.error.select_dates');
+            setError('applicationForm.errors.select_dates');
             return;
         }
 
@@ -202,12 +202,12 @@ function ApplicationFormPresenter({ onApplicationComplete, onBackToProfile }) {
         const todayUTC = toUTCDate(getTodayUTCString());
 
         if (fromUTC < todayUTC) {
-            setError('applicationForm.error.start_past');
+            setError('applicationForm.errors.start_past');
             return;
         }
 
         if (fromUTC > toUTC) {
-            setError('applicationForm.error.start_after_end');
+            setError('applicationForm.errors.start_after_end');
             return;
         }
 
@@ -222,7 +222,7 @@ function ApplicationFormPresenter({ onApplicationComplete, onBackToProfile }) {
         });
 
         if (hasOverlap) {
-            setError('applicationForm.error.overlapping_period');
+            setError('applicationForm.errors.overlapping_period');
             return;
         }
 
@@ -261,12 +261,12 @@ function ApplicationFormPresenter({ onApplicationComplete, onBackToProfile }) {
         e.preventDefault();
 
         if (experienceList.length === 0) {
-            setError('applicationForm.error.add_competence_required');
+            setError('applicationForm.errors.add_competence_required');
             return;
         }
 
         if (availabilityList.length === 0) {
-            setError('applicationForm.error.add_availability_required');
+            setError('applicationForm.errors.add_availability_required');
             return;
         }
 

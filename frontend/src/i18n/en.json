@@ -389,7 +389,7 @@
             "competence_exists": "This competence has already been added.",
             "invalid_competence": "Invalid competence selected.",
             "select_dates": "Please select both start and end dates.",
-            "start_dast": "Start date cannot be in the past.",
+            "start_past": "Start date cannot be in the past.",
             "start_after_end": "Start date cannot be after end date.",
             "overlapping_period": "Availability periods cannot overlap.",
             "add_competence_required": "Please add at least one competence.",
