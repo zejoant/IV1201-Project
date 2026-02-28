@@ -46,7 +46,6 @@ jobs:
           echo "No backend tests"
         fi
 
-    #Frontend Tests
     - name: Run Frontend Tests
       run: |
         cd frontend

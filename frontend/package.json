@@ -1,6 +1,7 @@
 {
   "name": "frontend",
   "version": "0.1.0",
+  "type": "module",
   "proxy": "http://localhost:3001/",
   "private": true,
   "dependencies": {
