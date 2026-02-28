@@ -400,5 +400,9 @@
             "lotteries": "lotteries",
             "roller coaster operation": "roller coaster operation"
         }
+    },
+
+    "languageButton": {
+        "language": "English"
     }
 }

@@ -2,5 +2,8 @@
   "dependencies": {
     "bcrypt": "^6.0.0",
     "react-router-dom": "^7.13.0"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1"
   }
 }
