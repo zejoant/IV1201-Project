@@ -37,7 +37,7 @@ function App() {
  * Separated to allow use of useContext inside the Router context.
  */
 function AppContent() {
-  const { currentUser, login } = useContext(UserContext);
+  const {currentUser, login} = useContext(UserContext);
   const [showRegister, setShowRegister] = useState(false);
   // For applicant area: track which sub‑view to display
   const [applicantView, setApplicantView] = useState('profile'); // 'profile', 'apply', 
@@ -139,4 +139,5 @@ function AppContent() {
   }
 }
 
+export { AppContent };
 export default App;

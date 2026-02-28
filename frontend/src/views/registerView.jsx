@@ -25,7 +25,7 @@ import LanguageButton from '../presenters/languageButtonPresenter';
  * @param {boolean} props.loading - Indicates whether the registration request is in progress.
  * @param {boolean} props.success - Indicates whether registration completed successfully.
  *
- * @param {number} props.passwordStrength - Password strength level (1–4).
+ * @param {number} props.passwordStrength - Password strength level (1-4).
  *
  * @param {Function} props.setUsername - Updates username state.
  * @param {Function} props.setName - Updates first name state.

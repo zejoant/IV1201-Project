@@ -24,6 +24,7 @@ const LanguageButton = () => {
     return <LanguageButtonView
         onChangeLanguage={changeLanguage}
         t={t}
+        language={localStorage.language}
     />;
 };
 

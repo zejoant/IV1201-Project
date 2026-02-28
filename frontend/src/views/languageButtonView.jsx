@@ -8,10 +8,10 @@ import '../cssFiles/languageButton.css';
  * @param {Function} props.onChangeLanguage - Callback to change language
  * @returns {JSX.Element} Rendered language buttons container
  */
-const LanguageButtonView = ({ onChangeLanguage, t }) => {
+const LanguageButtonView = ({onChangeLanguage, t, language}) => {
   return (
     <div>
-      <button className="lang-btn" onClick={() => onChangeLanguage(localStorage.language)}>
+      <button className="lang-btn" onClick={() => onChangeLanguage(language)}>
         {t('languageButton.language')}
       </button>
     </div>

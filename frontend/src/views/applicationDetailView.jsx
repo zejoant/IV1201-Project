@@ -111,7 +111,7 @@ function ApplicationDetailView({
                                         const yoe = exp.yoe ? parseFloat(exp.yoe) : 0;
                                         return (
                                             <li key={index} className="recruiter-detail-list-item">
-                                                {t(`applicationDetail.competences.${name}`)} – {yoe} {yoe === 1 ? t('applicationDetail.year') : t('applicationDetail.years')}
+                                                {t(`applicationDetail.competences.${name}`)} - {yoe} {yoe === 1 ? t('applicationDetail.year') : t('applicationDetail.years')}
                                             </li>
                                         );
                                     })}
