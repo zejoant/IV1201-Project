@@ -51,7 +51,7 @@ jobs:
       run: |
         cd frontend
         if [ -d tests ] && [ "$(find tests -type f -name '*.test.*')" ]; then
-          npx vitest --config frontend/vitest.config.mjs --run
+          npm run test -- --config vitest.config.mjs --run
         else
           echo "No frontend tests found in frontend/tests"
         fi
