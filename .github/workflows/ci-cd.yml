@@ -35,6 +35,7 @@ jobs:
         cd frontend
         npm install --legacy-peer-deps
 
+    #Backend Tests
     - name: Run Backend Tests
       run: |
         cd backend
@@ -45,13 +46,12 @@ jobs:
           echo "No backend tests"
         fi
 
-    # Frontend
+    #Frontend Tests
     - name: Run Frontend Tests
       run: |
         cd frontend
-        # Check if frontend/tests exists and contains at least one test file
         if [ -d tests ] && [ "$(find tests -type f -name '*.test.*')" ]; then
-          npm test -- --watchAll=false
+          npx vitest --run
         else
           echo "No frontend tests found in frontend/tests"
         fi
