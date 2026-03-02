@@ -4,20 +4,28 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import Header from '../../src/presenters/headerPresenter';
 import { UserContext } from '../../src/UserContext';
 
-// Mock react-i18next
+/**
+ * Mock react-i18next translation hook.
+ */
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: vi.fn((key) => key),
   }),
 }));
 
-// Mock react-router-dom
+
+/**
+ * Mock react-router-dom navigation hook.
+ */
 const mockNavigate = vi.fn();
 vi.mock('react-router-dom', () => ({
   useNavigate: () => mockNavigate,
 }));
 
-// Mock HeaderView
+/**
+ * Mock HeaderView component to intercept props and render
+ * a placeholder element.
+ */
 const mockHeaderView = vi.fn();
 vi.mock('../../src/views/headerView', () => ({
   default: (props) => {
@@ -26,7 +34,9 @@ vi.mock('../../src/views/headerView', () => ({
   },
 }));
 
-// Mock LanguageButton
+/**
+ * Mock LanguageButton presenter for inclusion in Header.
+ */
 vi.mock('../../src/presenters/languageButtonPresenter', () => ({
   default: () => <div data-testid="language-button" />
 }));
@@ -35,10 +45,16 @@ describe('Header presenter', () => {
   const mockLogout = vi.fn();
   const mockCurrentUser = {name: 'Agda', surname: 'Olsvenne', email: 'agda@example.com'};
 
+  /**
+   * Clear mocks before each test for isolation.
+   */
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
+  /**
+   * Renders null if no user is logged in.
+   */
   it('renders null if no user is logged in', () => {
     const {container} = render(
       <UserContext.Provider value={{ currentUser: null, logout: mockLogout }}>
@@ -48,6 +64,10 @@ describe('Header presenter', () => {
     expect(container.firstChild).toBeNull();
   });
 
+  /**
+   * Ensures Header forwards correct props to HeaderView
+   * when a user is present.
+   */
   it('passes props correctly to HeaderView', () => {
     render(
       <UserContext.Provider value={{ currentUser: mockCurrentUser, logout: mockLogout }}>
@@ -65,6 +85,10 @@ describe('Header presenter', () => {
     expect(props.LanguageButton).toBeDefined();
   });
 
+  /**
+   * Tests that calling HeaderView's onLogout prop
+   * invokes logout and redirects to the login page.
+   */
   it('calls logout and navigate on handleLogout', () => {
     render(
       <UserContext.Provider value={{ currentUser: mockCurrentUser, logout: mockLogout }}>

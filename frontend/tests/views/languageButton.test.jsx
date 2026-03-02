@@ -24,6 +24,16 @@ const t = (key) => key;
  */
 const mockOnChangeLanguage = vi.fn()
 
+/**
+ * Mocks the `react-i18next` module for testing purposes.
+ *
+ * This mock replaces the `useTranslation` hook with a simplified implementation:
+ * - `t` returns the translation key as-is (no real translation).
+ * - `i18n.changeLanguage` is mocked using `vi.fn()` for spying and assertions.
+ *
+ * This allows components using `useTranslation` to be tested
+ * without loading actual i18n configurations or language files.
+ */
 vi.mock('react-i18next', () => ({
     useTranslation: () => ({
         t: (key) => key,

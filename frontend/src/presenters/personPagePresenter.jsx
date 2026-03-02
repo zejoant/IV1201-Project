@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { UserContext } from '../UserContext';
 import { useTranslation } from 'react-i18next';
 import PersonPageView from '../views/personPageView';
@@ -11,10 +11,9 @@ import PersonPageView from '../views/personPageView';
  * @component
  * @param {Object} props - Component props
  * @param {Function} props.onApplyNow - Callback to navigate to the application form
- * @param {Function} props.onViewMyApplications - Callback to navigate to the user's applications list
  * @returns {JSX.Element} The rendered applicant dashboard
  */
-function PersonPagePresenter({ onApplyNow, onViewMyApplications }) {
+function PersonPagePresenter({ onApplyNow}) {
   const { currentUser } = useContext(UserContext);
   const {t} = useTranslation();
   
@@ -23,7 +22,6 @@ function PersonPagePresenter({ onApplyNow, onViewMyApplications }) {
       currentUser={currentUser}
       t={t}
       onApplyNow={onApplyNow}
-      onViewMyApplications={onViewMyApplications}
     />
   );
 }

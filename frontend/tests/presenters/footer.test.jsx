@@ -3,16 +3,26 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import Footer from '../../src/presenters/footerPresenter';
 
-// Mock react-i18next
+/**
+ * Mocks the react-i18next hook.
+ * Provides a translation function that simply returns
+ * the translation key to keep tests deterministic.
+ */
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: vi.fn((key) => key),
   }),
 }));
 
-// Mock FooterView
-const mockFooterView = vi.fn();
+/**
+ * Mock function used to capture props passed to FooterView.
+ */const mockFooterView = vi.fn();
 
+ /**
+ * Mocks FooterView to:
+ *  - intercept incoming props
+ *  - render a minimal placeholder element
+ */
 vi.mock('../../src/views/footerView', () => ({
   default: (props) => {
     mockFooterView(props);
@@ -20,11 +30,24 @@ vi.mock('../../src/views/footerView', () => ({
   },
 }));
 
+/**
+ * Test suite for the Footer presenter.
+ */
 describe('Footer', () => {
+
+   /**
+   * Clears mock history before each test to ensure isolation.
+   */
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
+   /**
+   * Verifies that Footer:
+   *  - calculates the current year correctly
+   *  - passes the translation function (t)
+   *  - forwards both values to FooterView as props
+   */
   it('passes currentYear and t to FooterView', () => {
     const currentYear = new Date().getFullYear();
 

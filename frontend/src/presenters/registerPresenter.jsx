@@ -12,7 +12,7 @@ import RegisterView from "./../views/registerView";
  * @param {Function} props.switchToLogin - Callback to switch the view to the login form
  * @returns {JSX.Element} The rendered registration form
  */
-function RegisterPresenter({ setCurrentUser, switchToLogin }) {
+function RegisterPresenter({switchToLogin }) {
   const [username, setUsername] = useState("");
   const [success, setSuccess] = useState(false); 
   const [password, setPassword] = useState("");

@@ -2,6 +2,10 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
 import LoginPresenter from '../../src/presenters/loginPresenter';
 
+/**
+ * Mock the LoginView component to intercept props and
+ * simulate user input and form submission.
+ */
 vi.mock('../../src/views/loginView', () => ({
   default: vi.fn(({ handleSubmit, username, setUsername, password, setPassword, error, loading }) => (
     <form data-testid="login-form" onSubmit={handleSubmit}>
@@ -29,6 +33,9 @@ describe('LoginPresenter', () => {
   let setCurrentUserMock;
   let switchToRegisterMock;
 
+  /**
+   * Reset mocks and localStorage before each test.
+   */
   beforeEach(() => {
     setCurrentUserMock = vi.fn();
     switchToRegisterMock = vi.fn();
@@ -36,10 +43,17 @@ describe('LoginPresenter', () => {
     localStorage.clear();
   });
 
+  /**
+   * Restores all mocks after each test.
+   */
   afterEach(() => {
     vi.restoreAllMocks();
   });
 
+  /**
+   * Tests that the form submits successfully with valid credentials,
+   * updates the user context, and stores the user in localStorage.
+   */
   it('submits form successfully and sets current user', async () => {
     fetchMock
       .mockResolvedValueOnce({ ok: true, json: async () => ({ success: true }) })
@@ -56,6 +70,9 @@ describe('LoginPresenter', () => {
     expect(localStorage.getItem('currentUser')).toEqual(JSON.stringify({ username: 'AgdaOlsvenne', role_id: 2 }));
   });
 
+   /**
+   * Tests that an error message is shown when the sign-in API fails.
+   */
   it('shows error when sign_in fails', async () => {
     fetchMock.mockResolvedValueOnce({ ok: false, json: async () => ({ error: 'invalid_credentials' }) });
 
@@ -70,6 +87,9 @@ describe('LoginPresenter', () => {
     expect(setCurrentUserMock).not.toHaveBeenCalled();
   });
 
+  /**
+   * Tests that an error message is shown when fetching the profile fails.
+   */
   it('shows error when fetching profile fails', async () => {
     fetchMock
       .mockResolvedValueOnce({ ok: true, json: async () => ({ success: true }) })
@@ -86,6 +106,10 @@ describe('LoginPresenter', () => {
     expect(setCurrentUserMock).not.toHaveBeenCalled();
   });
 
+  /**
+   * Tests that submitting the form with empty fields
+   * does not call the setCurrentUser callback.
+   */
   it('does not submit when form is invalid', async () => {
     render(<LoginPresenter setCurrentUser={setCurrentUserMock} switchToRegister={switchToRegisterMock} />);
 

@@ -32,7 +32,6 @@ function PersonPageView({
   currentUser,
   t,
   onApplyNow,
-  onViewMyApplications
 }) {
 
   return (

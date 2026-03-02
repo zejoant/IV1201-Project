@@ -54,7 +54,7 @@ describe("DAO Unit Tests", () => {
 
       const result = await dao.findUser("BrittaAnn");
 
-      expect(result).toHaveProperty("person_id", 1);
+      expect(result).toHaveProperty("name", "Britta");
       expect(Person.findOne).toHaveBeenCalledWith({ where: { username: "BrittaAnn" } });
     });
 
@@ -86,7 +86,7 @@ describe("DAO Unit Tests", () => {
 
       const result = await dao.createPerson(mockInput);
 
-      expect(result).toHaveProperty("person_id", 1);
+      expect(result).toHaveProperty("name", "Berra");
       expect(Person.create).toHaveBeenCalledWith(expect.objectContaining(mockInput));
     });
 
@@ -111,7 +111,7 @@ describe("DAO Unit Tests", () => {
      * Returns a user when a valid ID is provided.
      */
     test("should return a user if found", async () => {
-      const mockPerson = {person_id: 1};
+      const mockPerson = {person_id: 1, name: "Berra", surname: "Olsvenne", email: "Berra@gmail.com", username: "BerraOlsvenne", role_id: 2, password: "password123"};
 
       Person.findByPk.mockResolvedValue(mockPerson);
 

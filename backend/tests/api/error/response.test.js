@@ -56,7 +56,7 @@ describe("ErrorResponseSender", () => {
 
     expect(console.error).toHaveBeenCalledWith(err);
     expect(res.status).toHaveBeenCalledWith(500);
-    expect(res.send).toHaveBeenCalledWith({ error: "Something failed" });
+    expect(res.send).toHaveBeenCalledWith({ error: "operation_failed" });
   });
 
   /**

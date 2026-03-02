@@ -48,7 +48,6 @@ function AppContent() {
       return (
         <div>
           <Register 
-            setCurrentUser={login} 
             switchToLogin={() => setShowRegister(false)} 
           />
           <Footer></Footer>

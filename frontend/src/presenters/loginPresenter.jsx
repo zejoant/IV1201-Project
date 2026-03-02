@@ -64,8 +64,9 @@ function LoginPresenter({ setCurrentUser, switchToRegister }) {
       const user = profileData.success;
 
       // Save user to localStorage for persistence
-      localStorage.setItem('currentUser', JSON.stringify(user));
-      setCurrentUser(user);
+      const user_minimal = {name: user.name, surname: user.surname, username: user.username, email: user.email, role_id: user.role_id};
+      localStorage.setItem('currentUser', JSON.stringify(user_minimal));
+      setCurrentUser(user_minimal);
     } catch (err) {
       setError(err.custom ? err.message : 'login.errors.offline_login');
     } finally {

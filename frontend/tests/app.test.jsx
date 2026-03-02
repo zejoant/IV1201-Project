@@ -1,5 +1,4 @@
 /**
- *
  * These tests verify that AppContent:
  * 1. Renders the login screen when no user is logged in.
  * 2. Renders the recruiter dashboard for users with recruiter role.
@@ -7,7 +6,6 @@
  * 4. Renders the applicant's personal profile page for non-recruiter users.
  * 5. Renders the applicant application form when "Apply Now" is clicked.
  * 6. Switches to the registration form when the "Sign Up" button is clicked.
- *
  */
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, vi } from 'vitest';
