@@ -64,6 +64,7 @@ function LoginView({
                         <div className="login-input-group">
                             <label className="login-label">{t('login.username')}</label>
                             <input
+                                name="username"
                                 type="text"
                                 value={username}
                                 onChange={(e) => {
@@ -93,6 +94,7 @@ function LoginView({
                                 <label className="login-label">{t('login.password')}</label>
                             </div>
                             <input
+                                name="password"
                                 type="password"
                                 value={password}
                                 onChange={(e) => {
