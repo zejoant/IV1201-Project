@@ -183,9 +183,7 @@ function RegisterView({
                                     if (value.length === 0) {
                                         e.target.setCustomValidity(t('register.errors.missing_field'));
                                     } else if (value.length !== 12) {
-                                        e.target.setCustomValidity(
-                                            t("register.errors.pnr_length")
-                                        );
+                                        e.target.setCustomValidity(t("register.errors.pnr_length"));
                                     } else {
                                         e.target.setCustomValidity("");
                                     }

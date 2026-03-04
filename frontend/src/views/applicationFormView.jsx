@@ -227,6 +227,7 @@ function ApplicationFormView({
                                 {/* TODO: TYPE:DATE IS SYSTEM DEPENDANT AND WILL OVERWRITE PLACEHOLDER,
                 IF TRANSLATION IS WANTED HAVE TO CHANGE TO ANOTHER TYPE OR SOMETHING IDK */}
                                 <input
+                                    name="fromDate"
                                     type="date"
                                     value={fromDate}
                                     onChange={(e) => setFromDate(e.target.value)}
@@ -238,6 +239,7 @@ function ApplicationFormView({
                             <div className="application-input-group">
                                 <label className="application-label">{t('applicationForm.labels.to_date')}</label>
                                 <input
+                                    name="toDate"
                                     type="date"
                                     value={toDate}
                                     onChange={(e) => setToDate(e.target.value)}

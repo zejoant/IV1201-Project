@@ -8,6 +8,22 @@ const postgresDB = require("../integration/db");
 
 const SALT_ROUNDS = 12;
 
+/**
+ * Migrates plaintext passwords in the Person table to hashed passwords using bcrypt.
+ *
+ * This function performs the following steps:
+ * 1. Authenticates with the PostgreSQL database.
+ * 2. Fetches all users from the Person table.
+ * 3. Iterates over each user:
+ *    - Skips users with null passwords.
+ *    - Skips users whose passwords are already hashed.
+ *    - Hashes plaintext passwords and updates the database.
+ *
+ * @async
+ * @function
+ * @returns {Promise<void>} Resolves when all eligible passwords have been hashed.
+ * @throws {Error} Throws an error if database connection fails or updates cannot be saved.
+ */
 async function migratePasswords() {
   try {
     await postgresDB.authenticate();
@@ -50,4 +66,7 @@ async function migratePasswords() {
   }
 }
 
+/**
+ * Execute migration if the script is run directly.
+ */
 migratePasswords();

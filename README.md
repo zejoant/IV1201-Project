@@ -79,7 +79,5 @@ JWT_SECRET=your-secret-key
 - To run backend unit test do: `cd backend && npm run test`
 - To run frontend unit test do: `cd frontend && npm run test`
 - To run acceptance test do in 2 different terminals:
-```
-npx cross-env NODE_ENV=test concurrently "node backend/server.js" "cd frontend && npm start"  
-npx cypress run
-```
+`npx cross-env NODE_ENV=test concurrently "node backend/server.js" "cd frontend && npm start" `
+`npx cypress run` or `npx cypress open`
