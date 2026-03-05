@@ -417,6 +417,7 @@ class DAO {
       person.username,
       person.password,
       person.person_id,
+      person.pnr,
     );
   }
 

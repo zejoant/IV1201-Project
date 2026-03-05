@@ -97,6 +97,7 @@ function RegisterView({
                                     {t('register.labels.first_name')} <span className="register-required">*</span>
                                 </label>
                                 <input
+                                    name="name"
                                     type="text"
                                     value={name}
                                     onChange={(e) => { setName(e.target.value.replace(/[^A-Za-z ]/g, "")); e.target.setCustomValidity(t('')); }}
@@ -120,6 +121,7 @@ function RegisterView({
                                     {t('register.labels.last_name')} <span className="register-required">*</span>
                                 </label>
                                 <input
+                                    name="surname"
                                     type="text"
                                     value={surname}
                                     onChange={(e) => { setSurname(e.target.value.replace(/[^A-Za-z ]/g, "")); e.target.setCustomValidity(t('')); }}
@@ -144,9 +146,10 @@ function RegisterView({
                                 {t('register.labels.email')} <span className="register-required">*</span>
                             </label>
                             <input
+                                name="email"
                                 type="email"
                                 value={email}
-                                onChange={(e) => { setEmail(e.target.value); e.target.setCustomValidity(t('')); }}
+                                onChange={(e) => {setEmail(e.target.value); e.target.setCustomValidity(t(''));}}
                                 required
                                 onInvalid={(e) => {
                                     const value = e.target.value;
@@ -166,6 +169,7 @@ function RegisterView({
                                 {t('register.labels.pnr')} <span className="register-required">*</span>
                             </label>
                             <input
+                                name="pnr"
                                 type="text"
                                 value={pnr}
                                 onChange={(e) => {
@@ -179,9 +183,7 @@ function RegisterView({
                                     if (value.length === 0) {
                                         e.target.setCustomValidity(t('register.errors.missing_field'));
                                     } else if (value.length !== 12) {
-                                        e.target.setCustomValidity(
-                                            t("register.errors.pnr_length")
-                                        );
+                                        e.target.setCustomValidity(t("register.errors.pnr_length"));
                                     } else {
                                         e.target.setCustomValidity("");
                                     }
@@ -195,6 +197,7 @@ function RegisterView({
                                 {t('register.labels.username')} <span className="register-required">*</span>
                             </label>
                             <input
+                                name="username"
                                 type="text"
                                 value={username}
                                 onChange={(e) => {
@@ -232,6 +235,7 @@ function RegisterView({
                             </div>
                             <input type="text" name="fake-username" autoComplete="username" style={{ display: "none" }} /> {/*decoy field to prevent firefox detecting login*/}
                             <input
+                                name="password"
                                 type="password"
                                 value={password}
                                 onChange={(e) => {

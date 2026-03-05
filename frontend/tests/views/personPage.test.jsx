@@ -20,7 +20,7 @@ describe('PersonPageView', () => {
         name: 'Hash',
         surname: 'Man',
         email: 'hashman@example.com',
-        person_number: '123456-7890'
+        pnr: '1234567890'
     };
 
     /** Mock callback functions */
@@ -70,7 +70,7 @@ describe('PersonPageView', () => {
         expect(screen.getByText(mockUser.surname)).toBeInTheDocument();
         expect(screen.getAllByText(mockUser.username).length).toBe(2);
         expect(screen.getByText(mockUser.email)).toBeInTheDocument();
-        expect(screen.getByText(mockUser.person_number)).toBeInTheDocument();
+        expect(screen.getByText(mockUser.pnr)).toBeInTheDocument();
     });
 
     /**

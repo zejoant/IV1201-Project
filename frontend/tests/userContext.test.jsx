@@ -12,7 +12,7 @@ const TestComponent = () => {
     return (
         <div>
             <div data-testid="user">{currentUser ? currentUser.name : 'null'}</div>
-            <button data-testid="login" onClick={() => login({name: 'Berra'})}>Login</button>
+            <button data-testid="login" onClick={() => login({ name: 'Berra' })}>Login</button>
             <button data-testid="logout" onClick={logout}>Logout</button>
         </div>
     );
@@ -28,7 +28,12 @@ describe('UserProvider', () => {
      */
     beforeEach(() => {
         localStorage.clear();
-        global.fetch = vi.fn(() => Promise.resolve({ ok: true }));
+        global.fetch = vi.fn(() =>
+            Promise.resolve({
+                ok: true,
+                json: () => Promise.resolve({})
+            })
+        );
         vi.clearAllMocks();
     });
 

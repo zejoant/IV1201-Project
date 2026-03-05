@@ -1,5 +1,11 @@
 const { Sequelize } = require("sequelize");
-require("dotenv").config({ path: __dirname + "/../../.env" });
+
+require('dotenv').config({
+  path: process.env.NODE_ENV === "test" ? __dirname + "/../../.env.test" : __dirname + "/../../.env" //new with acceptance test
+});
+
+//require("dotenv").config({ path: __dirname + "/../../.env" }); old backup with no acceptance test
+
 const cls = require('cls-hooked');
 
 const useSSL = process.env.DB_SSL === "true";

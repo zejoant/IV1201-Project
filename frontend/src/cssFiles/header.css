@@ -112,6 +112,10 @@
   transform: translateX(3px);
 }
 
+.login-error-alert{
+  margin: 0;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .header-nav-content {

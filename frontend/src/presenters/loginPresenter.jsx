@@ -64,7 +64,7 @@ function LoginPresenter({ setCurrentUser, switchToRegister }) {
       const user = profileData.success;
 
       // Save user to localStorage for persistence
-      const user_minimal = {name: user.name, surname: user.surname, username: user.username, email: user.email, role_id: user.role_id};
+      const user_minimal = {name: user.name, surname: user.surname, username: user.username, email: user.email, role_id: user.role_id, pnr: user.pnr};
       localStorage.setItem('currentUser', JSON.stringify(user_minimal));
       setCurrentUser(user_minimal);
     } catch (err) {

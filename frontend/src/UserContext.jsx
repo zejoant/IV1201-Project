@@ -41,11 +41,25 @@ export function UserProvider({ children }) {
    * Logs out the current user: clears state and localStorage,
    * and optionally calls logout endpoint.
    */
-  const logout = () => {
-    setCurrentUser(null);
-    localStorage.removeItem('currentUser');
+  const logout = async () => {
     // Optionally call logout endpoint (fire-and-forget)
-    fetch('/account/sign_out', { method: 'POST', credentials: 'include' }).catch(() => {});
+    try{
+      const res = await fetch('/account/sign_out', { method: 'POST', credentials: 'include' });
+      const data = await res.json();
+
+      if (!res.ok) {
+        const err = new Error(`sign_out.errors.${data.error}` || 'sign_out.errors.operation_failed');
+        err.custom = true;
+        throw err;
+      }
+
+      setCurrentUser(null);
+      localStorage.removeItem('currentUser');
+      return;
+    }
+    catch(err){
+      return err.custom ? err.message : 'sign_out.errors.operation_failed';
+    }
   };
 
   return (

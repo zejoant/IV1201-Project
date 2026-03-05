@@ -19,7 +19,7 @@ import '../cssFiles/personPage.css';
  * @param {string} [props.currentUser.name] - User's first name.
  * @param {string} [props.currentUser.surname] - User's surname.
  * @param {string} [props.currentUser.email] - User's email address.
- * @param {string} [props.currentUser.person_number] - User's personal identification number.
+ * @param {string} [props.currentUser.pnr] - User's personal identification number.
  *
  * @param {Function} props.t - Translation function used for internationalized text.
  *
@@ -80,13 +80,13 @@ function PersonPageView({
               </div>
               <div className="personpage-info-item">
                 <span className="personpage-info-label">{t('personPage.labels.email')}</span>
-                <span className="personpage-info-value">{currentUser.email || t('personPage.notProvided')}</span>
+                <span className="personpage-info-value">{currentUser.email || t('personPage.not_provided')}</span>
               </div>
               {/* Person number can be shown if available */}
-              {currentUser.person_number && (
+              {currentUser.pnr && (
                 <div className="personpage-info-item">
                   <span className="personpage-info-label">{t('personPage.labels.pnr')}</span>
-                  <span className="personpage-info-value">{currentUser.person_number}</span>
+                  <span className="personpage-info-value">{currentUser.pnr}</span>
                 </div>
               )}
             </div>
