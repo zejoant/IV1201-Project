@@ -1,6 +1,6 @@
 import '../cssFiles/header.css';
 
-function HeaderView({ currentUser, t, onLogout, navigate, LanguageButton}) {
+function HeaderView({ currentUser, t, onLogout, navigate, LanguageButton, error}) {
   return (
     <nav className="header-navbar">
       <div className="header-nav-content">
@@ -18,6 +18,12 @@ function HeaderView({ currentUser, t, onLogout, navigate, LanguageButton}) {
             </span>
           </div>
           {<LanguageButton/>}
+          {error && (
+              <div className="login-error-alert">
+                  <span className="login-error-icon">⚠️</span>
+                  {t(error)}
+              </div>
+          )}
           <button onClick={onLogout} className="header-logout-button">
             <span>{t('header.logout')}</span>
             <span className="header-logout-icon">→</span>

@@ -149,7 +149,7 @@ function RegisterView({
                                 name="email"
                                 type="email"
                                 value={email}
-                                onChange={(e) => { setEmail(e.target.value); e.target.setCustomValidity(t('')); }}
+                                onChange={(e) => {setEmail(e.target.value); e.target.setCustomValidity(t(''));}}
                                 required
                                 onInvalid={(e) => {
                                     const value = e.target.value;

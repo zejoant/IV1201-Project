@@ -11,7 +11,7 @@ const jwt = require("jsonwebtoken");
  * @public
  */
 class Authorization {
-
+    
     /**
    * Generates a JWT for the given user and sends it as an HTTP-only cookie.
    *

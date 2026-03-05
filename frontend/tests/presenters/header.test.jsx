@@ -89,7 +89,7 @@ describe('Header presenter', () => {
    * Tests that calling HeaderView's onLogout prop
    * invokes logout and redirects to the login page.
    */
-  it('calls logout and navigate on handleLogout', () => {
+  it('calls logout and navigate on handleLogout', async () => {
     render(
       <UserContext.Provider value={{ currentUser: mockCurrentUser, logout: mockLogout }}>
         <Header />
@@ -97,7 +97,7 @@ describe('Header presenter', () => {
     );
 
     const props = mockHeaderView.mock.calls[0][0];
-    props.onLogout();
+    await props.onLogout();
 
     expect(mockLogout).toHaveBeenCalledTimes(1);
     expect(mockNavigate).toHaveBeenCalledWith('/login');

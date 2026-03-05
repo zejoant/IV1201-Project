@@ -19,8 +19,10 @@ class PersonDTO{
      * @param {number} role_id - Role type of the user (e.g., admin, regular user).
      * @param {string} username - Unique username for login.
      * @param {string} password - Unique password for login.
+     * @param {string} person_id - id for user.
+     * @param {string} pnr - person number for user.
      */
-    constructor(name, surname, email, role_id, username, password, person_id){
+    constructor(name, surname, email, role_id, username, password, person_id, pnr){
         this.name = name;
         this.surname = surname;
         this.role_id = role_id;
@@ -28,6 +30,7 @@ class PersonDTO{
         this.username = username;
         this.password = password;
         this.person_id = person_id;
+        this.pnr = pnr;
     }
 }
 

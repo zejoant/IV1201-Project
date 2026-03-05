@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../UserContext';
 import { useTranslation } from 'react-i18next';
@@ -16,10 +16,16 @@ function Header() {
   const { currentUser, logout } = useContext(UserContext);
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [error, setError] = useState('');
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
+  const handleLogout = async () => {
+    const response = await logout()
+    if(response){
+      setError(response)
+    }
+    else{
+      navigate('/login');
+    }
   };
 
   if (!currentUser) return null;
@@ -31,6 +37,7 @@ function Header() {
       onLogout={handleLogout}
       navigate={navigate}
       LanguageButton={LanguageButton}
+      error={error}
     />
   );
 }

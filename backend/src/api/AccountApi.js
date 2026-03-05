@@ -198,7 +198,7 @@ class LoginApi extends RequestHandler {
               this.sendResponse(res, 404, 'invalid_fetch');
               return;
             }
-            this.sendResponse(res, 201, {name: person.name, surname: person.surname, email: person.email, role_id: person.role_id, username: person.username})
+            this.sendResponse(res, 201, {name: person.name, surname: person.surname, email: person.email, role_id: person.role_id, username: person.username, pnr: person.pnr})
           } catch (err) {
             next(err);
           }
