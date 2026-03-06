@@ -17,7 +17,7 @@
 
 echo "1. Build React frontend..."
 cd frontend || exit
-npm install
+npm install --legacy-peer-deps
 npm run build || exit
 
 echo "2. Copy React build to backend public folder..."

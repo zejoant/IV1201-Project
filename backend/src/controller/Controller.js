@@ -13,6 +13,7 @@ class Controller {
 
   /**
    * Creates a controller instance and initializes DAO access.
+   * @param {DAO} dao data access object to access database operations
    * @constructor
    */
   constructor(dao) {
@@ -39,6 +40,7 @@ class Controller {
    *
    * @static
    * @returns {Promise<Controller>} Initialized controller instance.
+   * @param {string} username user username
    */
   async login(username) {
     return this.transactionManager.transaction(async (t1) => {

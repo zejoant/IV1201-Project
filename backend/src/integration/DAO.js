@@ -128,7 +128,7 @@ class DAO {
         throw new Error('user_exists');
       }
 
-      const newPerson = await Person.create({ name, surname, pnr, email, password, role_id, username });
+      const newPerson = await Person.create({name, surname, pnr, email, password, role_id, username});
 
       return this.createPersonDTO(newPerson);
     } catch (err) {
@@ -152,7 +152,8 @@ class DAO {
     try {
       Checker.isPositiveInteger(id, 'person id')
 
-      return await Person.findByPk(id);
+      const user = await Person.findByPk(id);
+      return this.createPersonDTO(user);
     } catch (err) {
       throw new WError(
         {
@@ -409,14 +410,14 @@ class DAO {
    */
   createPersonDTO(person) {
     return new PersonDTO(
-      person.person_id,
       person.name,
       person.surname,
-      person.pnr,
       person.email,
-      person.password,
       person.role_id,
       person.username,
+      person.password,
+      person.person_id,
+      person.pnr,
     );
   }
 
