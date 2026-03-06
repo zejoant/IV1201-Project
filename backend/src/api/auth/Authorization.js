@@ -1,7 +1,6 @@
 'use strict'
 
 const jwt = require("jsonwebtoken");
-const logger = require("../../utils/logger");
 
 
 /**
@@ -28,7 +27,6 @@ class Authorization {
         const token = jwt.sign({ id: person.person_id, username: person.username }, process.env.JWT_SECRET, { expiresIn: "1h" })
         const options = { httpOnly: true, maxAge: 60 * 60 * 1000 };
         res.cookie("auth", token, options)
-        logger.info(`A cookie was sent for username: ${person.username}, id: ${person.person_id}`);
     }
 
     /**
@@ -50,7 +48,6 @@ class Authorization {
 
         if (!authCookie) {
             res.status(403).json({ error: "auth.login_session_invalid" });
-            logger.info(`authCookie not found for request: ${req}`);
             return false;
         }
         try {
@@ -58,13 +55,11 @@ class Authorization {
 
             // decoded = { id, username, iat, exp }
             req.user = decoded;
-            logger.info(`Token successfully verified for username: ${req.user.username}`);
 
             return true;
         } catch (err) {
             res.clearCookie("auth");
             res.status(403).json({ error: "auth.user_login_expired" });
-            logger.error(`An error occured when checking login cookie: ${err}`);
             return false;
         }
     }
